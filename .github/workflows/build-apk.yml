@@ -26,7 +26,7 @@ jobs:
           channel: 'stable'
 
       - name: Create Android Folder
-        run: flutter create . --platforms=android --org com.example.padhai
+        run: flutter create . --platforms=android --project-name=padh_ai --org com.example.padhai
 
       - name: Install dependencies
         run: |
