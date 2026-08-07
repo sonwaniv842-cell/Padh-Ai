@@ -5,21 +5,21 @@ on:
     branches: [ main ]
   workflow_dispatch:
 
+permissions:
+  contents: write
+
 jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
+      - uses: actions/checkout@v4
 
-      - name: Set up Java
-        uses: actions/setup-java@v4
+      - uses: actions/setup-java@v4
         with:
           distribution: 'zulu'
           java-version: '17'
 
-      - name: Set up Flutter
-        uses: subosito/flutter-action@v2
+      - uses: subosito/flutter-action@v2
         with:
           channel: 'stable'
 
@@ -31,11 +31,9 @@ jobs:
           M=android/app/src/main/AndroidManifest.xml
           grep -q "permission.INTERNET" $M || \
             sed -i 's|<application|<uses-permission android:name="android.permission.INTERNET"/>\n    <application|' $M
-          [ -f android/app/build.gradle.kts ] && \
-            sed -i 's/minSdk = flutter.minSdkVersion/minSdk = 21/' android/app/build.gradle.kts || true
-          [ -f android/app/build.gradle ] && \
-            sed -i 's/minSdkVersion flutter.minSdkVersion/minSdkVersion 21/' android/app/build.gradle || true
-          cat $M
+          B=android/app/build.gradle.kts
+          sed -i 's|minSdk = flutter.minSdkVersion|minSdk = 23|' $B
+          sed -i 's|android:label=".*"|android:label="Padh-Ai"|' $M
 
       - name: Install dependencies
         run: flutter pub get
@@ -43,8 +41,25 @@ jobs:
       - name: Build APK Release
         run: flutter build apk --release
 
-      - name: Upload APK Artifact
+      - name: Rename APK
+        run: cp build/app/outputs/flutter-apk/app-release.apk padh-ai.apk
+
+      - name: Upload Artifact
         uses: actions/upload-artifact@v4
         with:
           name: app-release-apk
-          path: build/app/outputs/flutter-apk/app-release.apk
+          path: padh-ai.apk
+
+      # 🌟 यहाँ से स्थायी डाउनलोड लिंक बनता है
+      - name: Publish Release
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: latest
+          name: "Padh-Ai — नवीनतम संस्करण"
+          body: |
+            ## 📱 Padh-Ai ऐप डाउनलोड करें
+            नीचे **padh-ai.apk** पर टैप करके डाउनलोड करें।
+          files: padh-ai.apk
+          make_latest: true
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
