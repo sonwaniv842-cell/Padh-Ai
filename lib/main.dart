@@ -13,7 +13,7 @@ import 'package:google_mlkit_text_recognition/google_mlkit_text_recognition.dart
 /// 🔴🔴 यहाँ अपना नंबर डालें (यही एडमिन होगा) 🔴🔴
 const List<String> kAdminPhones = [
   '+919999900001',   // टेस्ट नंबर
-  '+919826000000',   // ⬅️ अपना असली नंबर यहाँ बदलें
+  '+917067132801',   // ⬅️ अपना असली नंबर यहाँ बदलें
 ];
 
 void main() async {
