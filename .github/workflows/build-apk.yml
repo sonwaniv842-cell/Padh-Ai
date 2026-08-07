@@ -1,63 +1,42 @@
-name: Build APK
+name: Build Android APK
 
 on:
-  push:
-    branches: [ main ]
   workflow_dispatch:
-
-permissions:
-  contents: write
+  push:
+    branches:
+      - main
 
 jobs:
   build:
     runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
 
-      - uses: actions/setup-java@v4
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Java
+        uses: actions/setup-java@v5
         with:
-          distribution: 'zulu'
+          distribution: temurin
           java-version: '17'
 
-      - uses: subosito/flutter-action@v2
+      - name: Setup Flutter
+        uses: subosito/flutter-action@v2
         with:
-          channel: 'stable'
+          channel: stable
+          cache: true
 
-      - name: Create android folder
-        run: flutter create --platforms=android --org com.padhai --project-name padh_ai .
-
-      - name: Fix android settings
-        run: |
-          M=android/app/src/main/AndroidManifest.xml
-          B=android/app/build.gradle.kts
-          grep -q "permission.INTERNET" $M || \
-            sed -i 's|<application|<uses-permission android:name="android.permission.INTERNET"/>\n    <application|' $M
-          sed -i 's|android:label="[^"]*"|android:label="Padh-Ai"|' $M
-          sed -i 's|minSdk = flutter.minSdkVersion|minSdk = 23|' $B
-          echo "--- manifest ---" && cat $M
+      - name: Flutter version
+        run: flutter --version
 
       - name: Install dependencies
         run: flutter pub get
 
-      - name: Build APK Release
-        run: flutter build apk --release
+      - name: Build APK without shrinking
+        run: flutter build apk --release --no-shrink
 
-      - name: Rename APK
-        run: cp build/app/outputs/flutter-apk/app-release.apk padh-ai.apk
-
-      - name: Upload Artifact
+      - name: Upload APK
         uses: actions/upload-artifact@v4
         with:
-          name: app-release-apk
-          path: padh-ai.apk
-
-      - name: Publish Release
-        uses: softprops/action-gh-release@v2
-        with:
-          tag_name: latest
-          name: "Padh-Ai — नवीनतम संस्करण"
-          body: "📱 नीचे padh-ai.apk पर टैप करके डाउनलोड करें।"
-          files: padh-ai.apk
-          make_latest: true
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          name: Padh-Ai-APK
+          path: build/app/outputs/flutter-apk/app-release.apk
