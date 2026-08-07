@@ -1,6 +1,12 @@
 import 'package:flutter/material.dart';
 
-// यह स्क्रीन कैमरा स्कैन और एआई उत्तर के लिए है
+void main() {
+  runApp(const MaterialApp(
+    debugShowCheckedModeBanner: false,
+    home: AiCameraScanScreen(),
+  ));
+}
+
 class AiCameraScanScreen extends StatefulWidget {
   const AiCameraScanScreen({super.key});
 
@@ -13,7 +19,6 @@ class _AiCameraScanScreenState extends State<AiCameraScanScreen> {
   String _scannedQuestion = "";
   String _aiAnswer = "";
 
-  // कैमरा से स्कैन करने का सिमुलेशन (असली ऐप में यहाँ Google Gemini Vision API या ML Kit लगेगा)
   void _simulateScanAndSolve() {
     setState(() {
       _isScanning = true;
@@ -21,18 +26,16 @@ class _AiCameraScanScreenState extends State<AiCameraScanScreen> {
       _aiAnswer = "";
     });
 
-    // 2 सेकंड का फेक प्रोसेसिंग ताकि स्कैनिंग का मज़ा आए
     Future.delayed(const Duration(seconds: 2), () {
       setState(() {
         _isScanning = false;
         _scannedQuestion = "प्रश्न: 'A' फॉर क्या होता है और इसका चित्र दिखाएं?";
         _aiAnswer = "🤖 AI टीचर का उत्तर:\n\n"
-                    "• 'A' फॉर Apple (सेब) होता है!\n"
-                    "• सेब एक बहुत ही स्वादिष्ट और सेहतमंद फल है, जो लाल रंग का होता है।\n"
-                    "• वर्तनी (Spelling): A - P - P - L - E";
+            "• 'A' फॉर Apple (सेब) होता है!\n"
+            "• सेब एक स्वादिष्ट और सेहतमंद फल है, जो लाल रंग का होता है।\n"
+            "• वर्तनी (Spelling): A - P - P - L - E";
       });
-      
-      // यहाँ टेक्स्ट-टू-स्पीच (Text-to-Speech) कोड डलेगा जो बोलकर भी बताएगा
+
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(content: Text('🔊 एआई टीचर बोलकर समझा रहे हैं...')),
       );
@@ -51,7 +54,6 @@ class _AiCameraScanScreenState extends State<AiCameraScanScreen> {
         padding: const EdgeInsets.all(16.0),
         child: Column(
           children: [
-            // कैमरा व्यूफाइंडर जैसा बॉक्स
             Expanded(
               flex: 2,
               child: Container(
@@ -87,7 +89,6 @@ class _AiCameraScanScreenState extends State<AiCameraScanScreen> {
               ),
             ),
             const SizedBox(height: 20),
-            // स्कैन किए गए प्रश्न और उत्तर का नीचे वाला बॉक्स
             Expanded(
               flex: 3,
               child: Container(
@@ -122,7 +123,6 @@ class _AiCameraScanScreenState extends State<AiCameraScanScreen> {
                       else ...[
                         Text(_scannedQuestion, style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 15)),
                         const SizedBox(height: 10),
-                        // यहाँ विजुअल चित्र या आइकन भी दिखेगा
                         Row(
                           children: [
                             Container(
