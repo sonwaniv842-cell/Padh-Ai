@@ -1,4 +1,4 @@
-name: Build Android APK
+name: Build APK
 
 on:
   push:
@@ -8,7 +8,6 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
-
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
@@ -22,16 +21,24 @@ jobs:
       - name: Set up Flutter
         uses: subosito/flutter-action@v2
         with:
-          flutter-version: '3.19.0'
           channel: 'stable'
 
-      - name: Create Android Folder
-        run: flutter create . --platforms=android --project-name=padh_ai --org com.example.padhai
+      - name: Create android folder
+        run: flutter create --platforms=android --org com.padhai .
+
+      - name: Fix manifest & minSdk
+        run: |
+          M=android/app/src/main/AndroidManifest.xml
+          grep -q "permission.INTERNET" $M || \
+            sed -i 's|<application|<uses-permission android:name="android.permission.INTERNET"/>\n    <application|' $M
+          [ -f android/app/build.gradle.kts ] && \
+            sed -i 's/minSdk = flutter.minSdkVersion/minSdk = 21/' android/app/build.gradle.kts || true
+          [ -f android/app/build.gradle ] && \
+            sed -i 's/minSdkVersion flutter.minSdkVersion/minSdkVersion 21/' android/app/build.gradle || true
+          cat $M
 
       - name: Install dependencies
-        run: |
-          flutter clean
-          flutter pub get
+        run: flutter pub get
 
       - name: Build APK Release
         run: flutter build apk --release
@@ -39,5 +46,5 @@ jobs:
       - name: Upload APK Artifact
         uses: actions/upload-artifact@v4
         with:
-          name: app-release
+          name: app-release-apk
           path: build/app/outputs/flutter-apk/app-release.apk
