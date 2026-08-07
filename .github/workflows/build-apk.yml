@@ -24,7 +24,7 @@ jobs:
           channel: 'stable'
 
       - name: Create android folder
-        run: flutter create --platforms=android --org com.padhai .
+        run: flutter create --platforms=android --org com.padhai --project-name padh_ai .
 
       - name: Fix manifest & minSdk
         run: |
