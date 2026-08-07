@@ -26,14 +26,15 @@ jobs:
       - name: Create android folder
         run: flutter create --platforms=android --org com.padhai --project-name padh_ai .
 
-      - name: Fix manifest & minSdk
+      - name: Fix android settings
         run: |
           M=android/app/src/main/AndroidManifest.xml
+          B=android/app/build.gradle.kts
           grep -q "permission.INTERNET" $M || \
             sed -i 's|<application|<uses-permission android:name="android.permission.INTERNET"/>\n    <application|' $M
-          B=android/app/build.gradle.kts
+          sed -i 's|android:label="[^"]*"|android:label="Padh-Ai"|' $M
           sed -i 's|minSdk = flutter.minSdkVersion|minSdk = 23|' $B
-          sed -i 's|android:label=".*"|android:label="Padh-Ai"|' $M
+          echo "--- manifest ---" && cat $M
 
       - name: Install dependencies
         run: flutter pub get
@@ -50,15 +51,12 @@ jobs:
           name: app-release-apk
           path: padh-ai.apk
 
-      # 🌟 यहाँ से स्थायी डाउनलोड लिंक बनता है
       - name: Publish Release
         uses: softprops/action-gh-release@v2
         with:
           tag_name: latest
           name: "Padh-Ai — नवीनतम संस्करण"
-          body: |
-            ## 📱 Padh-Ai ऐप डाउनलोड करें
-            नीचे **padh-ai.apk** पर टैप करके डाउनलोड करें।
+          body: "📱 नीचे padh-ai.apk पर टैप करके डाउनलोड करें।"
           files: padh-ai.apk
           make_latest: true
         env:
