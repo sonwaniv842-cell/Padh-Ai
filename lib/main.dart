@@ -5,7 +5,7 @@ import 'package:url_launcher/url_launcher.dart';
 
 // --- CONFIG ---
 const supabaseUrl = 'https://tyonurrbwdjqfrmqrgpk.supabase.co';
-const supabaseAnonKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InR5b251cnJid2RqcWZybXFyZ3BrIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDAzODU1NzksImV4cCI6MjA1NTk2MTU3OX0.aD4e71Hl74L_B5j65lK2I9w0I2jL0Z828Z458L99I20'; 
+const supabaseAnonKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InR5b251cnJid2RqcWZybXFyZ3BrIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDAzODU1NzksImV4cCI6MjA1NTk2MTU3OX0.aD4e71Hl74L_B5j65lK2I9w0I2jL0Z828Z458L99I20';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -17,6 +17,7 @@ final supabase = Supabase.instance.client;
 
 class PadhAIApp extends StatelessWidget {
   const PadhAIApp({super.key});
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -37,6 +38,7 @@ class PadhAIApp extends StatelessWidget {
 // --- 1. AUTH SCREEN (LOGIN + SIGNUP TOGGLE) ---
 class AuthScreen extends StatefulWidget {
   const AuthScreen({super.key});
+
   @override
   State<AuthScreen> createState() => _AuthScreenState();
 }
@@ -47,8 +49,8 @@ class _AuthScreenState extends State<AuthScreen> {
   final _nameController = TextEditingController();
   final _pNameController = TextEditingController();
   final _pPhoneController = TextEditingController();
-  
-  bool _isSignUp = true; 
+
+  bool _isSignUp = true;
   bool _isLoading = false;
 
   Future<void> _handleAuth() async {
@@ -60,15 +62,15 @@ class _AuthScreenState extends State<AuthScreen> {
     try {
       if (_isSignUp) {
         final res = await supabase.auth.signUp(
-          email: _emailController.text.trim(), 
-          password: _passController.text.trim()
+          email: _emailController.text.trim(),
+          password: _passController.text.trim(),
         );
         if (res.user != null) {
           await supabase.from('profiles').upsert({
             'id': res.user!.id,
-            'full_name': _nameController.text,
-            'parent_name': _pNameController.text,
-            'parent_phone': _pPhoneController.text,
+            'full_name': _nameController.text.trim(),
+            'parent_name': _pNameController.text.trim(),
+            'parent_phone': _pPhoneController.text.trim(),
           });
         }
       } else {
@@ -77,8 +79,10 @@ class _AuthScreenState extends State<AuthScreen> {
           password: _passController.text.trim(),
         );
       }
-      
-      if (mounted) Navigator.pushReplacement(context, MaterialPageRoute(builder: (c) => const MainContainer()));
+
+      if (mounted) {
+        Navigator.pushReplacement(context, MaterialPageRoute(builder: (c) => const MainContainer()));
+      }
     } catch (e) {
       _showMsg("त्रुटि: $e");
     } finally {
@@ -99,22 +103,25 @@ class _AuthScreenState extends State<AuthScreen> {
             const Text("Padh AI", style: TextStyle(fontSize: 40, fontWeight: FontWeight.bold, color: Color(0xFF6C63FF))),
             Text(_isSignUp ? "नया अकाउंट बनायें" : "अपने अकाउंट में लॉगिन करें", style: const TextStyle(color: Colors.grey)),
             const SizedBox(height: 40),
-            
+
             if (_isSignUp) ...[
               _buildField(_nameController, "छात्र का नाम", Icons.person),
               _buildField(_pNameController, "पिता/अभिभावक का नाम", Icons.people),
               _buildField(_pPhoneController, "WhatsApp नंबर", Icons.chat),
             ],
-            
+
             _buildField(_emailController, "ईमेल आईडी", Icons.email),
             _buildField(_passController, "पासवर्ड", Icons.lock, isPass: true),
-            
+
             const SizedBox(height: 25),
-            _isLoading 
-              ? const CircularProgressIndicator() 
-              : SizedBox(width: double.infinity, height: 55, 
-                  child: ElevatedButton(onPressed: _handleAuth, child: Text(_isSignUp ? "रजिस्टर करें" : "लॉगिन करें"))),
-            
+            _isLoading
+                ? const CircularProgressIndicator()
+                : SizedBox(
+                    width: double.infinity,
+                    height: 55,
+                    child: ElevatedButton(onPressed: _handleAuth, child: Text(_isSignUp ? "रजिस्टर करें" : "लॉगिन करें")),
+                  ),
+
             TextButton(
               onPressed: () => setState(() => _isSignUp = !_isSignUp),
               child: Text(_isSignUp ? "पहले से अकाउंट है? लॉगिन करें" : "नया अकाउंट बनाना है? रजिस्टर करें"),
@@ -132,9 +139,9 @@ class _AuthScreenState extends State<AuthScreen> {
         controller: controller,
         obscureText: isPass,
         decoration: InputDecoration(
-          labelText: label, 
-          prefixIcon: Icon(icon, color: const Color(0xFF6C63FF)), 
-          border: OutlineInputBorder(borderRadius: BorderRadius.circular(15))
+          labelText: label,
+          prefixIcon: Icon(icon, color: const Color(0xFF6C63FF)),
+          border: OutlineInputBorder(borderRadius: BorderRadius.circular(15)),
         ),
       ),
     );
@@ -144,6 +151,7 @@ class _AuthScreenState extends State<AuthScreen> {
 // --- 2. MAIN DASHBOARD ---
 class MainContainer extends StatefulWidget {
   const MainContainer({super.key});
+
   @override
   State<MainContainer> createState() => _MainContainerState();
 }
@@ -163,8 +171,11 @@ class _MainContainerState extends State<MainContainer> {
     try {
       final user = supabase.auth.currentUser;
       if (user != null) {
-        final data = await supabase.from('profiles').select().eq('id', user.id).single();
-        setState(() { userProfile = data; _isLoading = false; });
+        final data = await supabase.from('profiles').select().eq('id', user.id).maybeSingle();
+        setState(() {
+          userProfile = data;
+          _isLoading = false;
+        });
       }
     } catch (e) {
       setState(() => _isLoading = false);
@@ -182,17 +193,31 @@ class _MainContainerState extends State<MainContainer> {
     if (_isLoading) return const Scaffold(body: Center(child: CircularProgressIndicator()));
 
     return Scaffold(
-      appBar: AppBar(title: const Text("Padh AI Home"), actions: [
-        IconButton(icon: const Icon(Icons.logout), onPressed: () async {
-          await supabase.auth.signOut();
-          if (mounted) Navigator.pushReplacement(context, MaterialPageRoute(builder: (c) => const AuthScreen()));
-        })
-      ]),
+      appBar: AppBar(
+        title: const Text("Padh AI Home"),
+        actions: [
+          IconButton(
+            icon: const Icon(Icons.logout),
+            onPressed: () async {
+              await supabase.auth.signOut();
+              if (mounted) {
+                Navigator.pushReplacement(context, MaterialPageRoute(builder: (c) => const AuthScreen()));
+              }
+            },
+          )
+        ],
+      ),
       body: SingleChildScrollView(
         child: Column(
           children: [
-            Container(height: 150, width: double.infinity, color: Colors.deepPurple, child: const Center(child: Text("Padh AI Scholarship", style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold)))),
-            
+            Container(
+              height: 150,
+              width: double.infinity,
+              color: Colors.deepPurple,
+              child: const Center(
+                child: Text("Padh AI Scholarship", style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
+              ),
+            ),
             Padding(
               padding: const EdgeInsets.all(15),
               child: Card(
@@ -204,7 +229,10 @@ class _MainContainerState extends State<MainContainer> {
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
                           const Text("पैरेंट्स के लिए संदेश", style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
-                          IconButton(icon: const Icon(Icons.volume_up, size: 30, color: Colors.blueAccent), onPressed: _speakTrustMessage),
+                          IconButton(
+                            icon: const Icon(Icons.volume_up, size: 30, color: Colors.blueAccent),
+                            onPressed: _speakTrustMessage,
+                          ),
                         ],
                       ),
                       const Text("हम पढ़ाई के लिए ₹1 भी फीस नहीं लेते। टेस्ट फीस ₹50 बच्चों के भविष्य के इनामों के लिए है।"),
@@ -213,12 +241,11 @@ class _MainContainerState extends State<MainContainer> {
                 ),
               ),
             ),
-
             Padding(
               padding: const EdgeInsets.all(15),
-              child: userProfile?['has_paid'] == true 
-                ? const Card(child: ListTile(leading: Icon(Icons.check_circle, color: Colors.green), title: Text("एग्जाम अनलॉक है ✅")))
-                : const Card(child: ListTile(leading: Icon(Icons.lock, color: Colors.red), title: Text("एग्जाम लॉक है (₹50 फीस लंबित)"))),
+              child: userProfile?['has_paid'] == true
+                  ? const Card(child: ListTile(leading: Icon(Icons.check_circle, color: Colors.green), title: Text("एग्जाम अनलॉक है ✅")))
+                  : const Card(child: ListTile(leading: Icon(Icons.lock, color: Colors.red), title: Text("एग्जाम लॉक है (₹50 फीस लंबित)"))),
             ),
           ],
         ),
