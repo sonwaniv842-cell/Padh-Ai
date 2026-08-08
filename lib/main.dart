@@ -4,7 +4,7 @@ import 'package:supabase_flutter/supabase_flutter.dart';
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
-  // Supabase Initialized with correct URL & Original Anonymous JWT Key
+  // Supabase Initialized with Original Anonymous JWT Key
   await Supabase.initialize(
     url: 'https://tyonurrbwdjqfrmqrgpk.supabase.co',
     anonKey: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InR5b251cnJid2RqcWZybXFyZ3BrIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODYxNzMzODMsImV4cCI6MjEwMTc0OTM4M30.95tDST7gwxemb2w2SS71arWh77omlFf0ezPwkTun2cM',
@@ -30,7 +30,7 @@ class MyApp extends StatelessWidget {
   }
 }
 
-// --- 1. ऑथेंटिक स्क्रीन (लॉगिन / एडमिन / रजिस्टर) ---
+// --- 1. ऑथेंटिकेशन स्क्रीन (लॉगिन / एडमिन / रजिस्टर) ---
 class AuthScreen extends StatefulWidget {
   const AuthScreen({super.key});
 
@@ -339,16 +339,99 @@ class _AuthScreenState extends State<AuthScreen> {
   }
 }
 
-// --- 2. होम स्क्रीन एवं डिजिटल पहाड़ा डैशबोर्ड ---
-class HomeScreen extends StatelessWidget {
+// --- 2. होम स्क्रीन (एडमिन और स्टूडेंट दोनों के लिए अलग वॉलेट व UPI QR कंट्रोल) ---
+class HomeScreen extends StatefulWidget {
   final bool isAdmin;
   const HomeScreen({super.key, required this.isAdmin});
+
+  @override
+  State<HomeScreen> createState() => _HomeScreenState();
+}
+
+class _HomeScreenState extends State<HomeScreen> {
+  // एडमिन द्वारा सेट किया जाने वाला UPI QR डेटा
+  String adminUpiId = "sonwaniv842@okaxis";
+
+  void _openQrDialog() {
+    final upiController = TextEditingController(text: adminUpiId);
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        backgroundColor: const Color(0xFF1E293B),
+        title: Text(
+          widget.isAdmin ? '🔲 एडमिन UPI QR कंट्रोल' : '💳 एडमिन UPI QR कोड',
+          style: const TextStyle(color: Colors.white),
+        ),
+        content: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            if (widget.isAdmin) ...[
+              const Text(
+                'अपना UPI ID दर्ज करें जो छात्रों को दिखेगा:',
+                style: TextStyle(color: Colors.white70, fontSize: 13),
+              ),
+              const SizedBox(height: 12),
+              TextField(
+                controller: upiController,
+                style: const TextStyle(color: Colors.white),
+                decoration: InputDecoration(
+                  labelText: 'एडमिन UPI ID',
+                  labelStyle: const TextStyle(color: Colors.grey),
+                  filled: true,
+                  fillColor: const Color(0xFF0F172A),
+                  border: OutlineInputBorder(borderRadius: BorderRadius.circular(10)),
+                ),
+              ),
+            ] else ...[
+              Container(
+                padding: const EdgeInsets.all(16),
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: BorderRadius.circular(12),
+                ),
+                child: Icon(Icons.qr_code_2, size: 160, color: Colors.black87),
+              ),
+              const SizedBox(height: 12),
+              Text(
+                'UPI ID: $adminUpiId',
+                style: const TextStyle(color: Colors.tealAccent, fontWeight: FontWeight.bold, fontSize: 16),
+              ),
+              const SizedBox(height: 4),
+              const Text(
+                'पेमेंट करने के बाद एडमिन को स्क्रीनशॉट भेजें।',
+                style: TextStyle(color: Colors.white54, fontSize: 12),
+              ),
+            ]
+          ],
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(context),
+            child: const Text('बंद करें', style: TextStyle(color: Colors.grey)),
+          ),
+          if (widget.isAdmin)
+            ElevatedButton(
+              onPressed: () {
+                setState(() {
+                  adminUpiId = upiController.text.trim();
+                });
+                Navigator.pop(context);
+                ScaffoldMessenger.of(context).showSnackBar(
+                  const SnackBar(content: Text('एडमिन UPI QR अपडेट कर दिया गया है! 🎉')),
+                );
+              },
+              child: const Text('सेव करें'),
+            ),
+        ],
+      ),
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text(isAdmin ? 'Padh AI Admin Dashboard' : 'Padh AI - डिजिटल पढ़ाई'),
+        title: Text(widget.isAdmin ? 'Padh AI - Admin Dashboard' : 'Padh AI - Student Home'),
         backgroundColor: const Color(0xFF1E293B),
         actions: [
           IconButton(
@@ -368,13 +451,15 @@ class HomeScreen extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAlignment.start,
           children: [
-            // Welcome Card
+            // Dashboard Welcome & Wallet Banner
             Container(
               width: double.infinity,
               padding: const EdgeInsets.all(20),
               decoration: BoxDecoration(
-                gradient: const LinearGradient(
-                  colors: [Colors.deepPurple, Colors.indigo],
+                gradient: LinearGradient(
+                  colors: widget.isAdmin 
+                      ? [Colors.amber.shade900, Colors.deepOrange.shade800]
+                      : [Colors.deepPurple, Colors.indigo],
                 ),
                 borderRadius: BorderRadius.circular(16),
               ),
@@ -382,13 +467,55 @@ class HomeScreen extends StatelessWidget {
                 crossAxisAlignment: CrossAlignment.start,
                 children: [
                   Text(
-                    isAdmin ? 'स्वागत है, एडमिन सर! 👋' : 'नमस्ते छात्र! Padh AI में स्वागत है 📚',
+                    widget.isAdmin ? 'स्वागत है, एडमिन सर! 👋' : 'नमस्ते छात्र! Padh AI में स्वागत है 📚',
                     style: const TextStyle(fontSize: 22, fontWeight: FontWeight.bold, color: Colors.white),
                   ),
-                  const SizedBox(height: 8),
-                  Text(
-                    isAdmin ? 'यहाँ से आप अपने सभी बच्चों और डेटा को मैनेज कर सकते हैं।' : 'आइए आज कुछ नया और मजेदार सीखते हैं!',
-                    style: const TextStyle(color: Colors.white70, fontSize: 14),
+                  const SizedBox(height: 16),
+
+                  // Wallet Container
+                  Container(
+                    padding: const EdgeInsets.all(14),
+                    decoration: BoxDecoration(
+                      color: Colors.black26,
+                      borderRadius: BorderRadius.circular(12),
+                    ),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Row(
+                          children: [
+                            Icon(
+                              widget.isAdmin ? Icons.account_balance : Icons.account_balance_wallet,
+                              color: Colors.amberAccent,
+                              size: 28,
+                            ),
+                            const SizedBox(width: 10),
+                            Column(
+                              crossAxisAlignment: CrossAlignment.start,
+                              children: [
+                                Text(
+                                  widget.isAdmin ? 'Admin Earnings Wallet' : 'Student Wallet',
+                                  style: const TextStyle(color: Colors.white70, fontSize: 13),
+                                ),
+                                const Text(
+                                  '₹ 0.00',
+                                  style: TextStyle(color: Colors.amberAccent, fontWeight: FontWeight.bold, fontSize: 20),
+                                ),
+                              ],
+                            ),
+                          ],
+                        ),
+                        ElevatedButton.icon(
+                          onPressed: _openQrDialog,
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: Colors.tealAccent.shade700,
+                            foregroundColor: Colors.white,
+                          ),
+                          icon: Icon(widget.isAdmin ? Icons.edit : Icons.qr_code, size: 18),
+                          label: Text(widget.isAdmin ? 'QR बदलें' : 'पे करें'),
+                        ),
+                      ],
+                    ),
                   ),
                 ],
               ),
@@ -396,19 +523,31 @@ class HomeScreen extends StatelessWidget {
             const SizedBox(height: 24),
 
             const Text(
-              'सीखने के विकल्प (Modules)',
+              'मुख्य फीचर्स (Modules)',
               style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: Colors.white),
             ),
             const SizedBox(height: 16),
 
-            // डिजिटल पहाड़ा Card
+            // Admin Barcode & QR Management Option (If Admin)
+            if (widget.isAdmin) ...[
+              _buildFeatureCard(
+                context,
+                title: '🔲 एडमिन बारकोड व UPI QR सेटअप',
+                description: 'छात्रों के भुगतान के लिए अपना QR कोड अपडेट करें।',
+                icon: Icons.qr_code_scanner,
+                color: Colors.amberAccent,
+                onTap: _openQrDialog,
+              ),
+              const SizedBox(height: 16),
+            ],
+
+            // Digital Pahada
             _buildFeatureCard(
               context,
-              title: '📖 डिजिटल पहाड़ा (Pahada Book)',
-              description: '1 से 20 तक के पहाड़े बोलकर और देखकर सीखें।',
-              icon: Icons.menu_book_rounded,
+              title: '📖 डिजिटल पहाड़ा (Interactive)',
+              description: '1 से 20 तक का डिजिटल पहाड़ा सीखें।',
+              icon: Icons.calculate,
               color: Colors.orangeAccent,
-              imageAsset: 'assets/padh-ai-pahada-book.jpg',
               onTap: () {
                 Navigator.push(
                   context,
@@ -418,17 +557,16 @@ class HomeScreen extends StatelessWidget {
             ),
             const SizedBox(height: 16),
 
-            // AI रीडिंग क्लास
+            // Online Pahada
             _buildFeatureCard(
               context,
-              title: '🤖 AI रीडिंग क्लास',
-              description: 'बच्चों के लिए कहानियाँ और पढ़ने की प्रैक्टिस।',
-              icon: Icons.record_voice_over,
-              color: Colors.tealAccent,
-              imageAsset: 'assets/padh-ai-child-reading.jpg',
+              title: '🌐 ऑनलाइन पहाड़ा (Online View)',
+              description: 'इंटरनेट के जरिए ऑनलाइन टेबल्स देखें।',
+              icon: Icons.language,
+              color: Colors.blueAccent,
               onTap: () {
                 ScaffoldMessenger.of(context).showSnackBar(
-                  const SnackBar(content: Text('AI रीडिंग क्लास जल्द ही शुरू हो रही है!')),
+                  const SnackBar(content: Text('ऑनलाइन पहाड़ा पेज खुल रहा है...')),
                 );
               },
             ),
@@ -444,7 +582,6 @@ class HomeScreen extends StatelessWidget {
     required String description,
     required IconData icon,
     required Color color,
-    required String imageAsset,
     required VoidCallback onTap,
   }) {
     return Card(
@@ -452,18 +589,9 @@ class HomeScreen extends StatelessWidget {
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
       child: ListTile(
         contentPadding: const EdgeInsets.all(16),
-        leading: ClipRRect(
-          borderRadius: BorderRadius.circular(12),
-          child: Image.asset(
-            imageAsset,
-            width: 50,
-            height: 50,
-            fit: BoxFit.cover,
-            errorBuilder: (context, error, stackTrace) => CircleAvatar(
-              backgroundColor: color.withOpacity(0.2),
-              child: Icon(icon, color: color),
-            ),
-          ),
+        leading: CircleAvatar(
+          backgroundColor: color.withOpacity(0.2),
+          child: Icon(icon, color: color),
         ),
         title: Text(title, style: const TextStyle(fontWeight: FontWeight.bold, color: Colors.white, fontSize: 16)),
         subtitle: Text(description, style: const TextStyle(color: Colors.grey, fontSize: 13)),
