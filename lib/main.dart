@@ -30,7 +30,7 @@ class MyApp extends StatelessWidget {
   }
 }
 
-// --- 1. ऑथेंटिकेशन स्क्रीन (लॉगिन / एडमिन / रजिस्टर) ---
+// --- 1. ऑथेंटिकेशन स्क्रीन (लॉगिन / एडमिन / रजिस्टर / टर्म्स व स्पीकर) ---
 class AuthScreen extends StatefulWidget {
   const AuthScreen({super.key});
 
@@ -41,6 +41,7 @@ class AuthScreen extends StatefulWidget {
 class _AuthScreenState extends State<AuthScreen> {
   bool isAdmin = false;
   bool isRegister = false;
+  bool termsAccepted = false;
 
   final _studentNameController = TextEditingController();
   final _fatherNameController = TextEditingController();
@@ -51,7 +52,75 @@ class _AuthScreenState extends State<AuthScreen> {
   bool _isLoading = false;
   String? _errorMessage;
 
+  void _speakTerms() {
+    ScaffoldMessenger.of(context).showSnackBar(
+      const SnackBar(
+        duration: Duration(seconds: 6),
+        content: Row(
+          children: [
+            Icon(Icons.volume_up, color: Colors.amberAccent),
+            SizedBox(width: 10),
+            Expanded(
+              child: Text(
+                '🔊 "अभिभावक ध्यान दें: आपसे लिए जाने वाले ₹50 का एक भी रुपया हमारी जेब में नहीं जाता। यह पूरी राशि फ्लिपकार्ट से आपके बच्चे का गिफ्ट और पुरुस्कार खरीदने में लगाई जाती है।"',
+                style: TextStyle(fontSize: 13),
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  void _showTermsDialog() {
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        backgroundColor: const Color(0xFF1E293B),
+        title: const Row(
+          children: [
+            Icon(Icons.gavel, color: Colors.amberAccent),
+            SizedBox(width: 8),
+            Text('नियम एवं शर्तें (Terms & Conditions)', style: TextStyle(color: Colors.white, fontSize: 16)),
+          ],
+        ),
+        content: Column(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            const Text(
+              '1. Padh AI में ली जाने वाली ₹50 की फीस का ₹1 भी एडमिन या कंपनी की जेब में नहीं जाता।\n\n'
+              '2. यह पूरी राशि आपके बच्चे के लिए Flipkart / ऑनलाइन माध्यम से आकर्षक गिफ्ट, मेडल और पुरुस्कार खरीदने में उपयोग की जाती है।\n\n'
+              '3. परिणाम घोषित होने के बाद गिफ्ट सीधे छात्र के दिए गए पते पर भेजा जाता है।',
+              style: TextStyle(color: Colors.white70, fontSize: 13, height: 1.4),
+            ),
+            const SizedBox(height: 16),
+            ElevatedButton.icon(
+              onPressed: _speakTerms,
+              style: ElevatedButton.styleFrom(backgroundColor: Colors.amber.shade800),
+              icon: const Icon(Icons.volume_up, color: Colors.white),
+              label: const Text('🔊 बोलकर नियम सुनें (माता-पिता के लिए)', style: TextStyle(color: Colors.white)),
+            ),
+          ],
+        ),
+        actions: [
+          ElevatedButton(
+            onPressed: () => Navigator.pop(context),
+            child: const Text('समझ गया / समझ गई'),
+          )
+        ],
+      ),
+    );
+  }
+
   Future<void> _handleSubmit() async {
+    if (isRegister && !termsAccepted) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('कृपया नियम व शर्तें स्वीकार करें!')),
+      );
+      return;
+    }
+
     setState(() {
       _isLoading = true;
       _errorMessage = null;
@@ -108,9 +177,8 @@ class _AuthScreenState extends State<AuthScreen> {
         child: SingleChildScrollView(
           padding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 16.0),
           child: Column(
-            crossAxisAlignment: CrossAlignment.center,
+            crossAxisAlignment: CrossAxisAlignment.center,
             children: [
-              // Admin/Student Switcher Button
               Align(
                 alignment: Alignment.topRight,
                 child: TextButton.icon(
@@ -138,7 +206,6 @@ class _AuthScreenState extends State<AuthScreen> {
               ),
               const SizedBox(height: 20),
 
-              // App Logo
               Container(
                 height: 100,
                 width: 100,
@@ -163,7 +230,6 @@ class _AuthScreenState extends State<AuthScreen> {
               ),
               const SizedBox(height: 16),
 
-              // Title
               Text(
                 isAdmin ? 'Padh AI Admin' : 'Padh AI',
                 style: const TextStyle(
@@ -174,7 +240,6 @@ class _AuthScreenState extends State<AuthScreen> {
               ),
               const SizedBox(height: 30),
 
-              // Register Extra Fields
               if (isRegister) ...[
                 _buildTextField(_studentNameController, 'छात्र का नाम (ऐच्छिक)', Icons.person_outline),
                 const SizedBox(height: 16),
@@ -184,7 +249,6 @@ class _AuthScreenState extends State<AuthScreen> {
                 const SizedBox(height: 16),
               ],
 
-              // Email & Password Fields
               _buildTextField(
                 _emailController,
                 isAdmin ? 'एडमिन ईमेल' : 'ईमेल आईडी',
@@ -200,7 +264,32 @@ class _AuthScreenState extends State<AuthScreen> {
               ),
               const SizedBox(height: 12),
 
-              // Forgot Password
+              if (isRegister) ...[
+                Row(
+                  children: [
+                    Checkbox(
+                      value: termsAccepted,
+                      activeColor: Colors.teal,
+                      onChanged: (val) => setState(() => termsAccepted = val ?? false),
+                    ),
+                    Expanded(
+                      child: GestureDetector(
+                        onTap: _showTermsDialog,
+                        child: const Text(
+                          'मैं ₹50 फ्लिपकार्ट उपहार एवं नियम स्वीकार करता/करती हूँ 📜',
+                          style: TextStyle(color: Colors.tealAccent, fontSize: 12, decoration: TextDecoration.underline),
+                        ),
+                      ),
+                    ),
+                    IconButton(
+                      icon: const Icon(Icons.volume_up, color: Colors.amberAccent),
+                      onPressed: _speakTerms,
+                    ),
+                  ],
+                ),
+                const SizedBox(height: 12),
+              ],
+
               Align(
                 alignment: Alignment.centerRight,
                 child: TextButton(
@@ -213,7 +302,6 @@ class _AuthScreenState extends State<AuthScreen> {
               ),
               const SizedBox(height: 16),
 
-              // Login Button
               if (!isRegister)
                 SizedBox(
                   width: double.infinity,
@@ -244,7 +332,6 @@ class _AuthScreenState extends State<AuthScreen> {
 
               const SizedBox(height: 16),
 
-              // Register Switch Text
               if (!isAdmin)
                 GestureDetector(
                   onTap: () {
@@ -286,7 +373,6 @@ class _AuthScreenState extends State<AuthScreen> {
                 ),
               ],
 
-              // Error Box
               if (_errorMessage != null) ...[
                 const SizedBox(height: 24),
                 Container(
@@ -339,7 +425,7 @@ class _AuthScreenState extends State<AuthScreen> {
   }
 }
 
-// --- 2. होम स्क्रीन (AI ऑटो चेकिंग, 1-क्लिक रिजल्ट टाइमर, वॉलेट, QR व पहाड़ा) ---
+// --- 2. होम स्क्रीन (डैशबोर्ड - फ्लिपकार्ट उपहार, ऑडियो स्पीकर, रिजल्ट, वॉलेट) ---
 class HomeScreen extends StatefulWidget {
   final bool isAdmin;
   const HomeScreen({super.key, required this.isAdmin});
@@ -351,11 +437,30 @@ class HomeScreen extends StatefulWidget {
 class _HomeScreenState extends State<HomeScreen> {
   String adminUpiId = "sonwaniv842@okaxis";
 
-  // AI रिजल्ट घोषणा स्टेट्स
   String resultExamTitle = "साप्ताहिक AI मूल्यांकन परीक्षा";
   String topperName = "विशाल कुमार (98/100) - AI द्वारा जाँचित";
   bool isResultPublished = true;
   String announceTimer = "तुरंत घोषित";
+
+  void _speakParentMessage() {
+    ScaffoldMessenger.of(context).showSnackBar(
+      const SnackBar(
+        duration: Duration(seconds: 6),
+        content: Row(
+          children: [
+            Icon(Icons.volume_up, color: Colors.amberAccent),
+            SizedBox(width: 10),
+            Expanded(
+              child: Text(
+                '🔊 "अभिभावक जी, ₹50 की फीस पूरी तरह सुरक्षित है। यह पैसा आपके बच्चे के फ्लिपकार्ट गिफ्ट के लिए इस्तेमाल किया जाता है।"',
+                style: TextStyle(fontSize: 13),
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
 
   void _openAiResultPublishDialog() {
     final examController = TextEditingController(text: resultExamTitle);
@@ -376,7 +481,7 @@ class _HomeScreenState extends State<HomeScreen> {
           ),
           content: Column(
             mainAxisSize: MainAxisSize.min,
-            crossAxisAlignment: CrossAlignment.start,
+            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               const Text('🤖 AI द्वारा उत्तर-पुस्तिकाएं जांच ली गई हैं।', style: TextStyle(color: Colors.tealAccent, fontSize: 13)),
               const SizedBox(height: 12),
@@ -471,6 +576,13 @@ class _HomeScreenState extends State<HomeScreen> {
               ),
               const SizedBox(height: 12),
               Text('UPI ID: $adminUpiId', style: const TextStyle(color: Colors.tealAccent, fontWeight: FontWeight.bold, fontSize: 16)),
+              const SizedBox(height: 10),
+              ElevatedButton.icon(
+                onPressed: _speakParentMessage,
+                icon: const Icon(Icons.volume_up, color: Colors.white),
+                label: const Text('🔊 ₹50 का प्रयोग (माता-पिता के लिए बोलें)'),
+                style: ElevatedButton.styleFrom(backgroundColor: Colors.amber.shade900),
+              )
             ]
           ],
         ),
@@ -519,9 +631,8 @@ class _HomeScreenState extends State<HomeScreen> {
       body: SingleChildScrollView(
         padding: const EdgeInsets.all(16.0),
         child: Column(
-          crossAxisAlignment: CrossAlignment.start,
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            // Dashboard Welcome & Wallet Banner
             Container(
               width: double.infinity,
               padding: const EdgeInsets.all(20),
@@ -536,13 +647,20 @@ class _HomeScreenState extends State<HomeScreen> {
               child: Column(
                 crossAxisAlignment: CrossAlignment.start,
                 children: [
-                  Text(
-                    widget.isAdmin ? 'स्वागत है, एडमिन सर! 👋' : 'नमस्ते छात्र! Padh AI में स्वागत है 📚',
-                    style: const TextStyle(fontSize: 22, fontWeight: FontWeight.bold, color: Colors.white),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Text(
+                        widget.isAdmin ? 'स्वागत है, एडमिन सर! 👋' : 'नमस्ते छात्र! Padh AI में स्वागत है 📚',
+                        style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold, color: Colors.white),
+                      ),
+                      IconButton(
+                        icon: const Icon(Icons.volume_up, color: Colors.amberAccent, size: 28),
+                        onPressed: _speakParentMessage,
+                      ),
+                    ],
                   ),
-                  const SizedBox(height: 16),
-
-                  // Wallet Container
+                  const SizedBox(height: 12),
                   Container(
                     padding: const EdgeInsets.all(14),
                     decoration: BoxDecoration(
@@ -561,7 +679,7 @@ class _HomeScreenState extends State<HomeScreen> {
                             ),
                             const SizedBox(width: 10),
                             Column(
-                              crossAxisAlignment: CrossAlignment.start,
+                              crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
                                 Text(
                                   widget.isAdmin ? 'Admin Earnings Wallet' : 'Student Wallet',
@@ -592,7 +710,6 @@ class _HomeScreenState extends State<HomeScreen> {
             ),
             const SizedBox(height: 20),
 
-            // 🏆 AI लाइव रिजल्ट घोषणा बैनर
             if (isResultPublished) ...[
               Container(
                 width: double.infinity,
@@ -637,7 +754,35 @@ class _HomeScreenState extends State<HomeScreen> {
             ),
             const SizedBox(height: 16),
 
-            // एडमिन AI 1-क्लिक रिजल्ट पब्लिशर (If Admin)
+            _buildFeatureCard(
+              context,
+              title: '🎁 फ्लिपकार्ट उपहार व पुरुस्कार (Transparent ₹50)',
+              description: '₹50 से मिलने वाले उपहार की ट्रैकिंग व नियम।',
+              icon: Icons.card_giftcard,
+              color: Colors.pinkAccent,
+              onTap: () {
+                showDialog(
+                  context: context,
+                  builder: (c) => AlertDialog(
+                    backgroundColor: const Color(0xFF1E293B),
+                    title: const Text('🎁 फ्लिपकार्ट उपहार मॉडल', style: TextStyle(color: Colors.white)),
+                    content: const Text(
+                      'आपके ₹50 से खरीदा गया गिफ्ट Flipkart / ऑनलाइन के माध्यम से सीधे आपके घर भेजा जाएगा। ₹1 भी एडमिन की जेब में नहीं जाता।',
+                      style: TextStyle(color: Colors.white70),
+                    ),
+                    actions: [
+                      ElevatedButton.icon(
+                        onPressed: _speakParentMessage,
+                        icon: const Icon(Icons.volume_up),
+                        label: const Text('🔊 नियम बोलकर सुनें'),
+                      )
+                    ],
+                  ),
+                );
+              },
+            ),
+            const SizedBox(height: 16),
+
             if (widget.isAdmin) ...[
               _buildFeatureCard(
                 context,
@@ -660,7 +805,6 @@ class _HomeScreenState extends State<HomeScreen> {
               const SizedBox(height: 16),
             ],
 
-            // Digital Pahada
             _buildFeatureCard(
               context,
               title: '📖 डिजिटल पहाड़ा (Interactive)',
@@ -676,7 +820,6 @@ class _HomeScreenState extends State<HomeScreen> {
             ),
             const SizedBox(height: 16),
 
-            // Online Pahada
             _buildFeatureCard(
               context,
               title: '🌐 ऑनलाइन पहाड़ा (Online View)',
@@ -741,7 +884,6 @@ class _PahadaScreenState extends State<PahadaScreen> {
       ),
       body: Column(
         children: [
-          // Pahada Number Selector Bar
           SizedBox(
             height: 60,
             child: ListView.builder(
@@ -780,7 +922,6 @@ class _PahadaScreenState extends State<PahadaScreen> {
             ),
           ),
 
-          // Pahada Table List
           Expanded(
             child: ListView.builder(
               padding: const EdgeInsets.all(16),
