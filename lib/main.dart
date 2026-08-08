@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
+// ग्लोबल फीस राशि (एडमिन द्वारा परिवर्तन योग्य)
+String globalAppFee = "50";
+
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
-  // Supabase Initialized with Original Anonymous JWT Key
   await Supabase.initialize(
     url: 'https://tyonurrbwdjqfrmqrgpk.supabase.co',
     anonKey: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InR5b251cnJid2RqcWZybXFyZ3BrIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODYxNzMzODMsImV4cCI6MjEwMTc0OTM4M30.95tDST7gwxemb2w2SS71arWh77omlFf0ezPwkTun2cM',
@@ -30,7 +32,7 @@ class MyApp extends StatelessWidget {
   }
 }
 
-// --- 1. ऑथेंटिकेशन स्क्रीन (लॉगिन / एडमिन / रजिस्टर / टर्म्स व स्पीकर) ---
+// --- 1. ऑथेंटिकेशन स्क्रीन (लॉगिन / एडमिन / रजिस्टर / नियम व स्पीकर) ---
 class AuthScreen extends StatefulWidget {
   const AuthScreen({super.key});
 
@@ -54,16 +56,16 @@ class _AuthScreenState extends State<AuthScreen> {
 
   void _speakTerms() {
     ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(
-        duration: Duration(seconds: 6),
+      SnackBar(
+        duration: const Duration(seconds: 6),
         content: Row(
           children: [
-            Icon(Icons.volume_up, color: Colors.amberAccent),
-            SizedBox(width: 10),
+            const Icon(Icons.volume_up, color: Colors.amberAccent),
+            const SizedBox(width: 10),
             Expanded(
               child: Text(
-                '🔊 "अभिभावक ध्यान दें: आपसे लिए जाने वाले ₹50 का एक भी रुपया हमारी जेब में नहीं जाता। यह पूरी राशि फ्लिपकार्ट से आपके बच्चे का गिफ्ट और पुरुस्कार खरीदने में लगाई जाती है।"',
-                style: TextStyle(fontSize: 13),
+                '🔊 "अभिभावक ध्यान दें: आपसे लिए जाने वाले ₹$globalAppFee का एक भी रुपया हमारी जेब में नहीं जाता। यह पूरी राशि फ्लिपकार्ट से आपके बच्चे का गिफ्ट और पुरुस्कार खरीदने में लगाई जाती है।"',
+                style: const TextStyle(fontSize: 13),
               ),
             ),
           ],
@@ -88,11 +90,11 @@ class _AuthScreenState extends State<AuthScreen> {
           mainAxisSize: MainAxisSize.min,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            const Text(
-              '1. Padh AI में ली जाने वाली ₹50 की फीस का ₹1 भी एडमिन या कंपनी की जेब में नहीं जाता।\n\n'
+            Text(
+              '1. Padh AI में ली जाने वाली ₹$globalAppFee की फीस का ₹1 भी एडमिन या कंपनी की जेब में नहीं जाता।\n\n'
               '2. यह पूरी राशि आपके बच्चे के लिए Flipkart / ऑनलाइन माध्यम से आकर्षक गिफ्ट, मेडल और पुरुस्कार खरीदने में उपयोग की जाती है।\n\n'
               '3. परिणाम घोषित होने के बाद गिफ्ट सीधे छात्र के दिए गए पते पर भेजा जाता है।',
-              style: TextStyle(color: Colors.white70, fontSize: 13, height: 1.4),
+              style: const TextStyle(color: Colors.white70, fontSize: 13, height: 1.4),
             ),
             const SizedBox(height: 16),
             ElevatedButton.icon(
@@ -275,9 +277,9 @@ class _AuthScreenState extends State<AuthScreen> {
                     Expanded(
                       child: GestureDetector(
                         onTap: _showTermsDialog,
-                        child: const Text(
-                          'मैं ₹50 फ्लिपकार्ट उपहार एवं नियम स्वीकार करता/करती हूँ 📜',
-                          style: TextStyle(color: Colors.tealAccent, fontSize: 12, decoration: TextDecoration.underline),
+                        child: Text(
+                          'मैं ₹$globalAppFee फ्लिपकार्ट उपहार एवं नियम स्वीकार करता/करती हूँ 📜',
+                          style: const TextStyle(color: Colors.tealAccent, fontSize: 12, decoration: TextDecoration.underline),
                         ),
                       ),
                     ),
@@ -425,7 +427,7 @@ class _AuthScreenState extends State<AuthScreen> {
   }
 }
 
-// --- 2. होम स्क्रीन (डैशबोर्ड - फ्लिपकार्ट उपहार, ऑडियो स्पीकर, रिजल्ट, वॉलेट) ---
+// --- 2. होम स्क्रीन (डैशबोर्ड - एडमिन फीस कंट्रोल, उपहार, स्पीकर, रिजल्ट) ---
 class HomeScreen extends StatefulWidget {
   final bool isAdmin;
   const HomeScreen({super.key, required this.isAdmin});
@@ -444,20 +446,77 @@ class _HomeScreenState extends State<HomeScreen> {
 
   void _speakParentMessage() {
     ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(
-        duration: Duration(seconds: 6),
+      SnackBar(
+        duration: const Duration(seconds: 6),
         content: Row(
           children: [
-            Icon(Icons.volume_up, color: Colors.amberAccent),
-            SizedBox(width: 10),
+            const Icon(Icons.volume_up, color: Colors.amberAccent),
+            const SizedBox(width: 10),
             Expanded(
               child: Text(
-                '🔊 "अभिभावक जी, ₹50 की फीस पूरी तरह सुरक्षित है। यह पैसा आपके बच्चे के फ्लिपकार्ट गिफ्ट के लिए इस्तेमाल किया जाता है।"',
-                style: TextStyle(fontSize: 13),
+                '🔊 "अभिभावक जी, ₹$globalAppFee की फीस पूरी तरह सुरक्षित है। यह पैसा आपके बच्चे के फ्लिपकार्ट गिफ्ट के लिए इस्तेमाल किया जाता है।"'
               ),
             ),
           ],
         ),
+      ),
+    );
+  }
+
+  void _openFeeControlDialog() {
+    final feeController = TextEditingController(text: globalAppFee);
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        backgroundColor: const Color(0xFF1E293B),
+        title: const Row(
+          children: [
+            Icon(Icons.tune, color: Colors.amberAccent),
+            SizedBox(width: 8),
+            Text('⚙️ फीस व गिफ्ट राशि सेटअप', style: TextStyle(color: Colors.white, fontSize: 16)),
+          ],
+        ),
+        content: Column(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            const Text(
+              'यहाँ से आप छात्र की फीस राशि बढ़ा या घटा सकते हैं:',
+              style: TextStyle(color: Colors.white70, fontSize: 13),
+            ),
+            const SizedBox(height: 12),
+            TextField(
+              controller: feeController,
+              keyboardType: TextInputType.number,
+              style: const TextStyle(color: Colors.white),
+              decoration: const InputDecoration(
+                labelText: 'फीस राशि (₹)',
+                labelStyle: TextStyle(color: Colors.grey),
+                filled: true,
+                fillColor: Color(0xFF0F172A),
+                border: OutlineInputBorder(),
+              ),
+            ),
+          ],
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(context),
+            child: const Text('रद्द करें', style: TextStyle(color: Colors.grey)),
+          ),
+          ElevatedButton(
+            onPressed: () {
+              setState(() {
+                globalAppFee = feeController.text.trim();
+              });
+              Navigator.pop(context);
+              ScaffoldMessenger.of(context).showSnackBar(
+                SnackBar(content: Text('फीस राशि बढ़ाकर/घटाकर ₹$globalAppFee सेट कर दी गई है! 🎉')),
+              );
+            },
+            child: const Text('सेव करें'),
+          )
+        ],
       ),
     );
   }
@@ -580,7 +639,7 @@ class _HomeScreenState extends State<HomeScreen> {
               ElevatedButton.icon(
                 onPressed: _speakParentMessage,
                 icon: const Icon(Icons.volume_up, color: Colors.white),
-                label: const Text('🔊 ₹50 का प्रयोग (माता-पिता के लिए बोलें)'),
+                label: Text('🔊 ₹$globalAppFee का प्रयोग (माता-पिता के लिए बोलें)'),
                 style: ElevatedButton.styleFrom(backgroundColor: Colors.amber.shade900),
               )
             ]
@@ -645,7 +704,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 borderRadius: BorderRadius.circular(16),
               ),
               child: Column(
-                crossAxisAlignment: CrossAlignment.start,
+                crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -756,8 +815,8 @@ class _HomeScreenState extends State<HomeScreen> {
 
             _buildFeatureCard(
               context,
-              title: '🎁 फ्लिपकार्ट उपहार व पुरुस्कार (Transparent ₹50)',
-              description: '₹50 से मिलने वाले उपहार की ट्रैकिंग व नियम।',
+              title: '🎁 फ्लिपकार्ट उपहार व पुरुस्कार (Transparent ₹$globalAppFee)',
+              description: '₹$globalAppFee से मिलने वाले उपहार की ट्रैकिंग व नियम।',
               icon: Icons.card_giftcard,
               color: Colors.pinkAccent,
               onTap: () {
@@ -766,9 +825,9 @@ class _HomeScreenState extends State<HomeScreen> {
                   builder: (c) => AlertDialog(
                     backgroundColor: const Color(0xFF1E293B),
                     title: const Text('🎁 फ्लिपकार्ट उपहार मॉडल', style: TextStyle(color: Colors.white)),
-                    content: const Text(
-                      'आपके ₹50 से खरीदा गया गिफ्ट Flipkart / ऑनलाइन के माध्यम से सीधे आपके घर भेजा जाएगा। ₹1 भी एडमिन की जेब में नहीं जाता।',
-                      style: TextStyle(color: Colors.white70),
+                    content: Text(
+                      'आपके ₹$globalAppFee से खरीदा गया गिफ्ट Flipkart / ऑनलाइन के माध्यम से सीधे आपके घर भेजा जाएगा। ₹1 भी एडमिन की जेब में नहीं जाता।',
+                      style: const TextStyle(color: Colors.white70),
                     ),
                     actions: [
                       ElevatedButton.icon(
@@ -784,6 +843,16 @@ class _HomeScreenState extends State<HomeScreen> {
             const SizedBox(height: 16),
 
             if (widget.isAdmin) ...[
+              _buildFeatureCard(
+                context,
+                title: '⚙️ फीस व गिफ्ट राशि कंट्रोल (कम/ज्यादा करें)',
+                description: 'वर्तमान फीस: ₹$globalAppFee (यहाँ से बदलें)।',
+                icon: Icons.tune,
+                color: Colors.purpleAccent,
+                onTap: _openFeeControlDialog,
+              ),
+              const SizedBox(height: 16),
+
               _buildFeatureCard(
                 context,
                 title: '🤖 AI 1-क्लिक रिजल्ट घोषणा (24h/48h Timer)',
