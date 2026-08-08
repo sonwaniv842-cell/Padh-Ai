@@ -454,7 +454,8 @@ class _HomeScreenState extends State<HomeScreen> {
             const SizedBox(width: 10),
             Expanded(
               child: Text(
-                '🔊 "अभिभावक जी, ₹$globalAppFee की फीस पूरी तरह सुरक्षित है। यह पैसा आपके बच्चे के फ्लिपकार्ट गिफ्ट के लिए इस्तेमाल किया जाता है।"'
+                '🔊 "अभिभावक जी, ₹$globalAppFee की फीस पूरी तरह सुरक्षित है। यह पैसा आपके बच्चे के फ्लिपकार्ट गिफ्ट के लिए इस्तेमाल किया जाता है।"',
+                style: const TextStyle(fontSize: 13),
               ),
             ),
           ],
@@ -787,7 +788,7 @@ class _HomeScreenState extends State<HomeScreen> {
                     const SizedBox(width: 12),
                     Expanded(
                       child: Column(
-                        crossAxisAlignment: CrossAlignment.start,
+                        crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Row(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -867,8 +868,8 @@ class _HomeScreenState extends State<HomeScreen> {
                 context,
                 title: '🔲 एडमिन बारकोड व UPI QR सेटअप',
                 description: 'छात्रों के भुगतान के लिए अपना QR कोड अपडेट करें।',
-                icon: Icons.qr_code_scanner,
-                color: Colors.emerald,
+                icon: Icons.teal,
+                color: Colors.teal,
                 onTap: _openQrDialog,
               ),
               const SizedBox(height: 16),
