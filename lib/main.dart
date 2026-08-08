@@ -4,7 +4,7 @@ import 'package:supabase_flutter/supabase_flutter.dart';
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
-  // Supabase Initialized with correct URL & Key
+  // Supabase Initialized with correct URL & Publishable Key
   await Supabase.initialize(
     url: 'https://tyonurrbwdjqfrmqrgpk.supabase.co',
     anonKey: 'Sb_publishable_VSX21HOdkHZTTYvxj7DGTQ_tcyv4gDJ',
@@ -30,6 +30,7 @@ class MyApp extends StatelessWidget {
   }
 }
 
+// --- 1. ऑथेंटिकेशन स्क्रीन (लॉगिन / एडमिन / रजिस्टर) ---
 class AuthScreen extends StatefulWidget {
   const AuthScreen({super.key});
 
@@ -66,6 +67,7 @@ class _AuthScreenState extends State<AuthScreen> {
           ScaffoldMessenger.of(context).showSnackBar(
             const SnackBar(content: Text('रजिस्ट्रेशन सफल रहा! 🎉')),
           );
+          _navigateToHome();
         }
       } else {
         final response = await Supabase.instance.client.auth.signInWithPassword(
@@ -76,6 +78,7 @@ class _AuthScreenState extends State<AuthScreen> {
           ScaffoldMessenger.of(context).showSnackBar(
             const SnackBar(content: Text('लॉगिन सफल रहा! 🎉')),
           );
+          _navigateToHome();
         }
       }
     } catch (e) {
@@ -91,6 +94,13 @@ class _AuthScreenState extends State<AuthScreen> {
     }
   }
 
+  void _navigateToHome() {
+    Navigator.pushReplacement(
+      context,
+      MaterialPageRoute(builder: (context) => HomeScreen(isAdmin: isAdmin)),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -100,7 +110,7 @@ class _AuthScreenState extends State<AuthScreen> {
           child: Column(
             crossAxisAlignment: CrossAlignment.center,
             children: [
-              // Top Right Switch Button (Admin/Student)
+              // Admin/Student Switcher Button
               Align(
                 alignment: Alignment.topRight,
                 child: TextButton.icon(
@@ -128,7 +138,7 @@ class _AuthScreenState extends State<AuthScreen> {
               ),
               const SizedBox(height: 20),
 
-              // Logo Image / Icon
+              // App Logo with Image & Backup Icon
               Container(
                 height: 100,
                 width: 100,
@@ -164,7 +174,7 @@ class _AuthScreenState extends State<AuthScreen> {
               ),
               const SizedBox(height: 30),
 
-              // Form Fields
+              // Register Extra Fields
               if (isRegister) ...[
                 _buildTextField(_studentNameController, 'छात्र का नाम (ऐच्छिक)', Icons.person_outline),
                 const SizedBox(height: 16),
@@ -174,6 +184,7 @@ class _AuthScreenState extends State<AuthScreen> {
                 const SizedBox(height: 16),
               ],
 
+              // Email & Password Fields
               _buildTextField(
                 _emailController,
                 isAdmin ? 'एडमिन ईमेल' : 'ईमेल आईडी',
@@ -189,7 +200,7 @@ class _AuthScreenState extends State<AuthScreen> {
               ),
               const SizedBox(height: 12),
 
-              // Forgot Password Option
+              // Forgot Password
               Align(
                 alignment: Alignment.centerRight,
                 child: TextButton(
@@ -202,7 +213,7 @@ class _AuthScreenState extends State<AuthScreen> {
               ),
               const SizedBox(height: 16),
 
-              // Submit Button
+              // Login Button
               if (!isRegister)
                 SizedBox(
                   width: double.infinity,
@@ -233,7 +244,7 @@ class _AuthScreenState extends State<AuthScreen> {
 
               const SizedBox(height: 16),
 
-              // Toggle Register/Login Link
+              // Register Switch Text
               if (!isAdmin)
                 GestureDetector(
                   onTap: () {
@@ -323,6 +334,238 @@ class _AuthScreenState extends State<AuthScreen> {
           borderRadius: BorderRadius.circular(16),
           borderSide: const BorderSide(color: Color(0xFF6366F1), width: 2),
         ),
+      ),
+    );
+  }
+}
+
+// --- 2. होम स्क्रीन एवं डिजिटल पहाड़ा (Padh AI Main Dashboard) ---
+class HomeScreen extends StatelessWidget {
+  final bool isAdmin;
+  const HomeScreen({super.key, required this.isAdmin});
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: Text(isAdmin ? 'Padh AI Admin Dashboard' : 'Padh AI - डिजिटल पढ़ाई'),
+        backgroundColor: const Color(0xFF1E293B),
+        actions: [
+          IconButton(
+            icon: const Icon(Icons.logout),
+            onPressed: () {
+              Supabase.instance.client.auth.signOut();
+              Navigator.pushReplacement(
+                context,
+                MaterialPageRoute(builder: (context) => const AuthScreen()),
+              );
+            },
+          )
+        ],
+      ),
+      body: SingleChildScrollView(
+        padding: const EdgeInsets.all(16.0),
+        child: Column(
+          crossAxisAlignment: CrossAlignment.start,
+          children: [
+            // Welcome Card
+            Container(
+              width: double.infinity,
+              padding: const EdgeInsets.all(20),
+              decoration: BoxDecoration(
+                gradient: const LinearGradient(
+                  colors: [Colors.deepPurple, Colors.indigo],
+                ),
+                borderRadius: BorderRadius.circular(16),
+              ),
+              child: Column(
+                crossAxisAlignment: CrossAlignment.start,
+                children: [
+                  Text(
+                    isAdmin ? 'स्वागत है, एडमिन सर! 👋' : 'नमस्ते छात्र! Padh AI में स्वागत है 📚',
+                    style: const TextStyle(fontSize: 22, fontWeight: FontWeight.bold, color: Colors.white),
+                  ),
+                  const SizedBox(height: 8),
+                  Text(
+                    isAdmin ? 'यहाँ से आप अपने सभी बच्चों और डेटा को मैनेज कर सकते हैं।' : 'आइए आज कुछ नया और मजेदार सीखते हैं!',
+                    style: const TextStyle(color: Colors.white70, fontSize: 14),
+                  ),
+                ],
+              ),
+            ),
+            const SizedBox(height: 24),
+
+            const Text(
+              'सीखने के विकल्प (Modules)',
+              style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: Colors.white),
+            ),
+            const SizedBox(height: 16),
+
+            // डिजिटल पहाड़ा Card
+            _buildFeatureCard(
+              context,
+              title: '📖 डिजिटल पहाड़ा (Pahada Book)',
+              description: '1 से 20 तक के पहाड़े बोलकर और देखकर सीखें।',
+              icon: Icons.menu_book_rounded,
+              color: Colors.orangeAccent,
+              imageAsset: 'assets/padh-ai-pahada-book.jpg',
+              onTap: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => const PahadaScreen()),
+                );
+              },
+            ),
+            const SizedBox(height: 16),
+
+            // AI रीडिंग क्लास
+            _buildFeatureCard(
+              context,
+              title: '🤖 AI रीडिंग क्लास',
+              description: 'बच्चों के लिए कहानियाँ और पढ़ने की प्रैक्टिस।',
+              icon: Icons.record_voice_over,
+              color: Colors.tealAccent,
+              imageAsset: 'assets/padh-ai-child-reading.jpg',
+              onTap: () {
+                ScaffoldMessenger.of(context).showSnackBar(
+                  const SnackBar(content: Text('AI रीडिंग क्लास जल्द ही शुरू हो रही है!')),
+                );
+              },
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildFeatureCard(
+    BuildContext context, {
+    required String title,
+    required String description,
+    required IconData icon,
+    required Color color,
+    required String imageAsset,
+    required VoidCallback onTap,
+  }) {
+    return Card(
+      color: const Color(0xFF1E293B),
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+      child: ListTile(
+        contentPadding: const EdgeInsets.all(16),
+        leading: ClipRRect(
+          borderRadius: BorderRadius.circular(12),
+          child: Image.asset(
+            imageAsset,
+            width: 50,
+            height: 50,
+            fit: BoxFit.cover,
+            errorBuilder: (context, error, stackTrace) => CircleAvatar(
+              backgroundColor: color.withOpacity(0.2),
+              child: Icon(icon, color: color),
+            ),
+          ),
+        ),
+        title: Text(title, style: const TextStyle(fontWeight: FontWeight.bold, color: Colors.white, fontSize: 16)),
+        subtitle: Text(description, style: const TextStyle(color: Colors.grey, fontSize: 13)),
+        trailing: const Icon(Icons.arrow_forward_ios, color: Colors.white54, size: 18),
+        onTap: onTap,
+      ),
+    );
+  }
+}
+
+// --- 3. डिजिटल पहाड़ा स्क्रीन (Digital Pahada Module) ---
+class PahadaScreen extends StatefulWidget {
+  const PahadaScreen({super.key});
+
+  @override
+  State<PahadaScreen> createState() => _PahadaScreenState();
+}
+
+class _PahadaScreenState extends State<PahadaScreen> {
+  int selectedNumber = 2;
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: Text('$selectedNumber का डिजिटल पहाड़ा'),
+        backgroundColor: const Color(0xFF1E293B),
+      ),
+      body: Column(
+        children: [
+          // Pahada Number Selector Bar
+          SizedBox(
+            height: 60,
+            child: ListView.builder(
+              scrollDirection: Axis.horizontal,
+              itemCount: 20,
+              itemBuilder: (context, index) {
+                int number = index + 1;
+                bool isSelected = number == selectedNumber;
+                return GestureDetector(
+                  onTap: () {
+                    setState(() {
+                      selectedNumber = number;
+                    });
+                  },
+                  child: Container(
+                    margin: const EdgeInsets.symmetric(horizontal: 6, vertical: 8),
+                    padding: const EdgeInsets.symmetric(horizontal: 16),
+                    decoration: BoxDecoration(
+                      color: isSelected ? Colors.deepPurpleAccent : const Color(0xFF1E293B),
+                      borderRadius: BorderRadius.circular(12),
+                      border: Border.all(color: isSelected ? Colors.white : Colors.transparent),
+                    ),
+                    center: Text(
+                      '$number',
+                      style: TextStyle(
+                        color: Colors.white,
+                        fontWeight: isSelected ? FontWeight.bold : FontWeight.normal,
+                        fontSize: 16,
+                      ),
+                    ),
+                  ),
+                );
+              },
+            ),
+          ),
+
+          // Pahada Table List
+          Expanded(
+            child: ListView.builder(
+              padding: const EdgeInsets.all(16),
+              itemCount: 10,
+              itemBuilder: (context, index) {
+                int multiplier = index + 1;
+                int result = selectedNumber * multiplier;
+                return Container(
+                  margin: const EdgeInsets.only(bottom: 12),
+                  padding: const EdgeInsets.all(16),
+                  decoration: BoxDecoration(
+                    color: const Color(0xFF1E293B),
+                    borderRadius: BorderRadius.circular(12),
+                    border: Border.all(color: Colors.white10),
+                  ),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Text(
+                        '$selectedNumber  ×  $multiplier',
+                        style: const TextStyle(fontSize: 20, color: Colors.tealAccent, fontWeight: FontWeight.bold),
+                      ),
+                      const Text('=', style: TextStyle(fontSize: 20, color: Colors.white)),
+                      Text(
+                        '$result',
+                        style: const TextStyle(fontSize: 22, color: Colors.amberAccent, fontWeight: FontWeight.bold),
+                      ),
+                    ],
+                  ),
+                );
+              },
+            ),
+          ),
+        ],
       ),
     );
   }
