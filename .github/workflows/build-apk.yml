@@ -27,7 +27,10 @@ jobs:
         run: flutter pub get
 
       - name: Create Android Project Files
-        run: flutter create . --platforms=android --project-name padh_ai
+        run: |
+          flutter create . --platforms=android --project-name padh_ai
+          sed -i 's/flutter.minSdkVersion/21/g' android/app/build.gradle || true
+          sed -i 's/minSdkVersion 19/minSdkVersion 21/g' android/app/build.gradle || true
 
       - name: Build Release APK
         run: flutter build apk --release
