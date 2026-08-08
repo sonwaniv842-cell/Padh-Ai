@@ -210,7 +210,7 @@ class _AuthScreenState extends State<AuthScreen> {
                 ),
               ),
               const SizedBox(height: 16),
-              Text(_isAdminMode ? "Padh AI Admin" : "Padh AI", style: const TextStyle(fontSize: 32, fontWeight: FontWeight.extrabold, color: Colors.white)),
+              Text(_isAdminMode ? "Padh AI Admin" : "Padh AI", style: const TextStyle(fontSize: 32, fontWeight: FontWeight.w800, color: Colors.white)),
               const SizedBox(height: 35),
               if (_isSignUp && !_isAdminMode) ...[
                 _buildField(_nameController, "छात्र का नाम (ऐच्छिक)", Icons.person_outline),
@@ -389,7 +389,7 @@ class _MainContainerState extends State<MainContainer> {
                         icon: const Icon(Icons.volume_up_rounded, size: 30, color: Colors.black),
                         label: const Text(
                           "🔊 अभिभावक यहाँ दबाकर सुनें",
-                          style: TextStyle(color: Colors.black, fontWeight: FontWeight.extrabold, fontSize: 17),
+                          style: TextStyle(color: Colors.black, fontWeight: FontWeight.w800, fontSize: 17),
                         ),
                       ),
                     )
