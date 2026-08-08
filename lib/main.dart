@@ -64,8 +64,7 @@ class _AuthScreenState extends State<AuthScreen> {
             const SizedBox(width: 10),
             Expanded(
               child: Text(
-                '🔊 "अभिभावक ध्यान दें: आपसे लिए जाने वाले ₹$globalAppFee का एक भी रुपया हमारी जेब में नहीं जाता। यह पूरी राशि फ्लिपकार्ट से आपके बच्चे का गिफ्ट और पुरुस्कार खरीदने में लगाई जाती है।"',
-                style: const TextStyle(fontSize: 13),
+                '🔊 "अभिभावक ध्यान दें: आपसे लिए जाने वाले ₹$globalAppFee का एक भी रुपया हमारी जेब में नहीं जाता। यह पूरी राशि फ्लिपकार्ट से आपके बच्चे का गिफ्ट और पुरुस्कार खरीदने में लगाई जाती है।"'
               ),
             ),
           ],
@@ -454,8 +453,7 @@ class _HomeScreenState extends State<HomeScreen> {
             const SizedBox(width: 10),
             Expanded(
               child: Text(
-                '🔊 "अभिभावक जी, ₹$globalAppFee की फीस पूरी तरह सुरक्षित है। यह पैसा आपके बच्चे के फ्लिपकार्ट गिफ्ट के लिए इस्तेमाल किया जाता है।"',
-                style: const TextStyle(fontSize: 13),
+                '🔊 "अभिभावक जी, ₹$globalAppFee की फीस पूरी तरह सुरक्षित है। यह पैसा आपके बच्चे के फ्लिपकार्ट गिफ्ट के लिए इस्तेमाल किया जाता है।"'
               ),
             ),
           ],
@@ -512,7 +510,7 @@ class _HomeScreenState extends State<HomeScreen> {
               });
               Navigator.pop(context);
               ScaffoldMessenger.of(context).showSnackBar(
-                SnackBar(content: Text('फीस राशि बढ़ाकर/घटाकर ₹$globalAppFee सेट कर दी गई है! 🎉')),
+                SnackBar(content: Text('फीस राशि बनाकर/घटाकर ₹$globalAppFee सेट कर दी गई है! 🎉')),
               );
             },
             child: const Text('सेव करें'),
@@ -691,7 +689,7 @@ class _HomeScreenState extends State<HomeScreen> {
       body: SingleChildScrollView(
         padding: const EdgeInsets.all(16.0),
         child: Column(
-          crossAxisAlignment: CrossAlignment.start,
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Container(
               width: double.infinity,
@@ -705,7 +703,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 borderRadius: BorderRadius.circular(16),
               ),
               child: Column(
-                crossAxisAlignment: CrossAlignment.start,
+                crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -739,7 +737,7 @@ class _HomeScreenState extends State<HomeScreen> {
                             ),
                             const SizedBox(width: 10),
                             Column(
-                              crossAxisAlignment: CrossAlignment.start,
+                              crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
                                 Text(
                                   widget.isAdmin ? 'Admin Earnings Wallet' : 'Student Wallet',
@@ -788,7 +786,7 @@ class _HomeScreenState extends State<HomeScreen> {
                     const SizedBox(width: 12),
                     Expanded(
                       child: Column(
-                        crossAxisAlignment: CrossAlignment.start,
+                        crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Row(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
