@@ -691,7 +691,7 @@ class _HomeScreenState extends State<HomeScreen> {
       body: SingleChildScrollView(
         padding: const EdgeInsets.all(16.0),
         child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
+          crossAxisAlignment: CrossAlignment.start,
           children: [
             Container(
               width: double.infinity,
@@ -705,7 +705,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 borderRadius: BorderRadius.circular(16),
               ),
               child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
+                crossAxisAlignment: CrossAlignment.start,
                 children: [
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -739,7 +739,7 @@ class _HomeScreenState extends State<HomeScreen> {
                             ),
                             const SizedBox(width: 10),
                             Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
+                              crossAxisAlignment: CrossAlignment.start,
                               children: [
                                 Text(
                                   widget.isAdmin ? 'Admin Earnings Wallet' : 'Student Wallet',
@@ -788,7 +788,7 @@ class _HomeScreenState extends State<HomeScreen> {
                     const SizedBox(width: 12),
                     Expanded(
                       child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
+                        crossAxisAlignment: CrossAlignment.start,
                         children: [
                           Row(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -868,7 +868,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 context,
                 title: '🔲 एडमिन बारकोड व UPI QR सेटअप',
                 description: 'छात्रों के भुगतान के लिए अपना QR कोड अपडेट करें।',
-                icon: Icons.teal,
+                icon: Icons.qr_code_scanner,
                 color: Colors.teal,
                 onTap: _openQrDialog,
               ),
