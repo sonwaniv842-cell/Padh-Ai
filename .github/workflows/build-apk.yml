@@ -27,7 +27,7 @@ jobs:
         run: flutter pub get
 
       - name: Create Android Project Files
-        run: flutter create . --platforms=android
+        run: flutter create . --platforms=android --project-name padh_ai
 
       - name: Build Release APK
         run: flutter build apk --release
