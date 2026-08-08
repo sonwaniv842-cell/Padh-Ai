@@ -4,10 +4,10 @@ import 'package:supabase_flutter/supabase_flutter.dart';
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
-  // Supabase Initialized with correct URL & Publishable Key
+  // Supabase Initialized with correct URL & Original Anonymous JWT Key
   await Supabase.initialize(
     url: 'https://tyonurrbwdjqfrmqrgpk.supabase.co',
-    anonKey: 'Sb_publishable_VSX21HOdkHZTTYvxj7DGTQ_tcyv4gDJ',
+    anonKey: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InR5b251cnJid2RqcWZybXFyZ3BrIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODYxNzMzODMsImV4cCI6MjEwMTc0OTM4M30.95tDST7gwxemb2w2SS71arWh77omlFf0ezPwkTun2cM',
   );
 
   runApp(const MyApp());
@@ -108,7 +108,7 @@ class _AuthScreenState extends State<AuthScreen> {
         child: SingleChildScrollView(
           padding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 16.0),
           child: Column(
-            crossAxisAlignment: CrossAxisAlignment.center,
+            crossAxisAlignment: CrossAlignment.center,
             children: [
               // Admin/Student Switcher Button
               Align(
@@ -138,7 +138,7 @@ class _AuthScreenState extends State<AuthScreen> {
               ),
               const SizedBox(height: 20),
 
-              // App Logo with Backup Icon
+              // App Logo
               Container(
                 height: 100,
                 width: 100,
@@ -366,7 +366,7 @@ class HomeScreen extends StatelessWidget {
       body: SingleChildScrollView(
         padding: const EdgeInsets.all(16.0),
         child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
+          crossAxisAlignment: CrossAlignment.start,
           children: [
             // Welcome Card
             Container(
@@ -379,7 +379,7 @@ class HomeScreen extends StatelessWidget {
                 borderRadius: BorderRadius.circular(16),
               ),
               child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
+                crossAxisAlignment: CrossAlignment.start,
                 children: [
                   Text(
                     isAdmin ? 'स्वागत है, एडमिन सर! 👋' : 'नमस्ते छात्र! Padh AI में स्वागत है 📚',
