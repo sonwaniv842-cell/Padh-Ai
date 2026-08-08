@@ -27,7 +27,7 @@ jobs:
     - name: Repair Android Setup
       run: |
         rm -rf android
-        flutter create . --platforms android --org com.padhai
+        flutter create . --project-name padh_ai --platforms android --org com.padhai
 
     - name: Install Dependencies
       run: flutter pub get
