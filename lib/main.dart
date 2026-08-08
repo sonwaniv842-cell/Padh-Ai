@@ -30,7 +30,7 @@ class MyApp extends StatelessWidget {
   }
 }
 
-// --- 1. ऑथेंटिकेशन स्क्रीन (लॉगिन / एडमिन / रजिस्टर) ---
+// --- 1. ऑथेंटिक स्क्रीन (लॉगिन / एडमिन / रजिस्टर) ---
 class AuthScreen extends StatefulWidget {
   const AuthScreen({super.key});
 
@@ -83,7 +83,7 @@ class _AuthScreenState extends State<AuthScreen> {
       }
     } catch (e) {
       setState(() {
-        _errorMessage = "कनेक्शन सूचना: AuthRetryableFetchException(message: ClientException with SocketException: $e)";
+        _errorMessage = "कनेक्शन सूचना: $e";
       });
     } finally {
       if (mounted) {
@@ -108,7 +108,7 @@ class _AuthScreenState extends State<AuthScreen> {
         child: SingleChildScrollView(
           padding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 16.0),
           child: Column(
-            crossAxisAlignment: CrossAlignment.center,
+            crossAxisAlignment: CrossAxisAlignment.center,
             children: [
               // Admin/Student Switcher Button
               Align(
@@ -138,7 +138,7 @@ class _AuthScreenState extends State<AuthScreen> {
               ),
               const SizedBox(height: 20),
 
-              // App Logo with Image & Backup Icon
+              // App Logo with Backup Icon
               Container(
                 height: 100,
                 width: 100,
@@ -339,7 +339,7 @@ class _AuthScreenState extends State<AuthScreen> {
   }
 }
 
-// --- 2. होम स्क्रीन एवं डिजिटल पहाड़ा (Padh AI Main Dashboard) ---
+// --- 2. होम स्क्रीन एवं डिजिटल पहाड़ा डैशबोर्ड ---
 class HomeScreen extends StatelessWidget {
   final bool isAdmin;
   const HomeScreen({super.key, required this.isAdmin});
@@ -366,7 +366,7 @@ class HomeScreen extends StatelessWidget {
       body: SingleChildScrollView(
         padding: const EdgeInsets.all(16.0),
         child: Column(
-          crossAxisAlignment: CrossAlignment.start,
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             // Welcome Card
             Container(
@@ -379,7 +379,7 @@ class HomeScreen extends StatelessWidget {
                 borderRadius: BorderRadius.circular(16),
               ),
               child: Column(
-                crossAxisAlignment: CrossAlignment.start,
+                crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
                     isAdmin ? 'स्वागत है, एडमिन सर! 👋' : 'नमस्ते छात्र! Padh AI में स्वागत है 📚',
@@ -474,7 +474,7 @@ class HomeScreen extends StatelessWidget {
   }
 }
 
-// --- 3. डिजिटल पहाड़ा स्क्रीन (Digital Pahada Module) ---
+// --- 3. डिजिटल पहाड़ा स्क्रीन ---
 class PahadaScreen extends StatefulWidget {
   const PahadaScreen({super.key});
 
@@ -517,12 +517,14 @@ class _PahadaScreenState extends State<PahadaScreen> {
                       borderRadius: BorderRadius.circular(12),
                       border: Border.all(color: isSelected ? Colors.white : Colors.transparent),
                     ),
-                    center: Text(
-                      '$number',
-                      style: TextStyle(
-                        color: Colors.white,
-                        fontWeight: isSelected ? FontWeight.bold : FontWeight.normal,
-                        fontSize: 16,
+                    child: Center(
+                      child: Text(
+                        '$number',
+                        style: TextStyle(
+                          color: Colors.white,
+                          fontWeight: isSelected ? FontWeight.bold : FontWeight.normal,
+                          fontSize: 16,
+                        ),
                       ),
                     ),
                   ),
