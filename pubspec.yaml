@@ -1,9 +1,4 @@
-name: padh_ai
-dependencies:
-  flutter:
-    sdk: flutter
+
   supabase_flutter: ^2.0.0
-  flutter_tts: ^3.8.5        # AI के बोलने के लिए
-  camera: ^0.10.5            # सवाल स्कैन करने के लिए
-  google_generative_ai: ^0.2.0 # AI जवाब देने के लिए (Gemini)
-  image_picker: ^1.0.4
+  flutter_tts: ^3.8.5
+  url_launcher: ^6.2.0
