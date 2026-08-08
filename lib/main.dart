@@ -4,7 +4,7 @@ import 'package:flutter_tts/flutter_tts.dart';
 
 // CONFIG
 const supabaseUrl = 'https://tyonurrbwdjqfrmqrgpk.supabase.co';
-const supabaseAnonKey = 'YOUR_KEY_HERE';
+const supabaseAnonKey = 'sb_publishable_VSX21HOdkHZTTYvxj7DGTQ_tcyv4gDJ';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -20,7 +20,11 @@ class PadhAIApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
-      theme: ThemeData(brightness: Brightness.dark, primaryColor: Colors.deepPurple, scaffoldBackgroundColor: const Color(0xFF0D0D1E)),
+      theme: ThemeData(
+        brightness: Brightness.dark, 
+        primaryColor: Colors.deepPurple, 
+        scaffoldBackgroundColor: const Color(0xFF0D0D1E)
+      ),
       home: supabase.auth.currentSession == null ? const RegistrationScreen() : const MainDashboard(),
     );
   }
@@ -64,7 +68,7 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
             ),
             TextField(controller: phoneController, decoration: const InputDecoration(hintText: "फोन नंबर")),
             const SizedBox(height: 30),
-            ElevatedButton(onPressed: () {}, child: const Text("रजिस्टर करें")) // यहाँ Supabase Auth का कोड आएगा
+            ElevatedButton(onPressed: () {}, child: const Text("रजिस्टर करें"))
           ],
         ),
       ),
