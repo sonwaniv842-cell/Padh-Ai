@@ -24,18 +24,22 @@ jobs:
         flutter-version: '3.19.6'
         channel: 'stable'
 
-    - name: Repair Android Setup
+    - name: Repair Android Setup & Add Internet Permission
       run: |
         rm -rf android
         flutter create . --project-name padh_ai --platforms android --org com.padhai
+        sed -i '/<manifest/a \    <uses-permission android:name="android.permission.INTERNET"/>' android/app/src/main/AndroidManifest.xml
 
-    - name: Set minSdk Version for flutter_tts
+    - name: Set minSdk Version
       run: |
         sed -i 's/minSdkVersion .*/minSdkVersion 21/' android/app/build.gradle || true
         sed -i 's/minSdk = .*/minSdk = 21/' android/app/build.gradle || true
 
     - name: Install Dependencies
       run: flutter pub get
+
+    - name: Generate App Launcher Icons
+      run: flutter pub run flutter_launcher_icons
 
     - name: Build Android APK
       run: flutter build apk --release
