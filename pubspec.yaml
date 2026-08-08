@@ -1,7 +1,6 @@
 name: padh_ai
-description: "A new Flutter project."
+description: "Padh AI Learning & Scholarship App"
 publish_to: 'none'
-
 version: 1.0.0+1
 
 environment:
@@ -10,15 +9,23 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
-  supabase_flutter: ^2.3.0
-  flutter_tts: 3.8.5
-  url_launcher: ^6.2.5
+  supabase_flutter: ^2.3.4
+  flutter_tts: ^3.8.5
   cupertino_icons: ^1.0.6
 
 dev_dependencies:
   flutter_test:
     sdk: flutter
   flutter_lints: ^3.0.0
+  flutter_launcher_icons: ^0.13.1
+
+flutter_launcher_icons:
+  android: "launcher_icon"
+  ios: true
+  image_path: "assets/icon.png"
+  min_sdk_android: 21
 
 flutter:
   uses-material-design: true
+  assets:
+    - assets/icon.png
