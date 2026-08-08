@@ -92,7 +92,7 @@ class _AuthScreenState extends State<AuthScreen> {
   final _pPhoneController = TextEditingController();
 
   bool _isSignUp = true;
-  bool _isAdminMode = false; // Mode Toggle for Admin
+  bool _isAdminMode = false;
   bool _isLoading = false;
 
   Future<void> _handleAuth() async {
@@ -108,7 +108,7 @@ class _AuthScreenState extends State<AuthScreen> {
 
     try {
       if (_isAdminMode) {
-        // Admin Login Process
+        // Admin Login
         final res = await supabase.auth.signInWithPassword(
           email: email,
           password: password,
@@ -120,7 +120,7 @@ class _AuthScreenState extends State<AuthScreen> {
           }
         }
       } else if (_isSignUp) {
-        // Student Signup
+        // Student Signup (Father's Name & Phone are now OPTIONAL)
         final res = await supabase.auth.signUp(
           email: email,
           password: password,
@@ -129,11 +129,14 @@ class _AuthScreenState extends State<AuthScreen> {
         });
 
         if (res.user != null) {
+          final pName = _pNameController.text.trim();
+          final pPhone = _pPhoneController.text.trim();
+
           await supabase.from('profiles').upsert({
             'id': res.user!.id,
-            'full_name': _nameController.text.trim(),
-            'parent_name': _pNameController.text.trim(),
-            'parent_phone': _pPhoneController.text.trim(),
+            'full_name': _nameController.text.trim().isEmpty ? 'छात्र' : _nameController.text.trim(),
+            'parent_name': pName.isEmpty ? 'N/A' : pName,
+            'parent_phone': pPhone.isEmpty ? 'N/A' : pPhone,
             'is_admin': false,
           }).timeout(const Duration(seconds: 15));
         }
@@ -251,9 +254,9 @@ class _AuthScreenState extends State<AuthScreen> {
 
               // FORM FIELDS
               if (_isSignUp && !_isAdminMode) ...[
-                _buildField(_nameController, "छात्र का नाम", Icons.person_outline),
-                _buildField(_pNameController, "पिता/अभिभावक का नाम", Icons.family_restroom_outlined),
-                _buildField(_pPhoneController, "WhatsApp नंबर", Icons.phone_android_outlined),
+                _buildField(_nameController, "छात्र का नाम (ऐच्छिक)", Icons.person_outline),
+                _buildField(_pNameController, "पिता/अभिभावक का नाम (ऑप्शनल)", Icons.family_restroom_outlined),
+                _buildField(_pPhoneController, "WhatsApp नंबर (ऑप्शनल)", Icons.phone_android_outlined),
               ],
 
               _buildField(_emailController, _isAdminMode ? "एडमिन ईमेल" : "ईमेल आईडी", Icons.alternate_email_outlined),
