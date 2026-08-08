@@ -5,7 +5,7 @@ import 'package:url_launcher/url_launcher.dart';
 
 // --- CONFIG ---
 const supabaseUrl = 'https://tyonurrbwdjqfrmqrgpk.supabase.co';
-const supabaseAnonKey = 'YOUR_SUPABASE_ANON_KEY'; // <--- अपनी Supabase Anon Key यहाँ डालें
+const supabaseAnonKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InR5b251cnJid2RqcWZybXFyZ3BrIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDAzODU1NzksImV4cCI6MjA1NTk2MTU3OX0.aD4e71Hl74L_B5j65lK2I9w0I2jL0Z828Z458L99I20'; 
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -52,7 +52,7 @@ class _AuthScreenState extends State<AuthScreen> {
   final _pNameController = TextEditingController();
   final _pPhoneController = TextEditingController();
   bool _isLoading = false;
-  bool _isSignUp = true; // साइनअप और लॉगिन के बीच स्विच करने के लिए
+  bool _isSignUp = true;
 
   Future<void> _handleAuth() async {
     final email = _emailController.text.trim();
@@ -69,7 +69,6 @@ class _AuthScreenState extends State<AuthScreen> {
 
     try {
       if (_isSignUp) {
-        // नया साइन-अप
         final res = await supabase.auth.signUp(email: email, password: password);
         if (res.user != null) {
           await supabase.from('profiles').upsert({
@@ -84,7 +83,6 @@ class _AuthScreenState extends State<AuthScreen> {
           }
         }
       } else {
-        // पुराना यूज़र लॉगिन
         await supabase.auth.signInWithPassword(email: email, password: password);
         if (mounted) {
           Navigator.pushReplacement(context, MaterialPageRoute(builder: (c) => const MainContainer()));
@@ -117,11 +115,10 @@ class _AuthScreenState extends State<AuthScreen> {
             ),
             const SizedBox(height: 25),
             
-            // सिर्फ साइन-अप के समय ये 3 एक्स्ट्रा फ़ील्ड दिखेंगे
             if (_isSignUp) ...[
               _buildField(_nameController, "छात्र का नाम"),
               _buildField(_pNameController, "पिता/अभिभावक का नाम"),
-              _buildField(_pPhoneController, "अभिभावक का WhatsApp नंबर", icon: Icons.whatsapp),
+              _buildField(_pPhoneController, "अभिभावक का WhatsApp नंबर", icon: Icons.chat),
             ],
 
             _buildField(_emailController, "ईमेल आईडी"),
@@ -236,7 +233,6 @@ class _MainContainerState extends State<MainContainer> {
       body: SingleChildScrollView(
         child: Column(
           children: [
-            // DYNAMIC BANNER
             Image.network(
               bannerUrl, 
               height: 180, 
@@ -249,7 +245,6 @@ class _MainContainerState extends State<MainContainer> {
               ),
             ),
 
-            // PARENT TRUST MESSAGE
             Padding(
               padding: const EdgeInsets.all(15),
               child: Card(
@@ -279,7 +274,6 @@ class _MainContainerState extends State<MainContainer> {
               ),
             ),
 
-            // EXAM LOCK / UNLOCK SYSTEM
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 15),
               child: userProfile?['has_paid'] == true ? _buildAdmitCard() : _buildLockedExam(),
