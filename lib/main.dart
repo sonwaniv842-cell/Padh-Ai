@@ -1,12 +1,11 @@
-import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:flutter_tts/flutter_tts.dart';
-import 'package:image_picker/image_picker.dart';
+import 'package:url_launcher/url_launcher.dart';
 
-// --- CONFIGURATION ---
+// --- CONFIG ---
 const supabaseUrl = 'https://tyonurrbwdjqfrmqrgpk.supabase.co';
-const supabaseAnonKey = 'sb_publishable_VSX21HOdkHZTTYvxj7DGTQ_tcyv4gDJ';
+const supabaseAnonKey = 'YOUR_SUPABASE_ANON_KEY'; // <--- अपनी Supabase Anon Key यहाँ डालें
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -18,6 +17,7 @@ final supabase = Supabase.instance.client;
 
 class PadhAIApp extends StatelessWidget {
   const PadhAIApp({super.key});
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -26,242 +26,387 @@ class PadhAIApp extends StatelessWidget {
         brightness: Brightness.dark,
         primaryColor: const Color(0xFF6C63FF),
         scaffoldBackgroundColor: const Color(0xFF0D0D1E),
-        elevatedButtonTheme: ElevatedButtonThemeData(
-          style: ElevatedButton.styleFrom(backgroundColor: const Color(0xFF6C63FF)),
+        cardTheme: CardTheme(
+          color: const Color(0xFF1A1A2E), 
+          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20))
         ),
+        fontFamily: 'Inter',
       ),
       home: supabase.auth.currentSession == null ? const AuthScreen() : const MainContainer(),
     );
   }
 }
 
-// --- GLOBAL STATE & PROFILE ---
-class UserData {
-  static String? fullName;
-  static String? classLevel;
-  static String? medium;
-  static bool isAdmin = false;
-}
-
-// --- 1. AUTH & REGISTRATION SCREEN ---
+// --- 1. ENHANCED SIGN-UP / USER PROFILE & LOGIN ---
 class AuthScreen extends StatefulWidget {
   const AuthScreen({super.key});
+
   @override
   State<AuthScreen> createState() => _AuthScreenState();
 }
 
 class _AuthScreenState extends State<AuthScreen> {
-  final _phoneController = TextEditingController();
+  final _emailController = TextEditingController();
+  final _passController = TextEditingController();
   final _nameController = TextEditingController();
-  String _selectedClass = "1st";
-  String _selectedMedium = "Hindi";
-  bool _isOTPsent = false;
-  final _otpController = TextEditingController();
+  final _pNameController = TextEditingController();
+  final _pPhoneController = TextEditingController();
+  bool _isLoading = false;
+  bool _isSignUp = true; // साइनअप और लॉगिन के बीच स्विच करने के लिए
 
   Future<void> _handleAuth() async {
+    final email = _emailController.text.trim();
+    final password = _passController.text.trim();
+
+    if (email.isEmpty || password.isEmpty) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text("कृपया ईमेल और पासवर्ड भरें।")),
+      );
+      return;
+    }
+
+    setState(() => _isLoading = true);
+
     try {
-      if (!_isOTPsent) {
-        await supabase.auth.signInWithOtp(phone: _phoneController.text.trim());
-        setState(() => _isOTPsent = true);
-      } else {
-        final res = await supabase.auth.verifyOtp(
-          phone: _phoneController.text.trim(),
-          token: _otpController.text.trim(),
-          type: OtpType.sms,
-        );
-        if (res.session != null) {
-          // Profile Create/Update
+      if (_isSignUp) {
+        // नया साइन-अप
+        final res = await supabase.auth.signUp(email: email, password: password);
+        if (res.user != null) {
           await supabase.from('profiles').upsert({
             'id': res.user!.id,
-            'full_name': _nameController.text,
-            'class_level': _selectedClass,
-            'medium': _selectedMedium,
+            'full_name': _nameController.text.trim(),
+            'parent_name': _pNameController.text.trim(),
+            'parent_phone': _pPhoneController.text.trim(),
+            'class_level': '1st',
           });
-          if (mounted) Navigator.pushReplacement(context, MaterialPageRoute(builder: (c) => const MainContainer()));
+          if (mounted) {
+            Navigator.pushReplacement(context, MaterialPageRoute(builder: (c) => const MainContainer()));
+          }
+        }
+      } else {
+        // पुराना यूज़र लॉगिन
+        await supabase.auth.signInWithPassword(email: email, password: password);
+        if (mounted) {
+          Navigator.pushReplacement(context, MaterialPageRoute(builder: (c) => const MainContainer()));
         }
       }
     } catch (e) {
-      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text("Error: $e")));
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(e.toString())));
+      }
     }
+    setState(() => _isLoading = false);
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       body: SingleChildScrollView(
-        padding: const EdgeInsets.all(30),
+        padding: const EdgeInsets.all(25),
         child: Column(
           children: [
-            const SizedBox(height: 80),
-            const Text("Padh AI", style: TextStyle(fontSize: 40, fontWeight: FontWeight.bold, color: Color(0xFF6C63FF))),
-            const Text("भविष्य की डिजिटल पाठशाला", style: TextStyle(color: Colors.grey)),
-            const SizedBox(height: 40),
-            if (!_isOTPsent) ...[
-              TextField(controller: _nameController, decoration: const InputDecoration(labelText: "पूरा नाम", border: OutlineInputBorder())),
-              const SizedBox(height: 15),
-              DropdownButtonFormField(
-                value: _selectedClass,
-                decoration: const InputDecoration(border: OutlineInputBorder()),
-                items: ["KG1", "KG2", "1st", "2nd", "3rd", "4th", "5th", "6th", "7th", "8th", "9th", "10th", "11th", "12th", "UPSC"]
-                    .map((e) => DropdownMenuItem(value: e, child: Text(e))).toList(),
-                onChanged: (v) => _selectedClass = v!,
-              ),
-              const SizedBox(height: 15),
-              Row(
-                children: [
-                  const Text("Medium: "),
-                  Radio(value: "Hindi", groupValue: _selectedMedium, onChanged: (v) => setState(() => _selectedMedium = v!)), const Text("Hindi"),
-                  Radio(value: "English", groupValue: _selectedMedium, onChanged: (v) => setState(() => _selectedMedium = v!)), const Text("English"),
-                ],
-              ),
-              TextField(controller: _phoneController, decoration: const InputDecoration(labelText: "मोबाइल नंबर (+91)", border: OutlineInputBorder())),
-            ] else ...[
-              const Text("OTP दर्ज करें जो आपके फोन पर भेजा गया है"),
-              const SizedBox(height: 20),
-              TextField(controller: _otpController, decoration: const InputDecoration(labelText: "6-Digit OTP", border: OutlineInputBorder())),
+            const SizedBox(height: 60),
+            const Text(
+              "Padh AI", 
+              style: TextStyle(fontSize: 35, fontWeight: FontWeight.bold, color: Color(0xFF6C63FF))
+            ),
+            const SizedBox(height: 20),
+            Text(
+              _isSignUp ? "नया अकाउंट बनायें" : "पुराने अकाउंट से लॉगिन करें",
+              style: const TextStyle(fontSize: 18, color: Colors.grey),
+            ),
+            const SizedBox(height: 25),
+            
+            // सिर्फ साइन-अप के समय ये 3 एक्स्ट्रा फ़ील्ड दिखेंगे
+            if (_isSignUp) ...[
+              _buildField(_nameController, "छात्र का नाम"),
+              _buildField(_pNameController, "पिता/अभिभावक का नाम"),
+              _buildField(_pPhoneController, "अभिभावक का WhatsApp नंबर", icon: Icons.whatsapp),
             ],
-            const SizedBox(height: 30),
-            SizedBox(width: double.infinity, height: 50, child: ElevatedButton(onPressed: _handleAuth, child: Text(_isOTPsent ? "Verify OTP" : "Register / Login"))),
+
+            _buildField(_emailController, "ईमेल आईडी"),
+            _buildField(_passController, "पासवर्ड (कम से कम 6 अंक)", isPass: true),
+            
+            const SizedBox(height: 25),
+            _isLoading 
+              ? const CircularProgressIndicator() 
+              : SizedBox(
+                  width: double.infinity, 
+                  height: 55, 
+                  child: ElevatedButton(
+                    style: ElevatedButton.styleFrom(backgroundColor: const Color(0xFF6C63FF)),
+                    onPressed: _handleAuth, 
+                    child: Text(_isSignUp ? "रजिस्टर करें" : "लॉगिन करें", style: const TextStyle(fontSize: 16, color: Colors.white)),
+                  ),
+                ),
+            
+            const SizedBox(height: 15),
+            TextButton(
+              onPressed: () => setState(() => _isSignUp = !_isSignUp),
+              child: Text(_isSignUp ? "पहले से अकाउंट है? लॉगिन करें" : "नया अकाउंट बनायें (रजिस्टर)"),
+            ),
           ],
         ),
       ),
     );
   }
+
+  Widget _buildField(TextEditingController controller, String label, {bool isPass = false, IconData? icon}) {
+    return Padding(
+      padding: const EdgeInsets.only(bottom: 15),
+      child: TextField(
+        controller: controller,
+        obscureText: isPass,
+        decoration: InputDecoration(
+          labelText: label, 
+          prefixIcon: icon != null ? Icon(icon, color: Colors.green) : null, 
+          border: OutlineInputBorder(borderRadius: BorderRadius.circular(15))
+        ),
+      ),
+    );
+  }
 }
 
-// --- MAIN CONTAINER (DASHBOARD) ---
+// --- MAIN CONTAINER ---
 class MainContainer extends StatefulWidget {
   const MainContainer({super.key});
+
   @override
   State<MainContainer> createState() => _MainContainerState();
 }
 
 class _MainContainerState extends State<MainContainer> {
-  int _tabIndex = 0;
+  Map<String, dynamic>? userProfile;
+  final FlutterTts flutterTts = FlutterTts();
   bool _isLoading = true;
-  final FlutterTts _tts = FlutterTts();
 
   @override
   void initState() {
     super.initState();
-    _loadProfile();
+    _fetchProfile();
   }
 
-  _loadProfile() async {
-    final user = supabase.auth.currentUser;
-    final data = await supabase.from('profiles').select().eq('id', user!.id).single();
-    setState(() {
-      UserData.fullName = data['full_name'];
-      UserData.classLevel = data['class_level'];
-      UserData.medium = data['medium'];
-      UserData.isAdmin = data['is_admin'] ?? false;
-      _isLoading = false;
-    });
-  }
-
-  // FEATURE 1: KG Pahada with AI Voice
-  Widget _buildLearn() {
-    if (UserData.classLevel!.contains("KG")) {
-      List<Map<String, String>> letters = [
-        {"l": "A", "w": "Apple"}, {"l": "B", "w": "Ball"}, {"l": "C", "w": "Cat"}, {"l": "D", "w": "Dog"}
-      ];
-      return GridView.builder(
-        padding: const EdgeInsets.all(20),
-        gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 2, crossAxisSpacing: 15, mainAxisSpacing: 15),
-        itemCount: letters.length,
-        itemBuilder: (c, i) => InkWell(
-          onTap: () => _tts.speak(UserData.medium == "Hindi" ? "Bolo bacho, ${letters[i]['l']} for ${letters[i]['w']}" : "${letters[i]['l']} for ${letters[i]['w']}"),
-          child: Container(
-            decoration: BoxDecoration(color: Colors.white10, borderRadius: BorderRadius.circular(20), border: Border.all(color: Colors.white24)),
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Text(letters[i]['l']!, style: const TextStyle(fontSize: 60, fontWeight: FontWeight.bold)),
-                Text(letters[i]['w']!, style: const TextStyle(color: Colors.grey)),
-              ],
-            ),
-          ),
-        ),
-      );
+  Future<void> _fetchProfile() async {
+    try {
+      final user = supabase.auth.currentUser;
+      if (user != null) {
+        final data = await supabase.from('profiles').select().eq('id', user.id).maybeSingle();
+        setState(() { 
+          userProfile = data; 
+          _isLoading = false; 
+        });
+      }
+    } catch (e) {
+      setState(() => _isLoading = false);
     }
-    return Center(child: Text("${UserData.classLevel} की पढ़ाई जल्द शुरू होगी!", style: const TextStyle(fontSize: 18)));
   }
 
-  // FEATURE 2: Monthly Exam System
-  Widget _buildExam() {
-    return Padding(
-      padding: const EdgeInsets.all(25),
-      child: Column(
-        children: [
-          const Icon(Icons.stars, size: 80, color: Colors.amber),
-          const SizedBox(height: 20),
-          const Text("मंथली मेगा एग्जाम", style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold)),
-          const Text("तारीख: हर महीने की 30 तारीख", style: TextStyle(color: Colors.grey)),
-          const Divider(height: 40),
-          const ListTile(leading: Icon(Icons.payment), title: Text("एग्जाम फीस: ₹50 मात्र"), subtitle: Text("प्रथम आने पर: Smart TV या Cycle!")),
-          const SizedBox(height: 30),
-          SizedBox(width: double.infinity, height: 50, child: ElevatedButton(onPressed: () {}, child: const Text("Pay ₹50 & Enroll Now"))),
-        ],
-      ),
-    );
-  }
-
-  // FEATURE 3: Scanner (Dummy UI for Mobile Compatibility)
-  Widget _buildScanner() {
-    return Center(
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          const Icon(Icons.qr_code_scanner, size: 100, color: Color(0xFF6C63FF)),
-          const SizedBox(height: 20),
-          const Text("किसी भी सवाल को स्कैन करें", style: TextStyle(fontSize: 18)),
-          const SizedBox(height: 20),
-          ElevatedButton.icon(onPressed: () async => await ImagePicker().pickImage(source: ImageSource.camera), icon: const Icon(Icons.camera_alt), label: const Text("कैमरा खोलें")),
-        ],
-      ),
-    );
-  }
-
-  // FEATURE 4: AI + Admin Helpline
-  Widget _buildHelpline() {
-    return Column(
-      children: [
-        const Expanded(child: Center(child: Text("नमस्ते! क्या सहायता चाहिए?\n(Admin ऑफलाइन होने पर AI जवाब देगा)", textAlign: TextAlign.center))),
-        Padding(
-          padding: const EdgeInsets.all(15),
-          child: Row(
-            children: [
-              const Expanded(child: TextField(decoration: InputDecoration(hintText: "यहाँ अपना सवाल लिखें...", border: OutlineInputBorder()))),
-              IconButton(onPressed: () {}, icon: const Icon(Icons.send, color: Color(0xFF6C63FF))),
-            ],
-          ),
-        )
-      ],
-    );
+  void _speakTrustMessage() async {
+    String msg = "नमस्ते अभिभावक, हम पढ़ाई के नाम पर एक रुपया भी फीस नहीं लेते। 3 महीने पढ़ाकर देखें, सुधार न दिखे तो कहें। 50 रुपये की फीस केवल टेस्ट के लिए है जो बच्चों के 10,000 से 20,000 रुपये के इनाम और स्कॉलरशिप के काम आती है। हमारा सपना बस इतना है कि कल बच्चा आगे बढ़े।";
+    await flutterTts.setLanguage("hi-IN");
+    await flutterTts.speak(msg);
   }
 
   @override
   Widget build(BuildContext context) {
     if (_isLoading) return const Scaffold(body: Center(child: CircularProgressIndicator()));
 
+    final bannerUrl = userProfile?['banner_url'] ?? 'https://placeholder.co/600x200/6C63FF/white?text=Padh+AI+Scholarship';
+
     return Scaffold(
       appBar: AppBar(
-        title: Text("Padh AI: ${UserData.fullName}"),
-        actions: [if (UserData.isAdmin) IconButton(icon: const Icon(Icons.admin_panel_settings, color: Colors.orange), onPressed: () {})],
+        title: const Text("Padh AI Home"), 
+        actions: [
+          if (userProfile?['is_admin'] == true) 
+            IconButton(
+              icon: const Icon(Icons.admin_panel_settings, color: Colors.amber), 
+              onPressed: () => Navigator.push(context, MaterialPageRoute(builder: (c) => const AdminPanel()))
+            ),
+          IconButton(
+            icon: const Icon(Icons.logout),
+            onPressed: () async {
+              await supabase.auth.signOut();
+              if (mounted) {
+                Navigator.pushReplacement(context, MaterialPageRoute(builder: (c) => const AuthScreen()));
+              }
+            },
+          )
+        ]
       ),
-      body: IndexedStack(index: _tabIndex, children: [_buildLearn(), _buildExam(), _buildScanner(), _buildHelpline()]),
-      bottomNavigationBar: BottomNavigationBar(
-        currentIndex: _tabIndex,
-        selectedItemColor: const Color(0xFF6C63FF),
-        unselectedItemColor: Colors.grey,
-        type: BottomNavigationBarType.fixed,
-        onTap: (i) => setState(() => _tabIndex = i),
-        items: const [
-          BottomNavigationBarItem(icon: Icon(Icons.book), label: "पढ़ाई"),
-          BottomNavigationBarItem(icon: Icon(Icons.quiz), label: "एग्जाम"),
-          BottomNavigationBarItem(icon: Icon(Icons.camera), label: "स्कैन"),
-          BottomNavigationBarItem(icon: Icon(Icons.support_agent), label: "हेल्पलाइन"),
-        ],
+      body: SingleChildScrollView(
+        child: Column(
+          children: [
+            // DYNAMIC BANNER
+            Image.network(
+              bannerUrl, 
+              height: 180, 
+              width: double.infinity, 
+              fit: BoxFit.cover,
+              errorBuilder: (context, error, stackTrace) => Container(
+                height: 180,
+                color: const Color(0xFF1A1A2E),
+                child: const Center(child: Text("Padh AI Banner", style: TextStyle(fontSize: 20))),
+              ),
+            ),
+
+            // PARENT TRUST MESSAGE
+            Padding(
+              padding: const EdgeInsets.all(15),
+              child: Card(
+                elevation: 10,
+                child: Padding(
+                  padding: const EdgeInsets.all(20),
+                  child: Column(
+                    children: [
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          const Text("पैरेंट्स के लिए संदेश", style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: Color(0xFFBB86FC))),
+                          IconButton(
+                            icon: const Icon(Icons.volume_up, size: 35, color: Color(0xFF6C63FF)), 
+                            onPressed: _speakTrustMessage
+                          ),
+                        ],
+                      ),
+                      const SizedBox(height: 10),
+                      const Text(
+                        "हम पढ़ाई के नाम पर ₹1 भी फीस नहीं लेते। 3 महीने पढ़ाकर देखें, सुधार न दिखे तो कहें। ₹50 की फीस केवल हर महीने के टेस्ट के लिए है जो एकत्रित होकर Rank 1, 2, 3 बच्चों के ₹10,000 - ₹20,000 के इनाम, स्कॉलरशिप और गिफ्ट्स के काम आती है।",
+                        style: TextStyle(height: 1.5),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+            ),
+
+            // EXAM LOCK / UNLOCK SYSTEM
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 15),
+              child: userProfile?['has_paid'] == true ? _buildAdmitCard() : _buildLockedExam(),
+            ),
+            const SizedBox(height: 30),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildLockedExam() {
+    return Card(
+      color: Colors.red.withOpacity(0.1),
+      child: Padding(
+        padding: const EdgeInsets.all(25),
+        child: Column(
+          children: [
+            const Icon(Icons.lock, size: 60, color: Colors.redAccent),
+            const SizedBox(height: 15),
+            const Text("एग्जाम सेक्शन लॉक है", style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
+            const SizedBox(height: 5),
+            const Text(
+              "एग्जाम फीस (₹50) न देने पर आपको परीक्षा में नहीं बैठने दिया जाएगा।", 
+              textAlign: TextAlign.center, 
+              style: TextStyle(color: Colors.grey)
+            ),
+            const SizedBox(height: 20),
+            const Text("इस QR कोड पर ₹50 पे करें और एडमिन को स्क्रीनशॉट भेजें:", style: TextStyle(fontSize: 12)),
+            const SizedBox(height: 10),
+            Image.network(
+              'https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=upi://pay?pa=ADMIN@UPI&pn=PadhAI', 
+              height: 150
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildAdmitCard() {
+    return Card(
+      color: Colors.green.withOpacity(0.1),
+      child: const ListTile(
+        leading: Icon(Icons.assignment_ind, color: Colors.green, size: 40),
+        title: Text("एग्जाम अनलॉक हो गया!"),
+        subtitle: Text("अपना एडमिट कार्ड यहाँ से डाउनलोड करें और परीक्षा में बैठें।"),
+        trailing: Icon(Icons.arrow_forward_ios),
+      ),
+    );
+  }
+}
+
+// --- ADVANCED ADMIN PANEL ---
+class AdminPanel extends StatefulWidget {
+  const AdminPanel({super.key});
+
+  @override
+  State<AdminPanel> createState() => _AdminPanelState();
+}
+
+class _AdminPanelState extends State<AdminPanel> {
+  List<dynamic> users = [];
+  bool _loading = true;
+
+  @override
+  void initState() {
+    super.initState();
+    _fetchUsers();
+  }
+
+  _fetchUsers() async {
+    final data = await supabase.from('profiles').select();
+    setState(() { users = data; _loading = false; });
+  }
+
+  _togglePayment(String id, bool currentStatus) async {
+    await supabase.from('profiles').update({'has_paid': !currentStatus}).eq('id', id);
+    _fetchUsers();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(title: const Text("Admin Control Centre")),
+      body: _loading 
+        ? const Center(child: CircularProgressIndicator()) 
+        : ListView.builder(
+            itemCount: users.length,
+            itemBuilder: (c, i) {
+              final u = users[i];
+              final phone = u['parent_phone'] ?? '';
+              return Card(
+                margin: const EdgeInsets.symmetric(horizontal: 15, vertical: 8),
+                child: ListTile(
+                  title: Text(u['full_name'] ?? 'No Name', style: const TextStyle(fontWeight: FontWeight.bold)),
+                  subtitle: Text("Parent: ${u['parent_name'] ?? 'N/A'}\nWhatsApp: $phone"),
+                  trailing: Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      IconButton(
+                        icon: const Icon(Icons.call, color: Colors.green), 
+                        onPressed: () {
+                          if (phone.isNotEmpty) {
+                            launchUrl(Uri.parse("tel:$phone"));
+                          }
+                        }
+                      ),
+                      Switch(
+                        value: u['has_paid'] ?? false, 
+                        activeColor: Colors.green, 
+                        onChanged: (v) => _togglePayment(u['id'], u['has_paid'] ?? false)
+                      ),
+                    ],
+                  ),
+                ),
+              );
+            },
+          ),
+      floatingActionButton: FloatingActionButton.extended(
+        onPressed: () {
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(content: Text("ब्रॉडकास्ट मैसेज फ़ीचर जल्द आ रहा है।")),
+          );
+        },
+        label: const Text("Broadcast Message"),
+        icon: const Icon(Icons.notification_add),
       ),
     );
   }
