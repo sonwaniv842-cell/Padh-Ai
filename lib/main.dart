@@ -75,7 +75,7 @@ class PadhAIApp extends StatelessWidget {
   }
 }
 
-// --- 1. AUTH SCREEN ---
+// --- 1. AUTH SCREEN WITH FORGOT PASSWORD ---
 class AuthScreen extends StatefulWidget {
   const AuthScreen({super.key});
 
@@ -110,18 +110,16 @@ class _AuthScreenState extends State<AuthScreen> {
         final res = await supabase.auth.signInWithPassword(
           email: email,
           password: password,
-        ).timeout(const Duration(seconds: 20));
+        );
 
-        if (res.user != null) {
-          if (mounted) {
-            Navigator.pushReplacement(context, MaterialPageRoute(builder: (c) => const AdminDashboardScreen()));
-          }
+        if (res.user != null && mounted) {
+          Navigator.pushReplacement(context, MaterialPageRoute(builder: (c) => const AdminDashboardScreen()));
         }
       } else if (_isSignUp) {
         final res = await supabase.auth.signUp(
           email: email,
           password: password,
-        ).timeout(const Duration(seconds: 20));
+        );
 
         if (res.user != null) {
           final pName = _pNameController.text.trim();
@@ -134,7 +132,7 @@ class _AuthScreenState extends State<AuthScreen> {
             'parent_phone': pPhone.isEmpty ? 'N/A' : pPhone,
             'has_paid': false,
             'is_admin': false,
-          }).timeout(const Duration(seconds: 15));
+          });
         }
         if (mounted) {
           Navigator.pushReplacement(context, MaterialPageRoute(builder: (c) => const MainContainer()));
@@ -143,16 +141,31 @@ class _AuthScreenState extends State<AuthScreen> {
         await supabase.auth.signInWithPassword(
           email: email,
           password: password,
-        ).timeout(const Duration(seconds: 20));
+        );
 
         if (mounted) {
           Navigator.pushReplacement(context, MaterialPageRoute(builder: (c) => const MainContainer()));
         }
       }
     } catch (e) {
-      _showMsg("सूचना: $e");
+      _showMsg("कनेक्शन सूचना: $e");
     } finally {
       if (mounted) setState(() => _isLoading = false);
+    }
+  }
+
+  Future<void> _resetPassword() async {
+    final email = _emailController.text.trim();
+    if (email.isEmpty) {
+      _showMsg("कृपया पहले अपनी ईमेल आईडी लिखें!");
+      return;
+    }
+
+    try {
+      await supabase.auth.resetPasswordForEmail(email);
+      _showMsg("✅ पासवर्ड रीसेट लिंक आपके ईमेल ($email) पर भेज दिया गया है!");
+    } catch (e) {
+      _showMsg("रीसेट एरर: $e");
     }
   }
 
@@ -210,7 +223,7 @@ class _AuthScreenState extends State<AuthScreen> {
                 ),
               ),
               const SizedBox(height: 16),
-              Text(_isAdminMode ? "Padh AI Admin" : "Padh AI", style: const TextStyle(fontSize: 32, fontWeight: FontWeight.w800, color: Colors.white)),
+              Text(_isAdminMode ? "Padh AI Admin" : "Padh AI", style: const TextStyle(fontSize: 32, fontWeight: FontWeight.bold, color: Colors.white)),
               const SizedBox(height: 35),
               if (_isSignUp && !_isAdminMode) ...[
                 _buildField(_nameController, "छात्र का नाम (ऐच्छिक)", Icons.person_outline),
@@ -219,7 +232,16 @@ class _AuthScreenState extends State<AuthScreen> {
               ],
               _buildField(_emailController, _isAdminMode ? "एडमिन ईमेल" : "ईमेल आईडी", Icons.alternate_email_outlined),
               _buildField(_passController, "पासवर्ड", Icons.lock_outline, isPass: true),
-              const SizedBox(height: 20),
+              
+              Align(
+                alignment: Alignment.centerRight,
+                child: TextButton(
+                  onPressed: _resetPassword,
+                  child: const Text("पासवर्ड भूल गए? (Reset Password)", style: TextStyle(color: Color(0xFFFFD77A), fontSize: 13)),
+                ),
+              ),
+              
+              const SizedBox(height: 10),
               _isLoading
                   ? const Center(child: CircularProgressIndicator(color: Color(0xFF00D2A0)))
                   : SizedBox(
@@ -246,7 +268,7 @@ class _AuthScreenState extends State<AuthScreen> {
 
   Widget _buildField(TextEditingController controller, String label, IconData icon, {bool isPass = false}) {
     return Padding(
-      padding: const EdgeInsets.only(bottom: 16),
+      padding: const EdgeInsets.only(bottom: 12),
       child: TextField(
         controller: controller,
         obscureText: isPass,
@@ -257,7 +279,7 @@ class _AuthScreenState extends State<AuthScreen> {
   }
 }
 
-// --- 2. STUDENT DASHBOARD (DETAILED T&C + HIGH IMPACT SPEAKER + FLIPKART GIFT CARD) ---
+// --- 2. STUDENT DASHBOARD ---
 class MainContainer extends StatefulWidget {
   const MainContainer({super.key});
 
@@ -330,7 +352,6 @@ class _MainContainerState extends State<MainContainer> {
         padding: const EdgeInsets.all(18),
         child: Column(
           children: [
-            // LOCK & DETAILED T&C SECTION
             if (!hasPaid) ...[
               Container(
                 width: double.infinity,
@@ -359,23 +380,19 @@ class _MainContainerState extends State<MainContainer> {
                       ],
                     ),
                     const Divider(color: Color(0xFF232B42), height: 25),
-                    
                     const Text(
                       "📜 जरूरी नियम एवं शर्तें (Terms & Conditions):",
                       style: TextStyle(fontSize: 15, fontWeight: FontWeight.bold, color: Color(0xFF00D2A0)),
                     ),
                     const SizedBox(height: 10),
-
                     Text(
                       "1. 💯% पारदर्शी नीति: हम पढ़ाई का ₹1 भी फीस नहीं लेते हैं।\n"
                       "2. 🎁 आपका पैसा, आपके बच्चे का गिफ्ट: जो ₹$fee की फीस ली जा रही है, वह शत-प्रतिशत आपके ही बच्चों को इनाम और स्कॉलरशिप के रूप में मिलेगी।\n"
-                      "3. 🛒 नकद (Cash) नहीं, सीधे Flipkart Gift Card: हम पैसों का नकद भुगतान नहीं करते, ताकि पैसों का गलत इस्तेमाल न हो। बच्चों को सीधे Flipkart Gift Card भेजा जाएगा जिससे वे पढ़ाई की सामग्री व सामान ही खरीद सकें।\n"
+                      "3. 🛒 नकद (Cash) नहीं, सीधे Flipkart Gift Card: हम पैसों का नकद भुगतान नहीं करते। बच्चों को सीधे Flipkart Gift Card भेजा जाएगा।\n"
                       "4. 🔓 लॉक कैसे खोलें: ₹$fee फीस देकर एडमिन से अपना अकाउंट अनलॉक करवाएं।",
                       style: const TextStyle(color: Color(0xFFE2E8F0), fontSize: 13.5, height: 1.6),
                     ),
                     const SizedBox(height: 22),
-
-                    // BIG SPEAKER BUTTON
                     SizedBox(
                       width: double.infinity,
                       child: ElevatedButton.icon(
@@ -389,7 +406,7 @@ class _MainContainerState extends State<MainContainer> {
                         icon: const Icon(Icons.volume_up_rounded, size: 30, color: Colors.black),
                         label: const Text(
                           "🔊 अभिभावक यहाँ दबाकर सुनें",
-                          style: TextStyle(color: Colors.black, fontWeight: FontWeight.w800, fontSize: 17),
+                          style: TextStyle(color: Colors.black, fontWeight: FontWeight.bold, fontSize: 17),
                         ),
                       ),
                     )
@@ -407,7 +424,6 @@ class _MainContainerState extends State<MainContainer> {
                       const Text("एग्जाम अनलॉक है ✅", style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
                       const SizedBox(height: 4),
                       const Text("आप स्कॉलरशिप टेस्ट देने के लिए पूरी तरह पात्र हैं।", style: TextStyle(color: Color(0xFFA0AEC0))),
-                      
                       if (giftUrl != null && giftUrl.isNotEmpty) ...[
                         const Divider(height: 30, color: Color(0xFF232B42)),
                         Container(
@@ -453,7 +469,6 @@ class AdminDashboardScreen extends StatefulWidget {
 
 class _AdminDashboardScreenState extends State<AdminDashboardScreen> {
   List<dynamic> _students = [];
-  final _feeController = TextEditingController();
   bool _isLoading = true;
 
   @override
@@ -465,11 +480,8 @@ class _AdminDashboardScreenState extends State<AdminDashboardScreen> {
   Future<void> _fetchData() async {
     try {
       final studentsData = await supabase.from('profiles').select().order('id');
-      final configData = await supabase.from('app_config').select().eq('id', 1).maybeSingle();
-
       setState(() {
         _students = studentsData;
-        if (configData != null) _feeController.text = configData['test_fee'].toString();
         _isLoading = false;
       });
     } catch (e) {
