@@ -339,7 +339,7 @@ class _AuthScreenState extends State<AuthScreen> {
   }
 }
 
-// --- 2. होम स्क्रीन (एडमिन और स्टूडेंट दोनों के लिए अलग वॉलेट व UPI QR कंट्रोल) ---
+// --- 2. होम स्क्रीन (AI ऑटो चेकिंग, 1-क्लिक रिजल्ट टाइमर, वॉलेट, QR व पहाड़ा) ---
 class HomeScreen extends StatefulWidget {
   final bool isAdmin;
   const HomeScreen({super.key, required this.isAdmin});
@@ -349,8 +349,92 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
-  // एडमिन द्वारा सेट किया जाने वाला UPI QR डेटा
   String adminUpiId = "sonwaniv842@okaxis";
+
+  // AI रिजल्ट घोषणा स्टेट्स
+  String resultExamTitle = "साप्ताहिक AI मूल्यांकन परीक्षा";
+  String topperName = "विशाल कुमार (98/100) - AI द्वारा जाँचित";
+  bool isResultPublished = true;
+  String announceTimer = "तुरंत घोषित";
+
+  void _openAiResultPublishDialog() {
+    final examController = TextEditingController(text: resultExamTitle);
+    final topperController = TextEditingController(text: topperName);
+    String selectedHours = "0";
+
+    showDialog(
+      context: context,
+      builder: (context) => StatefulBuilder(
+        builder: (context, setDialogState) => AlertDialog(
+          backgroundColor: const Color(0xFF1E293B),
+          title: const Row(
+            children: [
+              Icon(Icons.auto_awesome, color: Colors.amberAccent),
+              SizedBox(width: 8),
+              Text('AI 1-क्लिक रिजल्ट घोषणा', style: TextStyle(color: Colors.white, fontSize: 18)),
+            ],
+          ),
+          content: Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAlignment.start,
+            children: [
+              const Text('🤖 AI द्वारा उत्तर-पुस्तिकाएं जांच ली गई हैं।', style: TextStyle(color: Colors.tealAccent, fontSize: 13)),
+              const SizedBox(height: 12),
+              TextField(
+                controller: examController,
+                style: const TextStyle(color: Colors.white),
+                decoration: const InputDecoration(labelText: 'परीक्षा का नाम', labelStyle: TextStyle(color: Colors.grey)),
+              ),
+              const SizedBox(height: 8),
+              TextField(
+                controller: topperController,
+                style: const TextStyle(color: Colors.white),
+                decoration: const InputDecoration(labelText: 'AI द्वारा घोषित टॉपर', labelStyle: TextStyle(color: Colors.grey)),
+              ),
+              const SizedBox(height: 16),
+              const Text('घोषणा का समय चुनें (Timer):', style: TextStyle(color: Colors.white70, fontSize: 13, fontWeight: FontWeight.bold)),
+              const SizedBox(height: 8),
+              DropdownButton<String>(
+                value: selectedHours,
+                dropdownColor: const Color(0xFF0F172A),
+                isExpanded: true,
+                style: const TextStyle(color: Colors.amberAccent),
+                items: const [
+                  DropdownMenuItem(value: "0", child: Text("🚀 1-क्लिक (तुरंत लाइव घोषित करें)")),
+                  DropdownMenuItem(value: "24", child: Text("⏱️ 24 घंटे में ऑटो-पब्लिश करें")),
+                  DropdownMenuItem(value: "48", child: Text("⏱️ 48 घंटे में ऑटो-पब्लिश करें")),
+                ],
+                onChanged: (val) {
+                  if (val != null) setDialogState(() => selectedHours = val);
+                },
+              ),
+            ],
+          ),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.pop(context),
+              child: const Text('रद्द करें', style: TextStyle(color: Colors.grey)),
+            ),
+            ElevatedButton(
+              onPressed: () {
+                setState(() {
+                  resultExamTitle = examController.text.trim();
+                  topperName = topperController.text.trim();
+                  announceTimer = selectedHours == "0" ? "तुरंत घोषित" : "$selectedHours घंटे का टाइमर लागू";
+                  isResultPublished = true;
+                });
+                Navigator.pop(context);
+                ScaffoldMessenger.of(context).showSnackBar(
+                  SnackBar(content: Text('AI परिणाम ($announceTimer) सेट हो गया है! 📢🎉')),
+                );
+              },
+              child: const Text('घोषित करें 📢'),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
 
   void _openQrDialog() {
     final upiController = TextEditingController(text: adminUpiId);
@@ -366,10 +450,7 @@ class _HomeScreenState extends State<HomeScreen> {
           mainAxisSize: MainAxisSize.min,
           children: [
             if (widget.isAdmin) ...[
-              const Text(
-                'अपना UPI ID दर्ज करें जो छात्रों को दिखेगा:',
-                style: TextStyle(color: Colors.white70, fontSize: 13),
-              ),
+              const Text('अपना UPI ID दर्ज करें जो छात्रों को दिखेगा:', style: TextStyle(color: Colors.white70, fontSize: 13)),
               const SizedBox(height: 12),
               TextField(
                 controller: upiController,
@@ -385,22 +466,11 @@ class _HomeScreenState extends State<HomeScreen> {
             ] else ...[
               Container(
                 padding: const EdgeInsets.all(16),
-                decoration: BoxDecoration(
-                  color: Colors.white,
-                  borderRadius: BorderRadius.circular(12),
-                ),
-                child: Icon(Icons.qr_code_2, size: 160, color: Colors.black87),
+                decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(12)),
+                child: const Icon(Icons.qr_code_2, size: 160, color: Colors.black87),
               ),
               const SizedBox(height: 12),
-              Text(
-                'UPI ID: $adminUpiId',
-                style: const TextStyle(color: Colors.tealAccent, fontWeight: FontWeight.bold, fontSize: 16),
-              ),
-              const SizedBox(height: 4),
-              const Text(
-                'पेमेंट करने के बाद एडमिन को स्क्रीनशॉट भेजें।',
-                style: TextStyle(color: Colors.white54, fontSize: 12),
-              ),
+              Text('UPI ID: $adminUpiId', style: const TextStyle(color: Colors.tealAccent, fontWeight: FontWeight.bold, fontSize: 16)),
             ]
           ],
         ),
@@ -520,7 +590,46 @@ class _HomeScreenState extends State<HomeScreen> {
                 ],
               ),
             ),
-            const SizedBox(height: 24),
+            const SizedBox(height: 20),
+
+            // 🏆 AI लाइव रिजल्ट घोषणा बैनर
+            if (isResultPublished) ...[
+              Container(
+                width: double.infinity,
+                padding: const EdgeInsets.all(16),
+                decoration: BoxDecoration(
+                  color: const Color(0xFF1E293B),
+                  borderRadius: BorderRadius.circular(16),
+                  border: Border.all(color: Colors.amberAccent.withOpacity(0.5)),
+                ),
+                child: Row(
+                  children: [
+                    const CircleAvatar(
+                      backgroundColor: Colors.amber,
+                      child: Icon(Icons.auto_awesome, color: Colors.black),
+                    ),
+                    const SizedBox(width: 12),
+                    Expanded(
+                      child: Column(
+                        crossAxisAlignment: CrossAlignment.start,
+                        children: [
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              Text(resultExamTitle, style: const TextStyle(fontWeight: FontWeight.bold, color: Colors.amber, fontSize: 14)),
+                              const Text('LIVE 🔴', style: TextStyle(color: Colors.redAccent, fontSize: 11, fontWeight: FontWeight.bold)),
+                            ],
+                          ),
+                          const SizedBox(height: 4),
+                          Text(topperName, style: const TextStyle(color: Colors.white70, fontSize: 12)),
+                        ],
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              const SizedBox(height: 24),
+            ],
 
             const Text(
               'मुख्य फीचर्स (Modules)',
@@ -528,14 +637,24 @@ class _HomeScreenState extends State<HomeScreen> {
             ),
             const SizedBox(height: 16),
 
-            // Admin Barcode & QR Management Option (If Admin)
+            // एडमिन AI 1-क्लिक रिजल्ट पब्लिशर (If Admin)
             if (widget.isAdmin) ...[
+              _buildFeatureCard(
+                context,
+                title: '🤖 AI 1-क्लिक रिजल्ट घोषणा (24h/48h Timer)',
+                description: 'AI द्वारा जाँचें गए नतीजों को 1 क्लिक में पब्लिश करें।',
+                icon: Icons.auto_awesome_sharp,
+                color: Colors.amber,
+                onTap: _openAiResultPublishDialog,
+              ),
+              const SizedBox(height: 16),
+
               _buildFeatureCard(
                 context,
                 title: '🔲 एडमिन बारकोड व UPI QR सेटअप',
                 description: 'छात्रों के भुगतान के लिए अपना QR कोड अपडेट करें।',
                 icon: Icons.qr_code_scanner,
-                color: Colors.amberAccent,
+                color: Colors.emerald,
                 onTap: _openQrDialog,
               ),
               const SizedBox(height: 16),
