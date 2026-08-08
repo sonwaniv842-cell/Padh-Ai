@@ -29,6 +29,11 @@ jobs:
         rm -rf android
         flutter create . --project-name padh_ai --platforms android --org com.padhai
 
+    - name: Set minSdk Version for flutter_tts
+      run: |
+        sed -i 's/minSdkVersion .*/minSdkVersion 21/' android/app/build.gradle || true
+        sed -i 's/minSdk = .*/minSdk = 21/' android/app/build.gradle || true
+
     - name: Install Dependencies
       run: flutter pub get
 
