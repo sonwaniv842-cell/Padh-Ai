@@ -1,7 +1,7 @@
 name: padh_ai
-description: "A new Flutter project for Padh AI."
-publish_to: 'none'
+description: Padh AI - Future Digital School
 version: 1.0.0+1
+publish_to: 'none'
 
 environment:
   sdk: '>=3.0.0 <4.0.0'
@@ -9,17 +9,14 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
-  supabase_flutter: ^2.3.4
-  flutter_tts: ^3.8.5
-  cupertino_icons: ^1.0.6
-
-dev_dependencies:
-  flutter:
-    sdk: flutter
-  flutter_test:
-    sdk: flutter
-  flutter_lints: ^3.0.0
+  supabase_flutter: ^2.0.0      # डेटाबेस और लॉगिन के लिए
+  flutter_tts: ^3.8.5           # आवाज़ (Voice) के लिए
+  url_launcher: ^6.2.0          # कॉल और व्हाट्सएप के लिए
+  image_picker: ^1.0.4          # कैमरा स्कैन के लिए
+  webview_flutter: ^4.7.0       # HTML वर्णमाला व पहाड़ा लोड करने के लिए
 
 flutter:
   uses-material-design: true
-  # यहाँ से एसेट्स हटा दिए गए हैं ताकि Error न आए
+  assets:
+    - assets/varnamala.html
+    
