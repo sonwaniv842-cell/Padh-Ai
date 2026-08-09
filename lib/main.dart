@@ -1,12 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
-import 'package:flutter_tts/flutter_tts.dart';
-import 'package:url_launcher/url_launcher.dart';
-import 'package:webview_flutter/webview_flutter.dart';
 
-// --- SUPABASE CONFIGURATION ---
+// --- CONFIGURATION ---
 const supabaseUrl = 'https://tyonurrbwdjqfrmqrgpk.supabase.co';
-const supabaseAnonKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InR5b251cnJid2RqcWZybXFyZ3BrIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODYxNzMzODMsImV4cCI6MjEwMTc0OTM4M30.95tDST7gwxemb2w2SS71arWh77omlFf0ezPwkTun2cM';
+const supabaseAnonKey = 'YOUR_SUPABASE_ANON_KEY'; // 👈 यहाँ अपनी असली Key डालें
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -22,17 +19,23 @@ class PadhAIApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
-      theme: ThemeData.dark().copyWith(
-        primaryColor: const Color(0xFF6C63FF),
-        scaffoldBackgroundColor: const Color(0xFF0D0D1E),
-        colorScheme: ColorScheme.fromSeed(seedColor: const Color(0xFF6C63FF), brightness: Brightness.dark),
+      theme: ThemeData(
+        brightness: Brightness.dark,
+        primaryColor: const Color(0xFF00E5FF), // Cyber Cyan
+        scaffoldBackgroundColor: const Color(0xFF0A0E21), // Robot Navy
+        fontFamily: 'Roboto',
+        cardTheme: CardTheme(
+          color: const Color(0xFF1D1B2E),
+          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+          elevation: 10,
+        ),
       ),
-      home: supabase.auth.currentSession == null ? const AuthScreen() : const MainDashboard(),
+      home: supabase.auth.currentSession == null ? const AuthScreen() : const StartupWrapper(),
     );
   }
 }
 
-// --- 1. AUTH SCREEN (FIXED FOR SUPABASE FOREIGN KEY ERROR) ---
+// --- 1. LOGIN / SIGNUP & PASSWORD RESET ---
 class AuthScreen extends StatefulWidget {
   const AuthScreen({super.key});
   @override
@@ -40,92 +43,149 @@ class AuthScreen extends StatefulWidget {
 }
 
 class _AuthScreenState extends State<AuthScreen> {
-  final _email = TextEditingController();
-  final _pass = TextEditingController();
-  final _name = TextEditingController();
-  final _pName = TextEditingController();
-  final _pPhone = TextEditingController();
-  bool _isSignUp = true;
-  bool _loading = false;
+  final _emailController = TextEditingController();
+  final _passController = TextEditingController();
+  final _nameController = TextEditingController();
+  bool _isLogin = true;
+  bool _isLoading = false;
 
   Future<void> _handleAuth() async {
-    setState(() => _loading = true);
+    setState(() => _isLoading = true);
     try {
-      if (_isSignUp) {
-        // 1. Sign Up User
-        final res = await supabase.auth.signUp(
-          email: _email.text.trim(), 
-          password: _pass.text.trim()
-        );
-        
-        final userId = res.user?.id ?? supabase.auth.currentUser?.id;
-
-        if (userId != null) {
-          // 2. Small delay to ensure Supabase Auth syncs
-          await Future.delayed(const Duration(milliseconds: 500));
-
-          // 3. Insert profile safely
+      if (_isLogin) {
+        await supabase.auth.signInWithPassword(email: _emailController.text.trim(), password: _passController.text);
+      } else {
+        final res = await supabase.auth.signUp(email: _emailController.text.trim(), password: _passController.text);
+        if (res.user != null) {
           await supabase.from('profiles').upsert({
-            'id': userId, 
-            'full_name': _name.text.trim(), 
-            'parent_name': _pName.text.trim(), 
-            'parent_phone': _pPhone.text.trim(),
-            'has_paid': false,
-            'is_admin': false,
+            'id': res.user!.id,
+            'full_name': _nameController.text.trim(),
+            'role': 'student',
+            'is_active': true,
           });
         }
-      } else {
-        await supabase.auth.signInWithPassword(
-          email: _email.text.trim(), 
-          password: _pass.text.trim()
-        );
       }
-      if (mounted) Navigator.pushReplacement(context, MaterialPageRoute(builder: (c) => const MainDashboard()));
+      if (mounted) Navigator.pushReplacement(context, MaterialPageRoute(builder: (c) => const StartupWrapper()));
     } catch (e) {
-      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-        backgroundColor: Colors.redAccent,
-        content: Text("Error: ${e.toString()}"),
-      ));
+      _showError("त्रुटि: $e");
     } finally {
-      if (mounted) setState(() => _loading = false);
+      if (mounted) setState(() => _isLoading = false);
+    }
+  }
+
+  Future<void> _resetPassword() async {
+    if (_emailController.text.trim().isEmpty) {
+      _showError("पासवर्ड रीसेट के लिए अपनी ईमेल भरें");
+      return;
+    }
+    try {
+      await supabase.auth.resetPasswordForEmail(_emailController.text.trim());
+      _showError("पासवर्ड रीसेट लिंक आपकी ईमेल पर भेज दिया गया है।");
+    } catch (e) {
+      _showError("त्रुटि: $e");
+    }
+  }
+
+  void _showError(String msg) => ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(msg)));
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      body: Center(
+        child: SingleChildScrollView(
+          padding: const EdgeInsets.all(30),
+          child: Column(
+            children: [
+              const Text("🤖", style: TextStyle(fontSize: 80)),
+              const Text("Padh-AI", style: TextStyle(fontSize: 32, fontWeight: FontWeight.bold, color: Color(0xFF00E5FF))),
+              const SizedBox(height: 40),
+              if (!_isLogin) TextField(controller: _nameController, decoration: const InputDecoration(labelText: "पूरा नाम", border: OutlineInputBorder())),
+              if (!_isLogin) const SizedBox(height: 15),
+              TextField(controller: _emailController, decoration: const InputDecoration(labelText: "ईमेल आईडी", border: OutlineInputBorder())),
+              const SizedBox(height: 15),
+              TextField(controller: _passController, obscureText: true, decoration: const InputDecoration(labelText: "पिन / पासवर्ड", border: OutlineInputBorder())),
+              const SizedBox(height: 30),
+              _isLoading ? const CircularProgressIndicator() : SizedBox(width: double.infinity, height: 50, child: ElevatedButton(onPressed: _handleAuth, child: Text(_isLogin ? "लॉगिन" : "साइन-अप"))),
+              TextButton(onPressed: () => setState(() => _isLogin = !_isLogin), child: Text(_isLogin ? "नया अकाउंट बनायें" : "पुराना अकाउंट है? लॉगिन करें")),
+              TextButton(onPressed: _resetPassword, child: const Text("पासवर्ड भूल गए? रीसेट करें", style: TextStyle(color: Colors.grey))),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+// --- 2. CLASS SELECTION WRAPPER ---
+class StartupWrapper extends StatefulWidget {
+  const StartupWrapper({super.key});
+  @override
+  State<StartupWrapper> createState() => _StartupWrapperState();
+}
+
+class _StartupWrapperState extends State<StartupWrapper> {
+  bool _isLoading = true;
+  String? _class;
+
+  @override
+  void initState() {
+    super.initState();
+    _checkClass();
+  }
+
+  _checkClass() async {
+    try {
+      final user = supabase.auth.currentUser;
+      if (user != null) {
+        final data = await supabase.from('profiles').select('class_level').eq('id', user.id).maybeSingle();
+        if (data != null && data['class_level'] != null) {
+          _class = data['class_level'];
+        }
+      }
+    } catch (e) {
+    } finally {
+      if (mounted) setState(() => _isLoading = false);
     }
   }
 
   @override
   Widget build(BuildContext context) {
+    if (_isLoading) return const Scaffold(body: Center(child: CircularProgressIndicator()));
+    if (_class == null) return const ClassSelectionScreen();
+    return const MainDashboard();
+  }
+}
+
+class ClassSelectionScreen extends StatelessWidget {
+  const ClassSelectionScreen({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    List<String> classes = ["KG-1", "KG-2", "1st", "2nd", "3rd", "4th", "5th", "6th", "7th", "8th", "9th", "10th", "11th", "12th"];
     return Scaffold(
-      body: SingleChildScrollView(
-        padding: const EdgeInsets.all(25),
-        child: Column(
-          children: [
-            const SizedBox(height: 70),
-            const Text("Padh AI", style: TextStyle(fontSize: 40, fontWeight: FontWeight.bold, color: Color(0xFF6C63FF))),
-            const SizedBox(height: 30),
-            if (_isSignUp) ...[
-              _buildField(_name, "छात्र का नाम", Icons.person),
-              _buildField(_pName, "अभिभावक का नाम", Icons.people),
-              _buildField(_pPhone, "WhatsApp नंबर", Icons.chat_bubble_outline),
-            ],
-            _buildField(_email, "ईमेल", Icons.email),
-            _buildField(_pass, "पासवर्ड", Icons.lock, isPass: true),
-            const SizedBox(height: 25),
-            _loading ? const CircularProgressIndicator() : SizedBox(width: double.infinity, height: 55, child: ElevatedButton(onPressed: _handleAuth, child: Text(_isSignUp ? "रजिस्टर करें" : "लॉगिन करें"))),
-            TextButton(onPressed: () => setState(() => _isSignUp = !_isSignUp), child: Text(_isSignUp ? "अकाउंट है? लॉगिन करें" : "नया अकाउंट बनायें"))
-          ],
+      appBar: AppBar(title: const Text("अपनी कक्षा चुनें")),
+      body: GridView.builder(
+        padding: const EdgeInsets.all(20),
+        gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 2, childAspectRatio: 2),
+        itemCount: classes.length,
+        itemBuilder: (c, i) => InkWell(
+          onTap: () async {
+            final user = supabase.auth.currentUser;
+            if (user != null) {
+              await supabase.from('profiles').update({'class_level': classes[i]}).eq('id', user.id);
+            }
+            if (context.mounted) {
+              Navigator.pushReplacement(context, MaterialPageRoute(builder: (c) => const StartupWrapper()));
+            }
+          },
+          child: Card(child: Center(child: Text(classes[i], style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold)))),
         ),
       ),
     );
   }
-
-  Widget _buildField(TextEditingController c, String l, IconData i, {bool isPass = false}) {
-    return Padding(
-      padding: const EdgeInsets.only(bottom: 12),
-      child: TextField(controller: c, obscureText: isPass, decoration: InputDecoration(labelText: l, prefixIcon: Icon(i, color: const Color(0xFF6C63FF)), border: OutlineInputBorder(borderRadius: BorderRadius.circular(15)))),
-    );
-  }
 }
 
-// --- 2. MAIN DASHBOARD ---
+// --- 3. MAIN DASHBOARD & EXAM HISTORY ---
 class MainDashboard extends StatefulWidget {
   const MainDashboard({super.key});
   @override
@@ -133,150 +193,98 @@ class MainDashboard extends StatefulWidget {
 }
 
 class _MainDashboardState extends State<MainDashboard> {
-  Map<String, dynamic>? profile;
   int _tab = 0;
-  final _tts = FlutterTts();
-
-  @override
-  void initState() { super.initState(); _load(); }
-
-  _load() async {
-    final user = supabase.auth.currentUser;
-    if (user != null) {
-      final data = await supabase.from('profiles').select().eq('id', user.id).maybeSingle();
-      setState(() => profile = data ?? {'full_name': 'Student', 'is_admin': false});
-    }
-  }
-
-  void _speak() async {
-    await _tts.setLanguage("hi-IN");
-    await _tts.speak("नमस्ते, हम पढ़ाई के लिए कोई फीस नहीं लेते। ₹50 टेस्ट फीस बच्चों के इनाम के लिए है।");
-  }
 
   @override
   Widget build(BuildContext context) {
-    if (profile == null) return const Scaffold(body: Center(child: CircularProgressIndicator()));
-
     return Scaffold(
-      appBar: AppBar(title: Text("Padh AI: ${profile!['full_name'] ?? 'User'}"), actions: [
-        if (profile!['is_admin'] == true) IconButton(icon: const Icon(Icons.admin_panel_settings, color: Colors.orange), onPressed: () => Navigator.push(context, MaterialPageRoute(builder: (c) => const AdminPage()))),
-        IconButton(icon: const Icon(Icons.logout), onPressed: () async {
-          await supabase.auth.signOut();
-          if (mounted) Navigator.pushReplacement(context, MaterialPageRoute(builder: (c) => const AuthScreen()));
-        })
-      ]),
-      body: _tab == 0 ? _homeView() : _examView(),
-      bottomNavigationBar: BottomNavigationBar(currentIndex: _tab, onTap: (i) => setState(() => _tab = i), items: const [
-        BottomNavigationBarItem(icon: Icon(Icons.school), label: "Learn"),
-        BottomNavigationBarItem(icon: Icon(Icons.quiz), label: "Exam"),
-      ]),
-    );
-  }
-
-  Widget _homeView() {
-    return SingleChildScrollView(
-      child: Column(
-        children: [
-          Image.network(profile?['banner_url'] ?? 'https://placehold.co/600x200/6C63FF/white?text=Padh+AI', height: 150, width: double.infinity, fit: BoxFit.cover),
-          
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 10),
-            child: SizedBox(
-              width: double.infinity,
-              height: 60,
-              child: ElevatedButton.icon(
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: Colors.deepOrangeAccent,
-                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
-                ),
-                icon: const Icon(Icons.auto_awesome, color: Colors.white, size: 28),
-                label: const Text("🎨 बाल शिक्षा (वर्णमाला, पहाड़ा व गिनती)", style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: Colors.white)),
-                onPressed: () => Navigator.push(context, MaterialPageRoute(builder: (c) => const VarnamalaWebScreen())),
-              ),
-            ),
-          ),
-
-          Padding(
-            padding: const EdgeInsets.all(15),
-            child: Card(child: Padding(
-              padding: const EdgeInsets.all(20),
-              child: Column(children: [
-                Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
-                  const Text("पैरेंट्स के लिए संदेश", style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
-                  IconButton(icon: const Icon(Icons.volume_up, size: 30, color: Colors.blueAccent), onPressed: _speak),
-                ]),
-                const Text("पढ़ाई ₹0। टेस्ट फीस ₹50 इनामों (TV/Cycle) के लिए। हम ₹1 भी अपने पास नहीं रखते।"),
-              ]),
-            )),
-          ),
+      appBar: AppBar(
+        title: const Text("🤖 Padh-AI"),
+        actions: [
+          IconButton(
+            icon: const Icon(Icons.logout), 
+            onPressed: () async {
+              await supabase.auth.signOut();
+              if (mounted) {
+                Navigator.pushReplacement(context, MaterialPageRoute(builder: (c) => const AuthScreen()));
+              }
+            }
+          )
+        ],
+      ),
+      body: _tab == 0 ? const StudentHome() : const ExamHistory(),
+      bottomNavigationBar: BottomNavigationBar(
+        currentIndex: _tab,
+        onTap: (i) => setState(() => _tab = i),
+        items: const [
+          BottomNavigationBarItem(icon: Icon(Icons.home), label: "होम"),
+          BottomNavigationBarItem(icon: Icon(Icons.history_edu), label: "एग्जाम हिस्ट्री"),
         ],
       ),
     );
   }
-
-  Widget _examView() {
-    bool paid = profile?['has_paid'] ?? false;
-    return Center(child: Padding(
-      padding: const EdgeInsets.all(25),
-      child: Column(mainAxisAlignment: MainAxisAlignment.center, children: [
-        Icon(paid ? Icons.check_circle : Icons.lock, size: 80, color: paid ? Colors.green : Colors.red),
-        Text(paid ? "परीक्षा अनलॉक है!" : "परीक्षा लॉक है", style: const TextStyle(fontSize: 22, fontWeight: FontWeight.bold)),
-        if (!paid) ...[
-          const Text("₹50 फीस न देने पर परीक्षा में बैठने नहीं दिया जाएगा।", textAlign: TextAlign.center),
-          const SizedBox(height: 20),
-          Image.network('https://api.qrserver.com/v1/create-qr-code/?size=120x120&data=upi://pay?pa=sonwaniv842@okaxis', height: 120),
-        ]
-      ]),
-    ));
-  }
 }
 
-// --- 3. HTML VARNAMALA WEBVIEW SCREEN ---
-class VarnamalaWebScreen extends StatefulWidget {
-  const VarnamalaWebScreen({super.key});
-  @override
-  State<VarnamalaWebScreen> createState() => _VarnamalaWebScreenState();
-}
-
-class _VarnamalaWebScreenState extends State<VarnamalaWebScreen> {
-  late final WebViewController _controller;
-
-  @override
-  void initState() {
-    super.initState();
-    _controller = WebViewController()
-      ..setJavaScriptMode(JavaScriptMode.unrestricted)
-      ..loadFlutterAsset('assets/varnamala.html');
-  }
-
+class StudentHome extends StatelessWidget {
+  const StudentHome({super.key});
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(title: const Text("बाल शिक्षा - Padh AI")),
-      body: WebViewWidget(controller: _controller),
+    return ListView(
+      padding: const EdgeInsets.all(20),
+      children: [
+        const Card(
+          child: Padding(
+            padding: const EdgeInsets.all(20),
+            child: Column(
+              children: [
+                Text("🤖 नमस्ते स्टूडेंट!", style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold)),
+                SizedBox(height: 5),
+                Text("आज हम क्या पढ़ेंगे?", style: TextStyle(color: Colors.cyanAccent)),
+              ],
+            ),
+          ),
+        ),
+        const SizedBox(height: 20),
+        _buildFeatureCard("📸 कैमरा स्कैनर", "किताब का फोटो लें और AI से समझें"),
+        _buildFeatureCard("📚 डेली क्विज", "आज का टेस्ट दें और इनाम जीतें"),
+      ],
+    );
+  }
+
+  Widget _buildFeatureCard(String title, String sub) {
+    return Card(
+      margin: const EdgeInsets.only(bottom: 15),
+      child: ListTile(title: Text(title), subtitle: Text(sub), trailing: const Icon(Icons.arrow_forward_ios)),
     );
   }
 }
 
-// --- 4. ADMIN PANEL ---
-class AdminPage extends StatefulWidget { const AdminPage({super.key}); @override State<AdminPage> createState() => _AdminPageState(); }
-class _AdminPageState extends State<AdminPage> {
-  List users = [];
-  @override void initState() { super.initState(); _fetch(); }
-  _fetch() async { final d = await supabase.from('profiles').select(); setState(() => users = d); }
-  _toggle(String id, bool s) async { await supabase.from('profiles').update({'has_paid': !s}).eq('id', id); _fetch(); }
-
+class ExamHistory extends StatelessWidget {
+  const ExamHistory({super.key});
   @override
   Widget build(BuildContext context) {
-    return Scaffold(appBar: AppBar(title: const Text("Admin Panel")), body: ListView.builder(itemCount: users.length, itemBuilder: (c, i) => Card(
-      child: ListTile(
-        title: Text(users[i]['full_name'] ?? 'User'),
-        subtitle: Text("Parent: ${users[i]['parent_name'] ?? 'N/A'}"),
-        trailing: Row(mainAxisSize: MainAxisSize.min, children: [
-          IconButton(icon: const Icon(Icons.call, color: Colors.green), onPressed: () => launchUrl(Uri.parse("tel:${users[i]['parent_phone']}"))),
-          Switch(value: users[i]['has_paid'] ?? false, onChanged: (v) => _toggle(users[i]['id'], users[i]['has_paid'] ?? false)),
-        ]),
-      ),
-    )));
+    final user = supabase.auth.currentUser;
+    if (user == null) return const Center(child: Text("लॉगिन करें"));
+
+    return FutureBuilder(
+      future: supabase.from('exam_history').select().eq('student_id', user.id),
+      builder: (context, AsyncSnapshot snap) {
+        if (!snap.hasData) return const Center(child: CircularProgressIndicator());
+        if (snap.data.isEmpty) {
+          return const Center(child: Text("अभी कोई एग्जाम हिस्ट्री नहीं है।"));
+        }
+        return ListView.builder(
+          itemCount: snap.data.length,
+          itemBuilder: (c, i) => Card(
+            margin: const EdgeInsets.all(10),
+            child: ListTile(
+              title: Text("${snap.data[i]['month'] ?? 'मासिक'} - टेस्ट रिजल्ट"),
+              subtitle: Text("मार्क्स: ${snap.data[i]['marks'] ?? 0} | प्रतिशत: ${snap.data[i]['percent'] ?? 0}%"),
+              trailing: const Icon(Icons.check_circle, color: Colors.green),
+            ),
+          ),
+        );
+      },
+    );
   }
 }
