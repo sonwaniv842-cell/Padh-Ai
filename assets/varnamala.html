@@ -2,246 +2,996 @@
 <html lang="hi">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>बाल शिक्षा - वर्णमाला और पहाड़ा</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>बाल शिक्षा - Padh-Ai</title>
     <style>
-        /* मोबाइल ऐप जैसा डिज़ाइन */
+        :root {
+            --bg-gradient: linear-gradient(135deg, #2a085c 0%, #4c1d95 50%, #1e1b4b 100%);
+            --card-bg: rgba(255, 255, 255, 0.95);
+            --primary: #7c3aed;
+            --primary-dark: #6d28d9;
+            --accent: #f59e0b;
+            --pink: #ec4899;
+            --text-dark: #1e1b4b;
+        }
+
+        * {
+            box-sizing: border-box;
+            user-select: none;
+            -webkit-tap-highlight-color: transparent;
+        }
+
         body {
-            font-family: 'Segoe UI', Arial, sans-serif;
-            background-color: #f4eeff;
+            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+            background: var(--bg-gradient);
             margin: 0;
             padding: 0;
+            color: #fff;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            overflow-x: hidden;
+        }
+
+        /* Floating background elements */
+        .bg-element {
+            position: fixed;
+            border-radius: 50%;
+            pointer-events: none;
+            z-index: 0;
+            opacity: 0.15;
+            animation: float 10s infinite ease-in-out;
+        }
+        .bg-1 { width: 200px; height: 200px; background: #ec4899; top: -50px; left: -50px; }
+        .bg-2 { width: 300px; height: 300px; background: #f59e0b; bottom: -100px; right: -100px; animation-delay: -5s; }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0) rotate(0deg); }
+            50% { transform: translateY(-20px) rotate(10deg); }
+        }
+
+        /* Top Header */
+        header {
+            background: rgba(15, 23, 42, 0.6);
+            backdrop-filter: blur(12px);
+            padding: 12px 16px;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            border-b: 1px solid rgba(255, 255, 255, 0.1);
             display: flex;
             flex-direction: column;
             align-items: center;
-            color: #333;
         }
 
-        /* हेडर और नेविगेशन */
-        header {
-            width: 100%;
-            background-color: #fff;
-            padding: 15px 0;
-            text-align: center;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
-            position: sticky;
-            top: 0;
-            z-index: 1000;
-        }
-
-        .nav-buttons {
-            margin-top: 10px;
+        .header-top {
             display: flex;
-            justify-content: center;
+            align-items: center;
+            justify-content: space-between;
+            width: 100%;
+            max-width: 600px;
+        }
+
+        .app-brand {
+            display: flex;
+            align-items: center;
             gap: 10px;
         }
 
-        .nav-btn {
-            padding: 8px 20px;
-            border: none;
-            border-radius: 20px;
-            background-color: #e0d4f7;
-            color: #6200ee;
+        .app-logo {
+            width: 38px;
+            height: 38px;
+            background: linear-gradient(135deg, #f59e0b, #ec4899);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
             font-weight: bold;
-            cursor: pointer;
-            transition: 0.3s;
+            box-shadow: 0 4px 12px rgba(245, 158, 11, 0.4);
         }
 
-        .nav-btn.active {
-            background-color: #6200ee;
+        .app-title h1 {
+            margin: 0;
+            font-size: 18px;
+            font-weight: 800;
+            background: linear-gradient(90deg, #ffd700, #ff8c00);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .app-title p {
+            margin: 0;
+            font-size: 11px;
+            color: #cbd5e1;
+        }
+
+        /* AI Call Button */
+        .ai-call-btn {
+            background: linear-gradient(135deg, #10b981, #059669);
+            color: white;
+            border: none;
+            padding: 8px 14px;
+            border-radius: 20px;
+            font-weight: bold;
+            font-size: 12px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            cursor: pointer;
+            box-shadow: 0 4px 15px rgba(16, 185, 129, 0.4);
+            animation: pulse-btn 2s infinite;
+        }
+
+        @keyframes pulse-btn {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+        }
+
+        /* Navigation Bar */
+        .nav-tabs {
+            display: flex;
+            gap: 6px;
+            margin-top: 10px;
+            overflow-x: auto;
+            width: 100%;
+            max-width: 600px;
+            padding-bottom: 4px;
+            scrollbar-width: none;
+        }
+        .nav-tabs::-webkit-scrollbar { display: none; }
+
+        .tab-btn {
+            padding: 7px 14px;
+            border: none;
+            border-radius: 16px;
+            background: rgba(255, 255, 255, 0.12);
+            color: #e2e8f0;
+            font-size: 12px;
+            font-weight: 700;
+            white-space: nowrap;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .tab-btn.active {
+            background: linear-gradient(135deg, #f59e0b, #d97706);
+            color: #1e1b4b;
+            box-shadow: 0 4px 12px rgba(245, 158, 11, 0.3);
+        }
+
+        /* Main Container */
+        .container {
+            flex: 1;
+            width: 100%;
+            max-width: 600px;
+            margin: 0 auto;
+            padding: 16px;
+            z-index: 1;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* SECTION: GINATI (Numbers 1-100 Single Card Swipe) */
+        .number-card-wrapper {
+            background: var(--card-bg);
+            border-radius: 28px;
+            padding: 24px;
+            text-align: center;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+            color: var(--text-dark);
+            margin-bottom: 16px;
+            position: relative;
+            min-height: 320px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .num-big {
+            font-size: 84px;
+            font-weight: 900;
+            color: #7c3aed;
+            line-height: 1;
+            margin-bottom: 8px;
+            text-shadow: 2px 2px 0px #ddd;
+        }
+
+        .num-hindi {
+            font-size: 28px;
+            font-weight: 800;
+            color: #ec4899;
+            margin-bottom: 12px;
+        }
+
+        .num-items {
+            font-size: 32px;
+            line-height: 1.4;
+            max-width: 280px;
+            min-height: 60px;
+            word-wrap: break-word;
+        }
+
+        .swipe-controls {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 12px;
+            margin-bottom: 16px;
+        }
+
+        .ctrl-btn {
+            background: rgba(255, 255, 255, 0.15);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            color: white;
+            padding: 12px 20px;
+            border-radius: 20px;
+            font-weight: bold;
+            font-size: 14px;
+            cursor: pointer;
+            flex: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+        }
+        .ctrl-btn:active { background: rgba(255, 255, 255, 0.3); }
+
+        /* Keypad Grid for direct number picking */
+        .keypad-toggle {
+            text-align: center;
+            color: #ffd700;
+            font-size: 13px;
+            font-weight: bold;
+            margin-bottom: 12px;
+            cursor: pointer;
+            text-decoration: underline;
+        }
+
+        .keypad-grid {
+            display: grid;
+            grid-template-columns: repeat(5, 1fr);
+            gap: 8px;
+            max-height: 180px;
+            overflow-y: auto;
+            background: rgba(0, 0, 0, 0.2);
+            padding: 10px;
+            border-radius: 16px;
+        }
+
+        .keypad-num {
+            background: rgba(255, 255, 255, 0.9);
+            color: #331f6e;
+            border-radius: 10px;
+            padding: 8px 0;
+            text-align: center;
+            font-weight: bold;
+            font-size: 14px;
+            cursor: pointer;
+        }
+        .keypad-num.active {
+            background: #f59e0b;
             color: white;
         }
 
-        /* कंटेंट एरिया */
-        .container {
-            width: 100%;
-            max-width: 500px;
-            padding: 20px;
-            box-sizing: border-box;
-        }
-
-        /* वर्णमाला कार्ड डिज़ाइन */
-        .grid {
+        /* SECTION: ALPHABETS (English A-Z & Hindi क-ज्ञ) */
+        .grid-2col {
             display: grid;
             grid-template-columns: repeat(2, 1fr);
-            gap: 15px;
+            gap: 12px;
         }
 
-        .card {
-            background: white;
+        .alpha-card {
+            background: var(--card-bg);
             border-radius: 20px;
-            padding: 20px;
+            padding: 16px;
             text-align: center;
-            box-shadow: 0 4px 6px rgba(0,0,0,0.05);
-        }
-
-        .emoji { font-size: 50px; margin-bottom: 10px; }
-        .letter { font-size: 40px; font-weight: bold; color: #2196F3; margin: 5px 0; }
-        .word { font-size: 18px; color: #777; }
-
-        /* पहाड़ा (Table) डिज़ाइन */
-        .table-list {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 10px;
-            justify-content: center;
-            margin-bottom: 20px;
-        }
-
-        .num-btn {
-            width: 50px;
-            height: 50px;
-            border-radius: 50%;
-            border: 2px solid #6200ee;
-            background: white;
-            color: #6200ee;
-            font-weight: bold;
-            font-size: 18px;
+            color: var(--text-dark);
+            box-shadow: 0 6px 16px rgba(0,0,0,0.2);
             cursor: pointer;
+            transition: transform 0.15s ease;
         }
+        .alpha-card:active { transform: scale(0.95); }
 
-        .num-btn.selected {
-            background: #6200ee;
+        .alpha-emoji { font-size: 42px; margin-bottom: 4px; }
+        .alpha-letter { font-size: 34px; font-weight: 800; color: #7c3aed; }
+        .alpha-word { font-size: 15px; font-weight: 600; color: #4b5563; }
+
+        /* SECTION: PAHADA (Multiplication Tables 2 to 20) */
+        .table-selector {
+            display: flex;
+            gap: 8px;
+            overflow-x: auto;
+            padding-bottom: 10px;
+            margin-bottom: 16px;
+            scrollbar-width: none;
+        }
+        .table-selector::-webkit-scrollbar { display: none; }
+
+        .tbl-num-btn {
+            min-width: 44px;
+            height: 44px;
+            border-radius: 14px;
+            border: none;
+            background: rgba(255, 255, 255, 0.15);
             color: white;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            shrink: 0;
+        }
+        .tbl-num-btn.active {
+            background: linear-gradient(135deg, #f59e0b, #ec4899);
+            color: white;
+            box-shadow: 0 4px 12px rgba(245, 158, 11, 0.4);
         }
 
-        .table-display {
-            background: white;
-            border-radius: 20px;
+        .table-card {
+            background: var(--card-bg);
+            border-radius: 24px;
             padding: 20px;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            color: var(--text-dark);
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.25);
+        }
+
+        .table-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 16px;
+            border-b: 2px solid #f1f5f9;
+            padding-bottom: 10px;
+        }
+
+        .table-title {
+            margin: 0;
+            font-size: 20px;
+            font-weight: 800;
+            color: #7c3aed;
+        }
+
+        .play-all-btn {
+            background: #10b981;
+            color: white;
+            border: none;
+            padding: 6px 12px;
+            border-radius: 12px;
+            font-size: 12px;
+            font-weight: bold;
+            cursor: pointer;
         }
 
         .table-row {
-            font-size: 20px;
-            padding: 10px;
-            border-bottom: 1px dashed #eee;
             display: flex;
             justify-content: space-between;
+            align-items: center;
+            padding: 10px 12px;
+            border-radius: 12px;
+            margin-bottom: 6px;
+            background: #f8fafc;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+        .table-row:active { background: #ede9fe; }
+        .table-row.speaking { background: #fef3c7; border: 1px solid #f59e0b; }
+
+        .row-math { font-size: 17px; font-weight: 700; color: #1e1b4b; }
+        .row-speak { font-size: 13px; font-weight: 600; color: #7c3aed; }
+
+        /* SECTION: ADITYA 3D CARTOON AI VIDEO CALL MODAL */
+        .ai-modal-overlay {
+            position: fixed;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background: rgba(15, 23, 42, 0.95);
+            backdrop-filter: blur(10px);
+            z-index: 1000;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: space-between;
+            padding: 20px 16px;
         }
 
-        .hindi-speak {
+        .vcall-header {
+            width: 100%;
+            max-width: 450px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .vcall-status {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            background: rgba(255, 255, 255, 0.1);
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+            color: #10b981;
+        }
+        .pulse-dot {
+            width: 8px; height: 8px; background: #10b981; border-radius: 50%;
+            animation: blink 1s infinite;
+        }
+        @keyframes blink { 0%, 100% { opacity: 1; } 50% { opacity: 0.2; } }
+
+        .close-call-btn {
+            background: #ef4444;
+            color: white;
+            border: none;
+            width: 36px; height: 36px;
+            border-radius: 50%;
+            font-size: 18px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        /* 3D Cartoon Avatar Screen */
+        .avatar-screen {
+            width: 100%;
+            max-width: 380px;
+            height: 300px;
+            background: linear-gradient(180deg, #312e81 0%, #1e1b4b 100%);
+            border-radius: 32px;
+            border: 3px solid rgba(255, 255, 255, 0.2);
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 20px 50px rgba(0,0,0,0.5);
+            overflow: hidden;
+        }
+
+        .avatar-3d {
+            width: 160px;
+            height: 160px;
+            background: linear-gradient(135deg, #fbbf24, #f59e0b);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 90px;
+            box-shadow: 0 10px 30px rgba(245, 158, 11, 0.5);
+            animation: float-avatar 3s infinite ease-in-out;
+            position: relative;
+        }
+
+        @keyframes float-avatar {
+            0%, 100% { transform: translateY(0) scale(1); }
+            50% { transform: translateY(-10px) scale(1.02); }
+        }
+
+        .avatar-name {
+            margin-top: 14px;
+            font-size: 20px;
+            font-weight: 800;
+            color: #ffd700;
+        }
+
+        /* Student Mini Preview Frame */
+        .student-mini-preview {
+            position: absolute;
+            bottom: 12px;
+            right: 12px;
+            width: 70px;
+            height: 90px;
+            background: #000;
+            border-radius: 12px;
+            border: 2px solid #a855f7;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 28px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.4);
+        }
+
+        /* Speech Bubble */
+        .speech-bubble {
+            width: 100%;
+            max-width: 450px;
+            background: rgba(255, 255, 255, 0.95);
+            color: #1e1b4b;
+            padding: 16px;
+            border-radius: 20px;
+            font-size: 15px;
+            font-weight: 600;
+            line-height: 1.4;
+            box-shadow: 0 8px 20px rgba(0,0,0,0.3);
+            min-height: 80px;
+            max-height: 120px;
+            overflow-y: auto;
+        }
+
+        /* Quick Prompts for Kids */
+        .quick-prompts {
+            display: flex;
+            gap: 6px;
+            overflow-x: auto;
+            width: 100%;
+            max-width: 450px;
+            padding: 4px 0;
+            scrollbar-width: none;
+        }
+        .quick-prompts::-webkit-scrollbar { display: none; }
+
+        .q-btn {
+            background: rgba(255, 255, 255, 0.15);
+            color: white;
+            border: none;
+            padding: 6px 12px;
+            border-radius: 14px;
+            font-size: 11px;
+            font-weight: bold;
+            white-space: nowrap;
+            cursor: pointer;
+        }
+
+        /* Call Controls */
+        .vcall-controls {
+            width: 100%;
+            max-width: 450px;
+            display: flex;
+            gap: 10px;
+            align-items: center;
+        }
+
+        .chat-input-box {
+            flex: 1;
+            background: rgba(255, 255, 255, 0.15);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 24px;
+            padding: 12px 16px;
+            color: white;
             font-size: 14px;
-            color: #999;
-            display: block;
+            outline: none;
+        }
+        .chat-input-box::placeholder { color: #94a3b8; }
+
+        .send-btn {
+            background: linear-gradient(135deg, #f59e0b, #d97706);
+            color: white;
+            border: none;
+            width: 46px; height: 46px;
+            border-radius: 50%;
+            font-size: 18px;
+            font-weight: bold;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
         }
 
-        .hidden { display: none; }
+        .hidden { display: none !important; }
     </style>
 </head>
 <body>
 
-<header>
-    <h2 id="title">चित्र वर्णमाला</h2>
-    <div class="nav-buttons">
-        <button class="nav-btn active" onclick="showSection('varnamala')">वर्णमाला</button>
-        <button class="nav-btn" onclick="showSection('pahada')">पहाड़ा (2-20)</button>
-    </div>
-</header>
+    <!-- Background Elements -->
+    <div class="bg-element bg-1"></div>
+    <div class="bg-element bg-2"></div>
 
-<div class="container">
-    <!-- वर्णमाला सेक्शन -->
-    <div id="varnamalaSection" class="grid">
-        <!-- JS से डेटा यहाँ आएगा -->
-    </div>
-
-    <!-- पहाड़ा सेक्शन -->
-    <div id="pahadaSection" class="hidden">
-        <div class="table-list" id="numberSelect">
-            <!-- 2 से 20 तक के बटन -->
+    <!-- Header -->
+    <header>
+        <div class="header-top">
+            <div class="app-brand">
+                <div class="app-logo">प</div>
+                <div class="app-title">
+                    <h1 id="appTitle">बाल शिक्षा - Padh-Ai</h1>
+                    <p id="appSubtitle">गिनती, वर्णमाला & पहाड़ा</p>
+                </div>
+            </div>
+            <button class="ai-call-btn" onclick="openAiVideoCall()">
+                <span>🤖</span>
+                <span>आदित्य AI कॉल</span>
+            </button>
         </div>
-        <div class="table-display" id="tableBox">
-            <h3 id="tableTitle" style="text-align: center;">2 का पहाड़ा</h3>
-            <div id="tableRows"></div>
+
+        <!-- Section Navigation -->
+        <div class="nav-tabs">
+            <button class="tab-btn active" id="tabGinati" onclick="switchSection('ginati')">1-100 गिनती</button>
+            <button class="tab-btn" id="tabEng" onclick="switchSection('english')">A-Z Alphabets</button>
+            <button class="tab-btn" id="tabHindi" onclick="switchSection('hindi')">क-ज्ञ वर्णमाला</button>
+            <button class="tab-btn" id="tabPahada" onclick="switchSection('pahada')">2-20 पहाड़ा</button>
+        </div>
+    </header>
+
+    <div class="container">
+
+        <!-- SECTION 1: GINATI (NUMBERS 1-100 SINGLE PAGE CARD) -->
+        <div id="sectionGinati">
+            <div class="number-card-wrapper" onclick="speakCurrentNumber()">
+                <div class="num-big" id="numDisplay">1</div>
+                <div class="num-hindi" id="numHindiText">एक</div>
+                <div class="num-items" id="numEmojis">🍎</div>
+            </div>
+
+            <div class="swipe-controls">
+                <button class="ctrl-btn" onclick="prevNumber()">⬅️ पिछला</button>
+                <button class="ctrl-btn" onclick="speakCurrentNumber()">🔊 सुनो</button>
+                <button class="ctrl-btn" onclick="nextNumber()">अगला ➡️</button>
+            </div>
+
+            <div class="keypad-toggle" onclick="toggleKeypad()">
+                🔢 डिजिटल नंबर पैड खोलें/बंद करें
+            </div>
+
+            <div class="keypad-grid hidden" id="keypadGrid">
+                <!-- Numbers 1 to 100 generated by JS -->
+            </div>
+        </div>
+
+        <!-- SECTION 2: ENGLISH ALPHABETS (A-Z) -->
+        <div id="sectionEnglish" class="grid-2col hidden">
+            <!-- Dynamic A-Z Cards -->
+        </div>
+
+        <!-- SECTION 3: HINDI ALPHABETS (क-ज्ञ) -->
+        <div id="sectionHindi" class="grid-2col hidden">
+            <!-- Dynamic Hindi Cards -->
+        </div>
+
+        <!-- SECTION 4: PAHADA (2 to 20 MULTIPLICATION TABLES) -->
+        <div id="sectionPahada" class="hidden">
+            <div class="table-selector" id="tblSelector">
+                <!-- 2 to 20 Buttons -->
+            </div>
+
+            <div class="table-card">
+                <div class="table-header">
+                    <h2 class="table-title" id="tblTitle">2 का पहाड़ा</h2>
+                    <button class="play-all-btn" onclick="playFullTable()">▶️ पूरा पहाड़ा सुनो</button>
+                </div>
+                <div id="tblRows">
+                    <!-- Dynamic Table Rows -->
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- AI VIDEO CALL MODAL (ADITYA AI DOST) -->
+    <div class="ai-modal-overlay hidden" id="aiModal">
+        <div class="vcall-header">
+            <div class="vcall-status">
+                <div class="pulse-dot"></div>
+                <span>आदित्य AI वीडियो कॉल ऑन है</span>
+            </div>
+            <button class="close-call-btn" onclick="closeAiVideoCall()">✕</button>
+        </div>
+
+        <!-- 3D Avatar Area -->
+        <div class="avatar-screen">
+            <div class="avatar-3d" id="avatarEmoji">👦</div>
+            <div class="avatar-name">आदित्य (आपका AI दोस्त)</div>
+
+            <!-- Student Mini Camera Frame -->
+            <div class="student-mini-preview">
+                👶
+            </div>
+        </div>
+
+        <!-- Speech Bubble -->
+        <div class="speech-bubble" id="aiSpeechText">
+            नमस्ते दोस्तों! मैं हूँ आपका AI दोस्त **आदित्य**! 🚀<br>आप मुझसे कुछ भी पूछ सकते हैं!
+        </div>
+
+        <!-- Quick Voice Prompts for Kids -->
+        <div class="quick-prompts">
+            <button class="q-btn" onclick="sendQuickPrompt('Aditya, you answered this question very well. Thank you.')">❤️ आदित्य थैंक यू!</button>
+            <button class="q-btn" onclick="sendQuickPrompt('आदित्य तुम कैसे हो?')">😊 तुम कैसे हो?</button>
+            <button class="q-btn" onclick="sendQuickPrompt('मुझे 5 का पहाड़ा सुनाओ!')">🔢 5 का पहाड़ा</button>
+            <button class="q-btn" onclick="sendQuickPrompt('चाँद कितना दूर है?')">🌙 चाँद की बात</button>
+        </div>
+
+        <!-- Controls -->
+        <div class="vcall-controls">
+            <input type="text" class="chat-input-box" id="userChatInput" placeholder="आदित्य से कुछ भी पूछें..." onkeydown="if(event.key==='Enter') sendChatMessage()">
+            <button class="send-btn" onclick="sendChatMessage()">🚀</button>
         </div>
     </div>
-</div>
 
-<script>
-    // --- वर्णमाला डेटा ---
-    const alphaData = [
-        { l: "अ", w: "अनार", i: "🍎" }, { l: "आ", w: "आम", i: "🥭" },
-        { l: "इ", w: "इमली", i: "🌿" }, { l: "ई", w: "ईख", i: "🎋" },
-        { l: "उ", w: "उल्लू", i: "🦉" }, { l: "ऊ", w: "ऊन", i: "🧶" },
-        { l: "ऋ", w: "ऋषि", i: "🧘" }, { l: "ए", w: "एड़ी", i: "🦶" },
-        { l: "ऐ", w: "ऐनक", i: "👓" }, { l: "ओ", w: "ओखली", i: "🥣" },
-        { l: "औ", w: "औरत", i: "👩" }, { l: "अं", w: "अंगूर", i: "🍇" },
-        { l: "क", w: "कबूतर", i: "🐦" }, { l: "ख", w: "खरगोश", i: "🐇" },
-        { l: "ग", w: "गमला", i: "🪴" }, { l: "घ", w: "घड़ी", i: "⌚" },
-        { l: "च", w: "चम्मच", i: "🥄" }, { l: "छ", w: "छाता", i: "☂️" },
-        { l: "ज", w: "जहाज", i: "🚢" }, { l: "झ", w: "झंडा", i: "🚩" },
-        { l: "ट", w: "टमाटर", i: "🍅" }, { l: "ठ", w: "ठठेरा", i: "🛠️" },
-        { l: "ड", w: "डमरू", i: "🥁" }, { l: "ढ", w: "ढक्कन", i: "🥘" },
-        { l: "त", w: "तरबूज", i: "🍉" }, { l: "थ", w: "थर्मस", i: "🍼" },
-        { l: "द", w: "दवात", i: "🖋️" }, { l: "ध", w: "धनुष", i: "🏹" },
-        { l: "न", w: "नल", i: "🚰" }, { l: "प", w: "पतंग", i: "🪁" },
-        { l: "फ", w: "फल", i: "🍎" }, { l: "ब", w: "बत्तख", i: "🦆" },
-        { l: "भ", w: "भालू", i: "🐻" }, { l: "म", w: "मछली", i: "🐟" },
-        { l: "य", w: "यज्ञ", i: "🔥" }, { l: "र", w: "रथ", i: "🏹" },
-        { l: "ल", w: "लट्टू", i: "🔝" }, { l: "व", w: "वक", i: "🦢" },
-        { l: "श", w: "शलगम", i: "🧅" }, { l: "ष", w: "षट्कोण", i: "⬢" },
-        { l: "स", w: "सपेरा", i: "🐍" }, { l: "ह", w: "हाथी", i: "🐘" },
-        { l: "क्ष", w: "क्षत्रिय", i: "⚔️" }, { l: "त्र", w: "त्रिशूल", i: "🔱" },
-        { l: "ज्ञ", w: "ज्ञानी", i: "👨‍🏫" }
-    ];
+    <script>
+        // --- DATA OBJECTS ---
 
-    // पहाड़ा उच्चारण शब्द
-    const pronunciations = ["", "एकम", "दूनी", "तिये", "चौके", "पंचे", "छक्के", "सत्ते", "अट्ठे", "नम्मे", "दहाम"];
+        // Hindi Number Words & Emojis (1 to 100)
+        const hindiNumbers = [
+            "", "एक", "दो", "तीन", "चार", "पांच", "छह", "सात", "आठ", "नौ", "दस",
+            "ग्यारह", "बारह", "तेरह", "चौदह", "पंद्रह", "सोलह", "सत्रह", "अठारह", "उन्नीस", "बीस",
+            "इक्कीस", "बाईस", "तेईस", "चौबीस", "पच्चीस", "छब्बीस", "सत्ताईस", "अट्ठाईस", "उनतीस", "तीस",
+            "इकत्तीस", "बत्तीस", "तैंतीस", "चौंतीस", "पैंतीस", "छत्तीस", "सैंतीस", "अड़तीस", "उनतालीस", "चालिस",
+            "इकतालीस", "बयालीस", "तैंतालीस", "चौंवालीस", "पैंतालीस", "छियालीस", "सैंतालीस", "अड़तालीस", "उनचास", "पचास",
+            "इक्यावन", "बावन", "तिरपन", "चौवन", "पचपन", "छप्पन", "सत्तावन", "अट्टावन", "उनसठ", "साठ",
+            "इकसठ", "बासठ", "तिरसठ", "चौंसठ", "पैंसठ", "छियासठ", "सरसठ", "अड़सठ", "उनहत्तर", "सत्तर",
+            "इकहत्तर", "बहत्तर", "तिहत्तर", "चौहत्तर", "पचहत्तर", "छहत्तर", "सतहत्तर", "अठहत्तर", "उनासी", "अस्सी",
+            "इक्यासी", "बयासी", "तिरासी", "चौरासी", "पचासी", "छियासी", "सत्तासी", "अट्ठासी", "नवासी", "नब्बे",
+            "इक्यानवे", "बानवे", "तिरानवे", "चौरानवे", "पंचानवे", "छियानवे", "सत्तानवे", "अट्ठानवे", "निन्न्यानवे", "सौ"
+        ];
 
-    // --- फंक्शन्स ---
+        const itemEmojis = ["🍎", "🎈", "🌟", "🚗", "🌸", "🧸", "⚽", "🐱", "🍦", "🍭"];
 
-    function init() {
-        // वर्णमाला लोड करें
-        const vGrid = document.getElementById('varnamalaSection');
-        alphaData.forEach(item => {
-            vGrid.innerHTML += `
-                <div class="card">
-                    <div class="emoji">${item.i}</div>
-                    <div class="letter">${item.l}</div>
-                    <div class="word">${item.w}</div>
-                </div>`;
-        });
+        // English Alphabets
+        const engData = [
+            { l: "A", w: "Apple", i: "🍎" }, { l: "B", w: "Ball", i: "⚽" },
+            { l: "C", w: "Cat", i: "🐱" }, { l: "D", w: "Dog", i: "🐶" },
+            { l: "E", w: "Elephant", i: "🐘" }, { l: "F", w: "Fish", i: "🐟" },
+            { l: "G", w: "Grapes", i: "🍇" }, { l: "H", w: "Horse", i: "🐴" },
+            { l: "I", w: "Ice Cream", i: "🍦" }, { l: "J", w: "Joker", i: "🤡" },
+            { l: "K", w: "Kite", i: "🪁" }, { l: "L", w: "Lion", i: "🦁" },
+            { l: "M", w: "Monkey", i: "🐒" }, { l: "N", w: "Nest", i: "🪹" },
+            { l: "O", w: "Orange", i: "🍊" }, { l: "P", w: "Parrot", i: "🦜" },
+            { l: "Q", w: "Queen", i: "👸" }, { l: "R", w: "Rose", i: "🌹" },
+            { l: "S", w: "Sun", i: "☀️" }, { l: "T", w: "Tiger", i: "🐅" },
+            { l: "U", w: "Umbrella", i: "☂️" }, { l: "V", w: "Van", i: "🚐" },
+            { l: "W", w: "Watch", i: "⌚" }, { l: "X", w: "Xylophone", i: "🎼" },
+            { l: "Y", w: "Yak", i: "🐂" }, { l: "Z", w: "Zebra", i: "🦓" }
+        ];
 
-        // पहाड़ा बटन लोड करें (2 से 20)
-        const nSelect = document.getElementById('numberSelect');
-        for (let i = 2; i <= 20; i++) {
-            nSelect.innerHTML += `<button class="num-btn ${i===2?'selected':''}" onclick="loadTable(${i}, this)">${i}</button>`;
+        // Hindi Alphabets
+        const hindiData = [
+            { l: "अ", w: "अनार", i: "🍎" }, { l: "आ", w: "आम", i: "🥭" },
+            { l: "इ", w: "इमली", i: "🌿" }, { l: "ई", w: "ईख", i: "🎋" },
+            { l: "उ", w: "उल्लू", i: "🦉" }, { l: "ऊ", w: "ऊन", i: "🧶" },
+            { l: "ऋ", w: "ऋषि", i: "🧘" }, { l: "ए", w: "एड़ी", i: "🦶" },
+            { l: "ऐ", w: "ऐनक", i: "👓" }, { l: "ओ", w: "ओखली", i: "🥣" },
+            { l: "औ", w: "औरत", i: "👩" }, { l: "अं", w: "अंगूर", i: "🍇" },
+            { l: "क", w: "कबूतर", i: "🐦" }, { l: "ख", w: "खरगोश", i: "🐇" },
+            { l: "ग", w: "गमला", i: "🪴" }, { l: "घ", w: "घड़ी", i: "⌚" },
+            { l: "च", w: "चम्मच", i: "🥄" }, { l: "छ", w: "छाता", i: "☂️" },
+            { l: "ज", w: "जहाज", i: "🚢" }, { l: "झ", w: "झंडा", i: "🚩" },
+            { l: "ट", w: "टमाटर", i: "🍅" }, { l: "ठ", w: "ठठेरा", i: "🛠️" },
+            { l: "ड", w: "डमरू", i: "🥁" }, { l: "ढ", w: "ढक्कन", i: "🥘" },
+            { l: "त", w: "तरबूज", i: "🍉" }, { l: "थ", w: "थर्मस", i: "🍼" },
+            { l: "द", w: "दवात", i: "🖋️" }, { l: "ध", w: "धनुष", i: "🏹" },
+            { l: "न", w: "नल", i: "🚰" }, { l: "प", w: "पतंग", i: "🪁" },
+            { l: "फ", w: "फल", i: "🍎" }, { l: "ब", w: "बत्तख", i: "🦆" },
+            { l: "भ", w: "भालू", i: "🐻" }, { l: "म", w: "मछली", i: "🐟" },
+            { l: "य", w: "यज्ञ", i: "🔥" }, { l: "र", w: "रथ", i: "🏹" },
+            { l: "ल", w: "लट्टू", i: "🔝" }, { l: "व", w: "वक", i: "🦢" },
+            { l: "श", w: "शलगम", i: "🧅" }, { l: "ष", w: "षट्कोण", i: "⬢" },
+            { l: "स", w: "सपेरा", i: "🐍" }, { l: "ह", w: "हाथी", i: "🐘" },
+            { l: "क्ष", w: "क्षत्रिय", i: "⚔️" }, { l: "त्र", w: "त्रिशूल", i: "🔱" },
+            { l: "ज्ञ", w: "ज्ञानी", i: "👨‍🏫" }
+        ];
+
+        const pronunciations = ["", "एकम", "दूनी", "तिये", "चौके", "पंचे", "छक्के", "सत्ते", "अट्ठे", "नम्मे", "दहाम"];
+
+        // --- GLOBAL STATE ---
+        let currentNum = 1;
+        let selectedTable = 2;
+
+        // Speech Engine
+        function speak(text, lang = 'hi-IN') {
+            if ('speechSynthesis' in window) {
+                window.speechSynthesis.cancel();
+                const msg = new SpeechSynthesisUtterance(text);
+                msg.lang = lang;
+                msg.rate = 0.88;
+                window.speechSynthesis.speak(msg);
+            }
         }
-        loadTable(2); // डिफ़ॉल्ट 2 का पहाड़ा
-    }
 
-    function showSection(section) {
-        document.getElementById('varnamalaSection').classList.toggle('hidden', section !== 'varnamala');
-        document.getElementById('pahadaSection').classList.toggle('hidden', section !== 'pahada');
-        
-        const btns = document.querySelectorAll('.nav-btn');
-        btns[0].classList.toggle('active', section === 'varnamala');
-        btns[1].classList.toggle('active', section === 'pahada');
-        
-        document.getElementById('title').innerText = section === 'varnamala' ? 'चित्र वर्णमाला' : 'गणित पहाड़ा';
-    }
-
-    function loadTable(n, btn) {
-        if(btn) {
-            document.querySelectorAll('.num-btn').forEach(b => b.classList.remove('selected'));
-            btn.classList.add('selected');
+        // INIT
+        function init() {
+            renderNumberCard(currentNum);
+            generateKeypad();
+            renderEnglishCards();
+            renderHindiCards();
+            renderTableSelector();
+            loadTable(2);
         }
-        
-        document.getElementById('tableTitle').innerText = `${n} का पहाड़ा`;
-        const rows = document.getElementById('tableRows');
-        rows.innerHTML = '';
-        
-        for (let i = 1; i <= 10; i++) {
-            rows.innerHTML += `
-                <div class="table-row">
-                    <span>${n} x ${i} = <b>${n * i}</b></span>
-                    <span class="hindi-speak">${n} ${pronunciations[i]} ${n * i}</span>
-                </div>`;
+
+        // --- GINATI (NUMBERS) ---
+        function renderNumberCard(n) {
+            document.getElementById('numDisplay').innerText = n;
+            document.getElementById('numHindiText').innerText = hindiNumbers[n] || n;
+
+            // Generate items up to 10
+            const emojiChar = itemEmojis[n % itemEmojis.length];
+            const countToShow = Math.min(n, 12);
+            document.getElementById('numEmojis').innerText = emojiChar.repeat(countToShow);
+
+            // Update Keypad active
+            document.querySelectorAll('.keypad-num').forEach(el => {
+                el.classList.toggle('active', parseInt(el.innerText) === n);
+            });
         }
-    }
 
-    window.onload = init;
-</script>
+        function speakCurrentNumber() {
+            speak(`${currentNum}, ${hindiNumbers[currentNum] || ''}`);
+        }
 
+        function nextNumber() {
+            if (currentNum < 100) {
+                currentNum++;
+                renderNumberCard(currentNum);
+                speakCurrentNumber();
+            }
+        }
+
+        function prevNumber() {
+            if (currentNum > 1) {
+                currentNum--;
+                renderNumberCard(currentNum);
+                speakCurrentNumber();
+            }
+        }
+
+        function toggleKeypad() {
+            document.getElementById('keypadGrid').classList.toggle('hidden');
+        }
+
+        function generateKeypad() {
+            const grid = document.getElementById('keypadGrid');
+            grid.innerHTML = '';
+            for (let i = 1; i <= 100; i++) {
+                const btn = document.createElement('div');
+                btn.className = `keypad-num ${i === 1 ? 'active' : ''}`;
+                btn.innerText = i;
+                btn.onclick = () => {
+                    currentNum = i;
+                    renderNumberCard(i);
+                    speakCurrentNumber();
+                };
+                grid.appendChild(btn);
+            }
+        }
+
+        // --- SECTION SWITCHING ---
+        function switchSection(sec) {
+            document.getElementById('sectionGinati').classList.toggle('hidden', sec !== 'ginati');
+            document.getElementById('sectionEnglish').classList.toggle('hidden', sec !== 'english');
+            document.getElementById('sectionHindi').classList.toggle('hidden', sec !== 'hindi');
+            document.getElementById('sectionPahada').classList.toggle('hidden', sec !== 'pahada');
+
+            document.getElementById('tabGinati').classList.toggle('active', sec === 'ginati');
+            document.getElementById('tabEng').classList.toggle('active', sec === 'english');
+            document.getElementById('tabHindi').classList.toggle('active', sec === 'hindi');
+            document.getElementById('tabPahada').classList.toggle('active', sec === 'pahada');
+        }
+
+        // --- ENGLISH & HINDI ALPHABETS ---
+        function renderEnglishCards() {
+            const container = document.getElementById('sectionEnglish');
+            container.innerHTML = '';
+            engData.forEach(item => {
+                const card = document.createElement('div');
+                card.className = 'alpha-card';
+                card.innerHTML = `
+                    <div class="alpha-emoji">${item.i}</div>
+                    <div class="alpha-letter">${item.l}</div>
+                    <div class="alpha-word">${item.w}</div>
+                `;
+                card.onclick = () => speak(`${item.l} for ${item.w}`, 'en-US');
+                container.appendChild(card);
+            });
+        }
+
+        function renderHindiCards() {
+            const container = document.getElementById('sectionHindi');
+            container.innerHTML = '';
+            hindiData.forEach(item => {
+                const card = document.createElement('div');
+                card.className = 'alpha-card';
+                card.innerHTML = `
+                    <div class="alpha-emoji">${item.i}</div>
+                    <div class="alpha-letter">${item.l}</div>
+                    <div class="alpha-word">${item.w}</div>
+                `;
+                card.onclick = () => speak(`${item.l} से ${item.w}`, 'hi-IN');
+                container.appendChild(card);
+            });
+        }
+
+        // --- PAHADA (TABLES 2 to 20) ---
+        function renderTableSelector() {
+            const selector = document.getElementById('tblSelector');
+            selector.innerHTML = '';
+            for (let i = 2; i <= 20; i++) {
+                const btn = document.createElement('button');
+                btn.className = `tbl-num-btn ${i === 2 ? 'active' : ''}`;
+                btn.innerText = i;
+                btn.onclick = (e) => {
+                    document.querySelectorAll('.tbl-num-btn').forEach(b => b.classList.remove('active'));
+                    btn.classList.add('active');
+                    loadTable(i);
+                };
+                selector.appendChild(btn);
+            }
+        }
+
+        function loadTable(n) {
+            selectedTable = n;
+            document.getElementById('tblTitle').innerText = `${n} का पहाड़ा`;
+            const rows = document.getElementById('tblRows');
+            rows.innerHTML = '';
+
+            for (let i = 1; i <= 10; i++) {
+                const speakText = `${n} ${pronunciations[i]} ${n * i}`;
+                const row = document.createElement('div');
+                row.className = 'table-row';
+                row.id = `tbl-row-${i}`;
+                row.innerHTML = `
+                    <span class="row-math">${n} x ${i} = <b>${n * i}</b></span>
+                    <span class="row-speak">${speakText}</span>
+                `;
+                row.onclick = () => {
+                    document.querySelectorAll('.table-row').forEach(r => r.classList.remove('speaking'));
+                    row.classList.add('speaking');
+                    speak(speakText);
+                };
+                rows.appendChild(row);
+            }
+        }
+
+        function playFullTable() {
+            let step = 1;
+            function speakStep() {
+                if (step > 10) return;
+                document.querySelectorAll('.table-row').forEach(r => r.classList.remove('speaking'));
+                const row = document.getElementById(`tbl-row-${step}`);
+                if (row) row.classList.add('speaking');
+
+                const speakText = `${selectedTable} ${pronunciations[step]} ${selectedTable * step}`;
+                speak(speakText);
+
+                step++;
+                setTimeout(speakStep, 2200);
+            }
+            speakStep();
+        }
+
+        // --- ADITYA AI VIDEO CALL (GEMINI API) ---
+        function openAiVideoCall() {
+            document.getElementById('aiModal').classList.remove('hidden');
+            speak('नमस्ते दोस्त! मैं हूँ आपका AI दोस्त आदित्य!');
+        }
+
+        function closeAiVideoCall() {
+            document.getElementById('aiModal').classList.add('hidden');
+            if ('speechSynthesis' in window) window.speechSynthesis.cancel();
+        }
+
+        async function sendChatMessage() {
+            const inputEl = document.getElementById('userChatInput');
+            const userMsg = inputEl.value.trim();
+            if (!userMsg) return;
+
+            inputEl.value = '';
+            document.getElementById('aiSpeechText').innerHTML = '🤔 आदित्य सोच रहा है...';
+
+            try {
+                const response = await fetch('/api/chat', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ message: userMsg })
+                });
+
+                const data = await response.json();
+                const reply = data.reply || "अरे वाह दोस्त! तुमने बहुत अच्छा सवाल पूछा!";
+                const audioText = data.audioText || reply;
+
+                document.getElementById('aiSpeechText').innerText = reply;
+                speak(audioText, 'hi-IN');
+            } catch (err) {
+                console.error(err);
+                const fallback = "अरे वाह आदित्य! तुमने तो बहुत अच्छा सवाल पूछा! चलो साथ मिलकर पढ़ाई करते हैं!";
+                document.getElementById('aiSpeechText').innerText = fallback;
+                speak(fallback, 'hi-IN');
+            }
+        }
+
+        function sendQuickPrompt(txt) {
+            document.getElementById('userChatInput').value = txt;
+            sendChatMessage();
+        }
+
+        window.onload = init;
+    </script>
 </body>
 </html>
