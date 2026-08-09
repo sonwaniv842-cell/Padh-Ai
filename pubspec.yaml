@@ -1,7 +1,6 @@
 name: padh_ai
 description: "A new Flutter project for Padh AI."
 publish_to: 'none'
-
 version: 1.0.0+1
 
 environment:
@@ -11,24 +10,16 @@ dependencies:
   flutter:
     sdk: flutter
   supabase_flutter: ^2.3.4
-  flutter_tts: ^3.8.5  # आवाज़ के लिए
+  flutter_tts: ^3.8.5
   cupertino_icons: ^1.0.6
 
 dev_dependencies:
+  flutter:
+    sdk: flutter
   flutter_test:
     sdk: flutter
   flutter_lints: ^3.0.0
-  flutter_launcher_icons: ^0.13.1
-
-flutter_launcher_icons:
-  android: true
-  ios: true
-  image_path: "assets/padh-ai-logo.png"
 
 flutter:
   uses-material-design: true
-
-  # एसेट्स फोल्डर को सही तरीके से जोड़ा गया है
-  assets:
-    - assets/
-    - assets/padh-ai-logo.png
+  # यहाँ से एसेट्स हटा दिए गए हैं ताकि Error न आए
