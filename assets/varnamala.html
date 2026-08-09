@@ -3,181 +3,245 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>चित्र वर्णमाला - Hindi Learning App</title>
+    <title>बाल शिक्षा - वर्णमाला और पहाड़ा</title>
     <style>
-        /* General Styles */
+        /* मोबाइल ऐप जैसा डिज़ाइन */
         body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background-color: #f7f1fb;
+            font-family: 'Segoe UI', Arial, sans-serif;
+            background-color: #f4eeff;
             margin: 0;
             padding: 0;
             display: flex;
             flex-direction: column;
             align-items: center;
+            color: #333;
         }
 
-        /* Header Styles */
+        /* हेडर और नेविगेशन */
         header {
             width: 100%;
-            padding: 20px;
-            background-color: white;
-            display: flex;
-            align-items: center;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+            background-color: #fff;
+            padding: 15px 0;
+            text-align: center;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
             position: sticky;
             top: 0;
-            z-index: 100;
+            z-index: 1000;
         }
 
-        .back-btn {
-            font-size: 24px;
-            margin-right: 20px;
+        .nav-buttons {
+            margin-top: 10px;
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+        }
+
+        .nav-btn {
+            padding: 8px 20px;
+            border: none;
+            border-radius: 20px;
+            background-color: #e0d4f7;
+            color: #6200ee;
+            font-weight: bold;
             cursor: pointer;
-            color: #333;
+            transition: 0.3s;
         }
 
-        h1 {
-            font-size: 22px;
-            margin: 0;
-            color: #333;
-            font-weight: 500;
+        .nav-btn.active {
+            background-color: #6200ee;
+            color: white;
         }
 
-        /* Grid Container */
-        .alphabet-grid {
-            display: grid;
-            grid-template-columns: repeat(2, 1fr);
-            gap: 15px;
-            padding: 20px;
-            max-width: 500px;
+        /* कंटेंट एरिया */
+        .container {
             width: 100%;
+            max-width: 500px;
+            padding: 20px;
             box-sizing: border-box;
         }
 
-        /* Card Styles (Matching your image) */
+        /* वर्णमाला कार्ड डिज़ाइन */
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 15px;
+        }
+
         .card {
-            background-color: white;
-            border-radius: 25px;
+            background: white;
+            border-radius: 20px;
             padding: 20px;
+            text-align: center;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+        }
+
+        .emoji { font-size: 50px; margin-bottom: 10px; }
+        .letter { font-size: 40px; font-weight: bold; color: #2196F3; margin: 5px 0; }
+        .word { font-size: 18px; color: #777; }
+
+        /* पहाड़ा (Table) डिज़ाइन */
+        .table-list {
             display: flex;
-            flex-direction: column;
-            align-items: center;
+            flex-wrap: wrap;
+            gap: 10px;
             justify-content: center;
-            box-shadow: 0 4px 10px rgba(0,0,0,0.03);
-            transition: transform 0.2s;
+            margin-bottom: 20px;
         }
 
-        .card:active {
-            transform: scale(0.95);
-        }
-
-        .emoji-img {
-            font-size: 50px;
-            margin-bottom: 15px;
-        }
-
-        .letter {
-            font-size: 42px;
-            font-weight: bold;
-            color: #2196F3; /* Blue color from your image */
-            margin-bottom: 5px;
-        }
-
-        .word {
-            font-size: 18px;
-            color: #888; /* Grey color from your image */
-            font-weight: 500;
-        }
-
-        /* Footer space */
-        .footer-spacer {
+        .num-btn {
+            width: 50px;
             height: 50px;
+            border-radius: 50%;
+            border: 2px solid #6200ee;
+            background: white;
+            color: #6200ee;
+            font-weight: bold;
+            font-size: 18px;
+            cursor: pointer;
         }
+
+        .num-btn.selected {
+            background: #6200ee;
+            color: white;
+        }
+
+        .table-display {
+            background: white;
+            border-radius: 20px;
+            padding: 20px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+        }
+
+        .table-row {
+            font-size: 20px;
+            padding: 10px;
+            border-bottom: 1px dashed #eee;
+            display: flex;
+            justify-content: space-between;
+        }
+
+        .hindi-speak {
+            font-size: 14px;
+            color: #999;
+            display: block;
+        }
+
+        .hidden { display: none; }
     </style>
 </head>
 <body>
 
-    <header>
-        <div class="back-btn">←</div>
-        <h1>चित्र वर्णमाला</h1>
-    </header>
+<header>
+    <h2 id="title">चित्र वर्णमाला</h2>
+    <div class="nav-buttons">
+        <button class="nav-btn active" onclick="showSection('varnamala')">वर्णमाला</button>
+        <button class="nav-btn" onclick="showSection('pahada')">पहाड़ा (2-20)</button>
+    </div>
+</header>
 
-    <div class="alphabet-grid" id="alphabetGrid">
-        <!-- Cards will be injected here by JavaScript -->
+<div class="container">
+    <!-- वर्णमाला सेक्शन -->
+    <div id="varnamalaSection" class="grid">
+        <!-- JS से डेटा यहाँ आएगा -->
     </div>
 
-    <div class="footer-spacer"></div>
+    <!-- पहाड़ा सेक्शन -->
+    <div id="pahadaSection" class="hidden">
+        <div class="table-list" id="numberSelect">
+            <!-- 2 से 20 तक के बटन -->
+        </div>
+        <div class="table-display" id="tableBox">
+            <h3 id="tableTitle" style="text-align: center;">2 का पहाड़ा</h3>
+            <div id="tableRows"></div>
+        </div>
+    </div>
+</div>
 
-    <script>
-        // FULL DATASET: Vowels + Consonants
-        const varnamalaData = [
-            { letter: "अ", word: "अनार", icon: "🍎" },
-            { letter: "आ", word: "आम", icon: "🥭" },
-            { letter: "इ", word: "इमली", icon: "🌿" },
-            { letter: "ई", word: "ईख", icon: "🎋" },
-            { letter: "उ", word: "उल्लू", icon: "🦉" },
-            { letter: "ऊ", word: "ऊन", icon: "🧶" },
-            { letter: "ऋ", word: "ऋषि", icon: "🧘" },
-            { letter: "ए", word: "एड़ी", icon: "🦶" },
-            { letter: "ऐ", word: "ऐनक", icon: "👓" },
-            { letter: "ओ", word: "ओखली", icon: "🥣" },
-            { letter: "औ", word: "औरत", icon: "👩" },
-            { letter: "अं", word: "अंगूर", icon: "🍇" },
-            { letter: "क", word: "कबूतर", icon: "🐦" },
-            { letter: "ख", word: "खरगोश", icon: "🐇" },
-            { letter: "ग", word: "गमला", icon: "🪴" },
-            { letter: "घ", word: "घड़ी", icon: "⌚" },
-            { letter: "च", word: "चम्मच", icon: "🥄" },
-            { letter: "छ", word: "छाता", icon: "☂️" },
-            { letter: "ज", word: "जहाज", icon: "🚢" },
-            { letter: "झ", word: "झंडा", icon: "🚩" },
-            { letter: "ट", word: "टमाटर", icon: "🍅" },
-            { letter: "ठ", word: "ठठेरा", icon: "🛠️" },
-            { letter: "ड", word: "डमरू", icon: "🥁" },
-            { letter: "ढ", word: "ढक्कन", icon: "🥘" },
-            { letter: "त", word: "तरबूज", icon: "🍉" },
-            { letter: "थ", word: "थर्मस", icon: "🍼" },
-            { letter: "द", word: "दवात", icon: "🖋️" },
-            { letter: "ध", word: "धनुष", icon: "🏹" },
-            { letter: "न", word: "नल", icon: "🚰" },
-            { letter: "प", word: "पतंग", icon: "🪁" },
-            { letter: "फ", word: "फल", icon: "🍎" },
-            { letter: "ब", word: "बत्तख", icon: "🦆" },
-            { letter: "भ", word: "भालू", icon: "🐻" },
-            { letter: "म", word: "मछली", icon: "🐟" },
-            { letter: "य", word: "यज्ञ", icon: "🔥" },
-            { letter: "र", word: "रथ", icon: "🏹" },
-            { letter: "ल", word: "लट्टू", icon: "🔝" },
-            { letter: "व", word: "वक", icon: "🦢" },
-            { letter: "श", word: "शलगम", icon: "🧅" },
-            { letter: "ष", word: "षट्कोण", icon: "⬢" },
-            { letter: "स", word: "सपेरा", icon: "🐍" },
-            { letter: "ह", word: "हाथी", icon: "🐘" },
-            { letter: "क्ष", word: "क्षत्रिय", icon: "⚔️" },
-            { letter: "त्र", word: "त्रिशूल", icon: "🔱" },
-            { letter: "ज्ञ", word: "ज्ञानी", icon: "👨‍🏫" }
-        ];
+<script>
+    // --- वर्णमाला डेटा ---
+    const alphaData = [
+        { l: "अ", w: "अनार", i: "🍎" }, { l: "आ", w: "आम", i: "🥭" },
+        { l: "इ", w: "इमली", i: "🌿" }, { l: "ई", w: "ईख", i: "🎋" },
+        { l: "उ", w: "उल्लू", i: "🦉" }, { l: "ऊ", w: "ऊन", i: "🧶" },
+        { l: "ऋ", w: "ऋषि", i: "🧘" }, { l: "ए", w: "एड़ी", i: "🦶" },
+        { l: "ऐ", w: "ऐनक", i: "👓" }, { l: "ओ", w: "ओखली", i: "🥣" },
+        { l: "औ", w: "औरत", i: "👩" }, { l: "अं", w: "अंगूर", i: "🍇" },
+        { l: "क", w: "कबूतर", i: "🐦" }, { l: "ख", w: "खरगोश", i: "🐇" },
+        { l: "ग", w: "गमला", i: "🪴" }, { l: "घ", w: "घड़ी", i: "⌚" },
+        { l: "च", w: "चम्मच", i: "🥄" }, { l: "छ", w: "छाता", i: "☂️" },
+        { l: "ज", w: "जहाज", i: "🚢" }, { l: "झ", w: "झंडा", i: "🚩" },
+        { l: "ट", w: "टमाटर", i: "🍅" }, { l: "ठ", w: "ठठेरा", i: "🛠️" },
+        { l: "ड", w: "डमरू", i: "🥁" }, { l: "ढ", w: "ढक्कन", i: "🥘" },
+        { l: "त", w: "तरबूज", i: "🍉" }, { l: "थ", w: "थर्मस", i: "🍼" },
+        { l: "द", w: "दवात", i: "🖋️" }, { l: "ध", w: "धनुष", i: "🏹" },
+        { l: "न", w: "नल", i: "🚰" }, { l: "प", w: "पतंग", i: "🪁" },
+        { l: "फ", w: "फल", i: "🍎" }, { l: "ब", w: "बत्तख", i: "🦆" },
+        { l: "भ", w: "भालू", i: "🐻" }, { l: "म", w: "मछली", i: "🐟" },
+        { l: "य", w: "यज्ञ", i: "🔥" }, { l: "र", w: "रथ", i: "🏹" },
+        { l: "ल", w: "लट्टू", i: "🔝" }, { l: "व", w: "वक", i: "🦢" },
+        { l: "श", w: "शलगम", i: "🧅" }, { l: "ष", w: "षट्कोण", i: "⬢" },
+        { l: "स", w: "सपेरा", i: "🐍" }, { l: "ह", w: "हाथी", i: "🐘" },
+        { l: "क्ष", w: "क्षत्रिय", i: "⚔️" }, { l: "त्र", w: "त्रिशूल", i: "🔱" },
+        { l: "ज्ञ", w: "ज्ञानी", i: "👨‍🏫" }
+    ];
 
-        const grid = document.getElementById('alphabetGrid');
+    // पहाड़ा उच्चारण शब्द
+    const pronunciations = ["", "एकम", "दूनी", "तिये", "चौके", "पंचे", "छक्के", "सत्ते", "अट्ठे", "नम्मे", "दहाम"];
 
-        // Function to create and add cards to the grid
-        function loadAlphabet() {
-            varnamalaData.forEach(item => {
-                const card = document.createElement('div');
-                card.className = 'card';
-                
-                card.innerHTML = `
-                    <div class="emoji-img">${item.icon}</div>
-                    <div class="letter">${item.letter}</div>
-                    <div class="word">${item.word}</div>
-                `;
-                
-                grid.appendChild(card);
-            });
+    // --- फंक्शन्स ---
+
+    function init() {
+        // वर्णमाला लोड करें
+        const vGrid = document.getElementById('varnamalaSection');
+        alphaData.forEach(item => {
+            vGrid.innerHTML += `
+                <div class="card">
+                    <div class="emoji">${item.i}</div>
+                    <div class="letter">${item.l}</div>
+                    <div class="word">${item.w}</div>
+                </div>`;
+        });
+
+        // पहाड़ा बटन लोड करें (2 से 20)
+        const nSelect = document.getElementById('numberSelect');
+        for (let i = 2; i <= 20; i++) {
+            nSelect.innerHTML += `<button class="num-btn ${i===2?'selected':''}" onclick="loadTable(${i}, this)">${i}</button>`;
         }
+        loadTable(2); // डिफ़ॉल्ट 2 का पहाड़ा
+    }
 
-        // Initialize the app
-        loadAlphabet();
-    </script>
+    function showSection(section) {
+        document.getElementById('varnamalaSection').classList.toggle('hidden', section !== 'varnamala');
+        document.getElementById('pahadaSection').classList.toggle('hidden', section !== 'pahada');
+        
+        const btns = document.querySelectorAll('.nav-btn');
+        btns[0].classList.toggle('active', section === 'varnamala');
+        btns[1].classList.toggle('active', section === 'pahada');
+        
+        document.getElementById('title').innerText = section === 'varnamala' ? 'चित्र वर्णमाला' : 'गणित पहाड़ा';
+    }
+
+    function loadTable(n, btn) {
+        if(btn) {
+            document.querySelectorAll('.num-btn').forEach(b => b.classList.remove('selected'));
+            btn.classList.add('selected');
+        }
+        
+        document.getElementById('tableTitle').innerText = `${n} का पहाड़ा`;
+        const rows = document.getElementById('tableRows');
+        rows.innerHTML = '';
+        
+        for (let i = 1; i <= 10; i++) {
+            rows.innerHTML += `
+                <div class="table-row">
+                    <span>${n} x ${i} = <b>${n * i}</b></span>
+                    <span class="hindi-speak">${n} ${pronunciations[i]} ${n * i}</span>
+                </div>`;
+        }
+    }
+
+    window.onload = init;
+</script>
+
 </body>
 </html>
