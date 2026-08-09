@@ -1,6 +1,6 @@
 name: padh_ai
-description: Padh AI - Future Digital School
-version: 1.0.2+3
+description: Padh-Ai Professional Digital School
+version: 1.0.0+1
 publish_to: 'none'
 
 environment:
@@ -12,11 +12,7 @@ dependencies:
   supabase_flutter: ^2.0.0
   flutter_tts: ^3.8.5
   url_launcher: ^6.2.0
-  image_picker: ^1.0.4
-  webview_flutter: ^4.7.0
-  google_generative_ai: ^0.2.2
+  google_generative_ai: ^0.4.0
 
 flutter:
   uses-material-design: true
-  assets:
-    - assets/varnamala.html
