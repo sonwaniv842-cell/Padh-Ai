@@ -2,129 +2,232 @@
 <html lang="hi">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Padh-Ai | आपका प्रीमियम एआई टीचर</title>
-    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&family=Hind:wght@400;600&display=swap" rel="stylesheet">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Padh-Ai | आपका प्यारा कार्टून एआई टीचर</title>
+    
+    <!-- Google Fonts for Premium Look -->
+    <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;600;700&family=Hind:wght@400;700&display=swap" rel="stylesheet">
+    <!-- Font Awesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
     <style>
         :root {
-            --cyan: #00E5FF;
-            --navy: #0A0E21;
-            --card: rgba(29, 27, 46, 0.9);
+            --bg-gradient: linear-gradient(135deg, #2a085c 0%, #4c1d95 50%, #1e1b4b 100%);
+            --card-bg: rgba(255, 255, 255, 0.95);
+            --primary: #7c3aed;
+            --accent: #f59e0b;
+            --pink: #ec4899;
+            --text-dark: #1e1b4b;
         }
-        body {
-            background-color: var(--navy);
-            color: white;
-            font-family: 'Hind', sans-serif;
+
+        * {
             margin: 0;
-            overflow-x: hidden;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Fredoka', 'Hind', sans-serif;
+            -webkit-tap-highlight-color: transparent;
         }
+
+        body {
+            background: var(--bg-gradient);
+            color: #fff;
+            min-height: 100vh;
+            overflow-x: hidden;
+            text-align: center;
+        }
+
+        /* Floating Cartoon Elements */
+        .bg-circle {
+            position: fixed;
+            border-radius: 50%;
+            z-index: -1;
+            opacity: 0.2;
+            filter: blur(60px);
+        }
+        .c1 { width: 300px; height: 300px; background: var(--accent); top: -100px; left: -100px; }
+        .c2 { width: 400px; height: 400px; background: var(--pink); bottom: -150px; right: -100px; }
+
+        /* Premium Logo Section */
+        .header {
+            padding: 40px 20px;
+        }
+
         .robot-logo {
-            font-size: 80px;
+            width: 180px;
+            height: 180px;
+            margin: 0 auto;
+            background-image: url('https://raw.githubusercontent.com/sonwaniv842-cell/Padh-Ai/main/Padh-Ai.png');
+            background-size: contain;
+            background-repeat: no-repeat;
+            background-position: center;
+            filter: drop-shadow(0 10px 30px rgba(0,0,0,0.5));
             animation: float 3s ease-in-out infinite;
         }
+
         @keyframes float {
             0%, 100% { transform: translateY(0); }
             50% { transform: translateY(-20px); }
         }
-        header {
-            min-height: 100vh;
-            padding: 40px 20px;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            text-align: center;
-            background: radial-gradient(circle, #1D1B2E 0%, #0A0E21 100%);
-            box-sizing: border-box;
-        }
+
         h1 {
-            font-family: 'Orbitron', sans-serif;
             font-size: 3.5rem;
-            color: var(--cyan);
-            text-shadow: 0 0 20px var(--cyan);
-            margin: 10px 0;
+            color: var(--accent);
+            text-shadow: 0 4px 10px rgba(0,0,0,0.3);
+            margin-top: 10px;
         }
-        .btn-download {
-            background: linear-gradient(90deg, var(--cyan), #00B0FF);
-            color: var(--navy);
-            padding: 15px 40px;
-            border-radius: 50px;
-            text-decoration: none;
-            font-weight: bold;
+
+        p.tagline {
             font-size: 1.2rem;
-            box-shadow: 0 0 20px rgba(0, 229, 255, 0.5);
-            transition: 0.3s;
-            display: inline-block;
+            opacity: 0.9;
+            margin-bottom: 30px;
+        }
+
+        .btn-download {
+            background: linear-gradient(135deg, #f59e0b, #ec4899);
+            color: #fff;
+            padding: 20px 50px;
+            border-radius: 50px;
+            font-size: 1.4rem;
+            font-weight: 700;
+            border: none;
             cursor: pointer;
+            box-shadow: 0 10px 25px rgba(236, 72, 153, 0.4);
+            transition: 0.3s;
+            display: inline-flex;
+            align-items: center;
+            gap: 15px;
         }
-        .btn-download:hover {
-            transform: scale(1.05);
-            box-shadow: 0 0 40px var(--cyan);
+
+        .btn-download:active {
+            transform: scale(0.95);
         }
-        .login-card {
-            background: var(--card);
-            padding: 30px 25px;
-            border-radius: 25px;
-            border: 1px solid var(--cyan);
-            max-width: 340px;
+
+        /* Login Card */
+        .login-section {
+            background: var(--card-bg);
+            margin: 40px auto;
             width: 90%;
-            margin-top: 40px;
-            box-shadow: 0 10px 30px rgba(0,229,255,0.15);
+            max-width: 400px;
+            padding: 30px;
+            border-radius: 30px;
+            box-shadow: 0 20px 50px rgba(0,0,0,0.4);
+            color: var(--text-dark);
         }
+
+        .login-section h2 {
+            font-size: 1.8rem;
+            margin-bottom: 20px;
+            color: var(--primary);
+        }
+
         input {
             width: 100%;
-            padding: 12px;
+            padding: 15px;
             margin: 10px 0;
-            background: rgba(255, 255, 255, 0.05);
-            border: 1px solid var(--cyan);
-            color: white;
-            border-radius: 10px;
-            box-sizing: border-box;
+            border-radius: 15px;
+            border: 2px solid #ddd;
+            font-size: 1rem;
             outline: none;
         }
-        input::placeholder {
-            color: rgba(255,255,255,0.6);
+
+        input:focus {
+            border-color: var(--primary);
         }
-        .footer {
+
+        .btn-login {
+            background: var(--primary);
+            color: #fff;
+            width: 100%;
+            padding: 15px;
+            border: none;
+            border-radius: 15px;
+            font-size: 1.2rem;
+            font-weight: 700;
+            cursor: pointer;
+            margin-top: 10px;
+        }
+
+        .links {
+            margin-top: 20px;
+            font-size: 0.9rem;
+            color: #666;
+        }
+
+        .links span {
+            color: var(--primary);
+            cursor: pointer;
+            font-weight: 700;
+        }
+
+        .features {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            flex-wrap: wrap;
             padding: 20px;
-            text-align: center;
-            font-size: 0.8rem;
-            opacity: 0.5;
-            background: #0A0E21;
+        }
+
+        .f-card {
+            background: rgba(255,255,255,0.1);
+            padding: 15px 25px;
+            border-radius: 20px;
+            border: 1px solid rgba(255,255,255,0.2);
+            font-size: 0.9rem;
         }
     </style>
 </head>
 <body>
 
-    <header>
-        <div class="robot-logo">🤖</div>
+    <div class="bg-circle c1"></div>
+    <div class="bg-circle c2"></div>
+
+    <div class="header">
+        <div class="robot-logo"></div>
         <h1>Padh-Ai</h1>
-        <p>भारत का अपना स्मार्ट एआई टीचर</p>
-        <br>
-        
-        <!-- 100% वर्क करने वाला सेफ़ लिंक -->
-        <a href="https://github.com/sonwaniv842-cell/Padh-Ai/releases" 
-           target="_blank" 
-           class="btn-download">
-           ⬇️ ऐप डाउनलोड करें
-        </a>
+        <p class="tagline">नमस्ते बच्चों! चलो आज कुछ नया सीखते हैं 📚</p>
 
-        <div class="login-card">
-            <h3 style="margin-top:0; color:var(--cyan)">स्टूडेंट पोर्टल</h3>
-            <input type="email" placeholder="ईमेल आईडी">
-            <input type="password" placeholder="पिन / पासवर्ड">
-            
-            <button style="background:var(--cyan); color:var(--navy); border:none; width:100%; padding:12px; border-radius:10px; font-weight:bold; cursor:pointer; margin-top:5px;">प्रवेश करें (Login)</button>
-            
-            <button style="background:transparent; color:var(--cyan); border:1px solid var(--cyan); width:100%; padding:10px; border-radius:10px; font-weight:bold; cursor:pointer; margin-top:10px;">नया स्टूडेंट रजिस्टर करें</button>
-            
-            <p style="font-size:0.8rem; margin-top:12px; cursor:pointer; color:var(--cyan); text-decoration:underline;">पासवर्ड भूल गए? रीसेट करें</p>
-        </div>
-    </header>
-
-    <div class="footer">
-        Padh-Ai Robotics Education System • Made in India
+        <!-- Fixed Download Button -->
+        <button onclick="window.location.href='https://github.com/sonwaniv842-cell/Padh-Ai/releases'" class="btn-download">
+            <i class="fa-solid fa-cloud-arrow-down"></i> मुफ़्त डाउनलोड करें
+        </button>
     </div>
+
+    <div class="features">
+        <div class="f-card">🔢 1-100 गिनती</div>
+        <div class="f-card">🍎 ABCD वर्णमाला</div>
+        <div class="f-card">🎤 AI टीचर वॉइस</div>
+        <div class="f-card">🏆 मंथली इनाम</div>
+    </div>
+
+    <div class="login-section">
+        <h2 id="authTitle">छात्र लॉगिन</h2>
+        <input type="text" id="nameField" placeholder="पूरा नाम" style="display:none;">
+        <input type="email" placeholder="ईमेल आईडी">
+        <input type="password" placeholder="6-अंकों का पिन">
+        <button class="btn-login" id="mainBtn">प्रवेश करें</button>
+        
+        <div class="links">
+            <p id="toggleTxt" onclick="toggleAuth()">नया अकाउंट बनाना है? <span>रजिस्टर करें</span></p>
+            <p style="margin-top:10px; opacity:0.6;">पासवर्ड भूल गए? रीसेट करें</p>
+        </div>
+    </div>
+
+    <footer style="padding: 40px; opacity: 0.7; font-size: 0.8rem;">
+        © 2024 Padh-Ai Assistant | भारत में बना सुरक्षित ऐप 🇮🇳
+    </footer>
+
+    <script>
+        let isLogin = true;
+        function toggleAuth() {
+            isLogin = !isLogin;
+            document.getElementById('authTitle').innerText = isLogin ? "छात्र लॉगिन" : "नया रजिस्ट्रेशन";
+            document.getElementById('mainBtn').innerText = isLogin ? "प्रवेश करें" : "अकाउंट बनायें";
+            document.getElementById('nameField').style.display = isLogin ? "none" : "block";
+            document.getElementById('toggleTxt').innerHTML = isLogin ? 
+                "नया अकाउंट बनाना है? <span>रजिस्टर करें</span>" : 
+                "पुराना अकाउंट है? <span>लॉगिन करें</span>";
+        }
+    </script>
 
 </body>
 </html>
