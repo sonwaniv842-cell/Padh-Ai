@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:flutter_tts/flutter_tts.dart';
 import 'package:url_launcher/url_launcher.dart';
+import 'package:webview_flutter/webview_flutter.dart';
 
 // --- SUPABASE CONFIGURATION ---
 const supabaseUrl = 'https://tyonurrbwdjqfrmqrgpk.supabase.co';
@@ -31,7 +32,7 @@ class PadhAIApp extends StatelessWidget {
   }
 }
 
-// --- 1. AUTH SCREEN (LOGIN/SIGNUP TOGGLE) ---
+// --- 1. AUTH SCREEN (FIXED FOR SUPABASE FOREIGN KEY ERROR) ---
 class AuthScreen extends StatefulWidget {
   const AuthScreen({super.key});
   @override
@@ -51,21 +52,40 @@ class _AuthScreenState extends State<AuthScreen> {
     setState(() => _loading = true);
     try {
       if (_isSignUp) {
-        final res = await supabase.auth.signUp(email: _email.text.trim(), password: _pass.text.trim());
-        if (res.user != null) {
+        // 1. Sign Up User
+        final res = await supabase.auth.signUp(
+          email: _email.text.trim(), 
+          password: _pass.text.trim()
+        );
+        
+        final userId = res.user?.id ?? supabase.auth.currentUser?.id;
+
+        if (userId != null) {
+          // 2. Small delay to ensure Supabase Auth syncs
+          await Future.delayed(const Duration(milliseconds: 500));
+
+          // 3. Insert profile safely
           await supabase.from('profiles').upsert({
-            'id': res.user!.id, 
-            'full_name': _name.text, 
-            'parent_name': _pName.text, 
-            'parent_phone': _pPhone.text,
+            'id': userId, 
+            'full_name': _name.text.trim(), 
+            'parent_name': _pName.text.trim(), 
+            'parent_phone': _pPhone.text.trim(),
+            'has_paid': false,
+            'is_admin': false,
           });
         }
       } else {
-        await supabase.auth.signInWithPassword(email: _email.text.trim(), password: _pass.text.trim());
+        await supabase.auth.signInWithPassword(
+          email: _email.text.trim(), 
+          password: _pass.text.trim()
+        );
       }
       if (mounted) Navigator.pushReplacement(context, MaterialPageRoute(builder: (c) => const MainDashboard()));
     } catch (e) {
-      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text("Error: $e")));
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+        backgroundColor: Colors.redAccent,
+        content: Text("Error: ${e.toString()}"),
+      ));
     } finally {
       if (mounted) setState(() => _loading = false);
     }
@@ -140,7 +160,10 @@ class _MainDashboardState extends State<MainDashboard> {
     return Scaffold(
       appBar: AppBar(title: Text("Padh AI: ${profile!['full_name'] ?? 'User'}"), actions: [
         if (profile!['is_admin'] == true) IconButton(icon: const Icon(Icons.admin_panel_settings, color: Colors.orange), onPressed: () => Navigator.push(context, MaterialPageRoute(builder: (c) => const AdminPage()))),
-        IconButton(icon: const Icon(Icons.logout), onPressed: () => supabase.auth.signOut())
+        IconButton(icon: const Icon(Icons.logout), onPressed: () async {
+          await supabase.auth.signOut();
+          if (mounted) Navigator.pushReplacement(context, MaterialPageRoute(builder: (c) => const AuthScreen()));
+        })
       ]),
       body: _tab == 0 ? _homeView() : _examView(),
       bottomNavigationBar: BottomNavigationBar(currentIndex: _tab, onTap: (i) => setState(() => _tab = i), items: const [
@@ -155,6 +178,24 @@ class _MainDashboardState extends State<MainDashboard> {
       child: Column(
         children: [
           Image.network(profile?['banner_url'] ?? 'https://placehold.co/600x200/6C63FF/white?text=Padh+AI', height: 150, width: double.infinity, fit: BoxFit.cover),
+          
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 10),
+            child: SizedBox(
+              width: double.infinity,
+              height: 60,
+              child: ElevatedButton.icon(
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: Colors.deepOrangeAccent,
+                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+                ),
+                icon: const Icon(Icons.auto_awesome, color: Colors.white, size: 28),
+                label: const Text("🎨 बाल शिक्षा (वर्णमाला, पहाड़ा व गिनती)", style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: Colors.white)),
+                onPressed: () => Navigator.push(context, MaterialPageRoute(builder: (c) => const VarnamalaWebScreen())),
+              ),
+            ),
+          ),
+
           Padding(
             padding: const EdgeInsets.all(15),
             child: Card(child: Padding(
@@ -190,7 +231,34 @@ class _MainDashboardState extends State<MainDashboard> {
   }
 }
 
-// --- 3. ADMIN PANEL ---
+// --- 3. HTML VARNAMALA WEBVIEW SCREEN ---
+class VarnamalaWebScreen extends StatefulWidget {
+  const VarnamalaWebScreen({super.key});
+  @override
+  State<VarnamalaWebScreen> createState() => _VarnamalaWebScreenState();
+}
+
+class _VarnamalaWebScreenState extends State<VarnamalaWebScreen> {
+  late final WebViewController _controller;
+
+  @override
+  void initState() {
+    super.initState();
+    _controller = WebViewController()
+      ..setJavaScriptMode(JavaScriptMode.unrestricted)
+      ..loadFlutterAsset('assets/varnamala.html');
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(title: const Text("बाल शिक्षा - Padh AI")),
+      body: WebViewWidget(controller: _controller),
+    );
+  }
+}
+
+// --- 4. ADMIN PANEL ---
 class AdminPage extends StatefulWidget { const AdminPage({super.key}); @override State<AdminPage> createState() => _AdminPageState(); }
 class _AdminPageState extends State<AdminPage> {
   List users = [];
