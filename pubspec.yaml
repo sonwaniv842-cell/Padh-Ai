@@ -11,7 +11,7 @@ dependencies:
   flutter:
     sdk: flutter
   supabase_flutter: ^2.3.4
-  flutter_tts: ^3.8.5
+  flutter_tts: ^3.8.5  # आवाज़ के लिए
   cupertino_icons: ^1.0.6
 
 dev_dependencies:
@@ -28,5 +28,7 @@ flutter_launcher_icons:
 flutter:
   uses-material-design: true
 
+  # एसेट्स फोल्डर को सही तरीके से जोड़ा गया है
   assets:
     - assets/
+    - assets/padh-ai-logo.png
