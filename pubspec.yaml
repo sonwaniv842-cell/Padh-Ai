@@ -1,6 +1,6 @@
 name: padh_ai
 description: Padh AI - Future Digital School
-version: 1.0.0+1
+version: 1.0.0+2
 publish_to: 'none'
 
 environment:
