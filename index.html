@@ -3,111 +3,537 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1.0">
-<title>Padh-Ai | बच्चों की मजेदार पढ़ाई</title>
+<meta name="theme-color" content="#7042df">
+
+<title>Padh-Ai 🤖 | बच्चों की मजेदार पढ़ाई</title>
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
 <style>
-*{box-sizing:border-box}
+*{
+  box-sizing:border-box;
+  -webkit-tap-highlight-color:transparent;
+}
+
+html{
+  scroll-behavior:smooth;
+}
+
 body{
   margin:0;
   font-family:Arial,"Noto Sans Devanagari",sans-serif;
-  background:
-    radial-gradient(circle at 10% 10%,#b9f3ff 0,#dff8ff 30%,transparent 55%),
-    radial-gradient(circle at 90% 20%,#fff1b7 0,#f3eaff 35%,transparent 60%),
-    linear-gradient(135deg,#eefaff,#f0eaff);
   color:#29244d;
+  min-height:100vh;
+
+  background:
+    radial-gradient(circle at 5% 5%,#b9f5ff 0,transparent 30%),
+    radial-gradient(circle at 95% 15%,#fff0b5 0,transparent 30%),
+    linear-gradient(135deg,#eefcff,#f1eaff);
 }
-button,input,select{font:inherit}
-.container{max-width:900px;margin:auto;padding:18px}
-.logo{
-  background:white;border:5px solid #29244d;border-radius:32px;
-  padding:20px;text-align:center;font-size:38px;font-weight:900;
-  color:#7042df;box-shadow:0 10px 0 #29244d;margin-bottom:18px
-}
-.logo span{color:#12b99b}
-.subtitle{text-align:center;font-size:20px;font-weight:bold;margin:10px}
-.hero{
-  margin:20px 0;background:linear-gradient(135deg,#ff4e9b,#6049ff,#15bddd);
-  color:white;border:5px solid #29244d;border-radius:28px;
-  padding:22px;text-align:center;box-shadow:0 10px 0 #29244d
-}
-.hero h1{margin:0;font-size:30px}
-.hero p{margin:8px 0;font-weight:bold}
-.download{
-  display:inline-block;text-decoration:none;color:white;
-  background:linear-gradient(135deg,#13c98a,#08aeea);
-  padding:16px 25px;border:4px solid #29244d;border-radius:20px;
-  box-shadow:0 7px 0 #29244d;font-weight:900;margin-top:12px
-}
-.download:active{transform:translateY(5px);box-shadow:0 2px 0 #29244d}
-.card{
-  background:rgba(255,255,255,.96);border:5px solid #29244d;
-  border-radius:32px;padding:25px;margin-top:25px;
-  box-shadow:0 10px 0 #29244d
-}
-.tabs{display:grid;grid-template-columns:1fr 1fr;gap:8px;background:#eeeaff;padding:7px;border-radius:22px}
-.tab{
-  border:0;border-radius:18px;padding:15px;font-weight:900;
-  background:transparent;color:#29244d;cursor:pointer
-}
-.tab.active{background:#ffd33d;box-shadow:0 5px 0 #c49b00}
-.admin-btn{
-  width:100%;margin-top:12px;padding:14px;border-radius:18px;
-  border:3px solid #29244d;background:#eee8ff;color:#6739d5;
-  font-weight:900;cursor:pointer
-}
-label{display:block;font-weight:900;font-size:18px;margin:18px 0 8px}
+
+button,
 input{
-  width:100%;padding:17px;border:4px solid #d9d8e6;
-  border-radius:20px;background:#fbfaff;outline:none
+  font:inherit;
 }
-input:focus{border-color:#7042df}
+
+a{
+  -webkit-tap-highlight-color:transparent;
+}
+
+.app{
+  width:100%;
+  max-width:920px;
+  margin:auto;
+  padding:14px;
+}
+
+/* ================= LOGO ================= */
+
+.logo{
+  background:#fff;
+  border:5px solid #29244d;
+  border-radius:32px;
+  padding:17px 20px;
+  text-align:center;
+  font-size:38px;
+  font-weight:1000;
+  color:#7042df;
+  box-shadow:0 9px 0 #29244d;
+  margin-bottom:12px;
+}
+
+.logo span{
+  color:#13b895;
+}
+
+.subtitle{
+  text-align:center;
+  font-weight:900;
+  font-size:20px;
+  margin:18px 0;
+}
+
+/* ================= HERO ================= */
+
+.hero{
+  position:relative;
+  overflow:hidden;
+
+  background:
+    linear-gradient(135deg,#ff4b9c,#6546ed,#13bde1);
+
+  color:white;
+
+  border:5px solid #29244d;
+  border-radius:30px;
+
+  padding:25px 18px;
+  text-align:center;
+
+  box-shadow:0 10px 0 #29244d;
+
+  margin-bottom:30px;
+}
+
+.hero:before,
+.hero:after{
+  content:"⭐";
+  position:absolute;
+  font-size:30px;
+  animation:float 3s ease-in-out infinite;
+}
+
+.hero:before{
+  left:18px;
+  top:15px;
+}
+
+.hero:after{
+  right:18px;
+  bottom:15px;
+  animation-delay:1s;
+}
+
+@keyframes float{
+  0%,100%{transform:translateY(0) rotate(0deg)}
+  50%{transform:translateY(-9px) rotate(10deg)}
+}
+
+.hero h1{
+  margin:0;
+  font-size:30px;
+  position:relative;
+  z-index:2;
+}
+
+.hero p{
+  font-weight:900;
+  position:relative;
+  z-index:2;
+}
+
+.download{
+  display:inline-block;
+  text-decoration:none;
+
+  color:white;
+
+  background:
+    linear-gradient(135deg,#12d092,#08aeea);
+
+  border:4px solid #29244d;
+  border-radius:22px;
+
+  padding:16px 22px;
+
+  font-weight:1000;
+
+  box-shadow:0 7px 0 #29244d;
+
+  margin-top:10px;
+
+  transition:.15s;
+}
+
+.download:active{
+  transform:translateY(6px);
+  box-shadow:0 2px 0 #29244d;
+}
+
+/* ================= CARD ================= */
+
+.card{
+  background:rgba(255,255,255,.97);
+
+  border:5px solid #29244d;
+  border-radius:32px;
+
+  padding:22px;
+
+  box-shadow:0 10px 0 #29244d;
+
+  margin-bottom:28px;
+}
+
+/* ================= TABS ================= */
+
+.tabs{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:8px;
+
+  background:#eeebff;
+  padding:7px;
+
+  border-radius:24px;
+}
+
+.tab{
+  border:0;
+  border-radius:19px;
+
+  padding:16px 8px;
+
+  font-weight:1000;
+  font-size:18px;
+
+  background:transparent;
+  color:#29244d;
+
+  cursor:pointer;
+}
+
+.tab.active{
+  background:#ffd33f;
+
+  box-shadow:
+    0 6px 0 #c49b00;
+
+  transform:translateY(-1px);
+}
+
+/* ================= ADMIN BUTTON ================= */
+
+.admin-login-button{
+  width:100%;
+
+  margin-top:14px;
+
+  padding:15px;
+
+  border:4px solid #29244d;
+  border-radius:21px;
+
+  background:
+    linear-gradient(135deg,#eee7ff,#fff);
+
+  color:#6739d5;
+
+  font-weight:1000;
+  font-size:18px;
+
+  cursor:pointer;
+}
+
+.admin-login-button:active{
+  transform:translateY(2px);
+}
+
+/* ================= FORM ================= */
+
+label{
+  display:block;
+
+  font-size:18px;
+  font-weight:1000;
+
+  margin:19px 0 8px;
+}
+
+input{
+  width:100%;
+
+  padding:17px;
+
+  border:4px solid #d9d8e7;
+  border-radius:20px;
+
+  background:#fbfaff;
+
+  color:#29244d;
+
+  outline:none;
+}
+
+input:focus{
+  border-color:#7042df;
+
+  box-shadow:
+    0 0 0 4px rgba(112,66,223,.12);
+}
+
+/* ================= BUTTON ================= */
+
 .primary{
-  width:100%;padding:17px;margin-top:20px;border:4px solid #29244d;
-  border-radius:20px;background:linear-gradient(135deg,#12c993,#16aee8);
-  color:white;font-weight:900;box-shadow:0 7px 0 #29244d;cursor:pointer
+  width:100%;
+
+  padding:17px;
+
+  margin-top:20px;
+
+  border:4px solid #29244d;
+  border-radius:21px;
+
+  background:
+    linear-gradient(135deg,#12cf92,#14afe7);
+
+  color:white;
+
+  font-size:18px;
+  font-weight:1000;
+
+  box-shadow:0 7px 0 #29244d;
+
+  cursor:pointer;
+
+  transition:.12s;
 }
-.primary:active{transform:translateY(5px);box-shadow:0 2px 0 #29244d}
+
+.primary:active{
+  transform:translateY(6px);
+  box-shadow:0 2px 0 #29244d;
+}
+
 .secondary{
-  width:100%;padding:14px;margin-top:14px;border:3px solid #7042df;
-  border-radius:18px;background:#f1edff;color:#6033c8;font-weight:900;cursor:pointer
+  width:100%;
+
+  padding:15px;
+
+  margin-top:14px;
+
+  border:4px solid #7042df;
+  border-radius:20px;
+
+  background:#f4f0ff;
+
+  color:#6739d5;
+
+  font-weight:1000;
+
+  cursor:pointer;
 }
-.msg{
-  margin-top:18px;padding:15px;border-radius:16px;text-align:center;
-  font-weight:bold;display:none
+
+/* ================= MESSAGE ================= */
+
+.message{
+  display:none;
+
+  margin-top:18px;
+
+  padding:15px;
+
+  border-radius:18px;
+
+  font-weight:1000;
+
+  line-height:1.5;
+
+  word-break:break-word;
 }
-.error{background:#ffe0e5;color:#a51f39}
-.success{background:#d9ffe9;color:#087442}
+
+.message.error{
+  display:block;
+  background:#ffe0e6;
+  color:#a71f3c;
+}
+
+.message.success{
+  display:block;
+  background:#dbffeb;
+  color:#087342;
+}
+
+.message.info{
+  display:block;
+  background:#e5f5ff;
+  color:#14658a;
+}
+
+/* ================= ADMIN ================= */
+
+.admin-panel{
+  display:none;
+}
+
+.admin-title{
+  text-align:center;
+  color:#6739d5;
+
+  font-size:28px;
+  margin-top:0;
+}
+
+.admin-box{
+  background:#f7f3ff;
+
+  border:3px solid #ddd3ff;
+
+  border-radius:22px;
+
+  padding:18px;
+
+  margin-top:15px;
+}
+
+.admin-box h3{
+  margin-top:0;
+  color:#6739d5;
+}
+
+.admin-action{
+  width:100%;
+
+  padding:14px;
+
+  border:3px solid #29244d;
+
+  border-radius:18px;
+
+  background:white;
+
+  font-weight:1000;
+
+  cursor:pointer;
+
+  margin-top:10px;
+}
+
+.admin-action.danger{
+  background:#ff5770;
+  color:white;
+}
+
+/* ================= USER ================= */
+
+.user-panel{
+  display:none;
+}
+
+.welcome{
+  text-align:center;
+}
+
+.welcome .emoji{
+  font-size:55px;
+}
+
+/* ================= SUPPORT ================= */
+
 .support{
-  margin-top:25px;border:4px dashed #16b795;border-radius:25px;
-  padding:20px;text-align:center;background:#effff9
+  border:4px dashed #15b996;
+
+  border-radius:27px;
+
+  padding:22px;
+
+  text-align:center;
+
+  background:#effff9;
+
+  margin-bottom:25px;
 }
-.support a{display:inline-block;margin-top:8px;color:#087b5f;font-size:20px;font-weight:900;text-decoration:none}
-.admin{
-  display:none
+
+.support-title{
+  font-size:18px;
 }
-.admin h2{color:#683bd5}
-.control{
-  background:#f6f2ff;border:3px solid #ddd3ff;border-radius:20px;
-  padding:16px;margin-top:14px
+
+.support-link{
+  display:inline-block;
+
+  color:#087a5d;
+
+  font-size:21px;
+  font-weight:1000;
+
+  text-decoration:none;
+
+  margin-top:8px;
 }
-.control button{margin-top:10px}
-.logout{background:#ff5571;color:white;border:3px solid #29244d}
-footer{text-align:center;padding:30px 10px;color:#777}
-.hidden{display:none!important}
-.small{font-size:13px;color:#777;margin-top:8px}
+
+/* ================= FOOTER ================= */
+
+footer{
+  text-align:center;
+
+  color:#777;
+
+  padding:22px 5px 35px;
+
+  font-weight:bold;
+}
+
+/* ================= UTILITY ================= */
+
+.hidden{
+  display:none !important;
+}
+
+.small{
+  font-size:13px;
+  opacity:.85;
+}
+
+.note{
+  font-size:13px;
+  color:#777;
+  line-height:1.5;
+}
+
+hr{
+  border:0;
+  border-top:2px dashed #ddd;
+  margin:22px 0;
+}
+
+/* ================= MOBILE ================= */
+
 @media(max-width:600px){
- .container{padding:12px}
- .logo{font-size:31px}
- .hero h1{font-size:25px}
- .card{padding:18px}
+
+  .app{
+    padding:10px;
+  }
+
+  .logo{
+    font-size:31px;
+    padding:15px;
+  }
+
+  .subtitle{
+    font-size:17px;
+  }
+
+  .hero h1{
+    font-size:25px;
+  }
+
+  .card{
+    padding:17px;
+  }
+
+  .tab{
+    font-size:16px;
+  }
+
 }
 </style>
 </head>
 
+
 <body>
-<div class="container">
+
+<div class="app">
+
+  <!-- ================= HEADER ================= -->
 
   <div class="logo">
     Padh-<span>Ai</span> 🤖
@@ -117,157 +543,471 @@ footer{text-align:center;padding:30px 10px;color:#777}
     🔢 गिनती • 🔤 वर्णमाला • 📚 पहाड़ा • 🤖 AI Teacher
   </div>
 
-  <div class="hero">
-    <h1>🎨 Padh-Ai Android App</h1>
-    <p>बच्चों की मजेदार पढ़ाई — मोबाइल ऐप</p>
 
-    <a class="download"
-       href="https://github.com/sonwaniv842-cell/Padh-Ai/releases/download/v1.0.5/app-release.apk"
-       download>
-       📲 Padh-Ai App (APK) डाउनलोड करें
+  <!-- ================= APK ================= -->
+
+  <section class="hero">
+
+    <h1>📱 Padh-Ai Android App</h1>
+
+    <p>
+      बच्चों की मजेदार पढ़ाई — मोबाइल ऐप
+    </p>
+
+    <a
+      class="download"
+      href="https://github.com/sonwaniv842-cell/Padh-Ai/releases/download/v1.0.5/app-release.apk"
+      target="_blank"
+      rel="noopener"
+    >
+      📲 Padh-Ai App (APK) डाउनलोड करें
     </a>
 
-    <p class="small" style="color:white">
+    <p>
       Version 1.0.5 • Free Download
     </p>
-  </div>
 
-  <!-- AUTH CARD -->
-  <div class="card" id="authCard">
+  </section>
+
+
+  <!-- ================= AUTH ================= -->
+
+  <section class="card" id="authCard">
 
     <div class="tabs">
-      <button class="tab active" id="loginTab" onclick="showLogin()">
+
+      <button
+        class="tab active"
+        id="loginTab"
+        onclick="showLogin()"
+      >
         🔐 Login
       </button>
 
-      <button class="tab" id="signupTab" onclick="showSignup()">
+      <button
+        class="tab"
+        id="signupTab"
+        onclick="showSignup()"
+      >
         🎒 नया Account
       </button>
+
     </div>
 
-    <button class="admin-btn" onclick="showAdminLogin()">
+
+    <!-- ADMIN LOGIN -->
+
+    <button
+      class="admin-login-button"
+      onclick="showAdminMode()"
+    >
       🛡️ Admin Login
     </button>
 
-    <!-- LOGIN -->
+
+    <!-- ================= LOGIN ================= -->
+
     <div id="loginBox">
 
-      <label>📧 Email</label>
-      <input id="loginEmail" type="email"
-             placeholder="अपना Email डालें">
+      <label>
+        📧 Email
+      </label>
 
-      <label>🔢 6 अंकों का PIN</label>
-      <input id="loginPin" type="password"
-             inputmode="numeric" maxlength="6"
-             placeholder="6 अंकों का PIN">
+      <input
+        id="loginEmail"
+        type="email"
+        autocomplete="email"
+        placeholder="अपना Email डालें"
+      >
 
-      <button class="primary" onclick="loginUser()">
+
+      <label>
+        🔢 6 अंकों का PIN
+      </label>
+
+      <input
+        id="loginPin"
+        type="password"
+        inputmode="numeric"
+        autocomplete="current-password"
+        maxlength="6"
+        placeholder="6 अंकों का PIN"
+      >
+
+
+      <button
+        class="primary"
+        onclick="loginUser()"
+      >
         🔐 Login करें
       </button>
 
-      <button class="secondary" onclick="forgotPin()">
+
+      <button
+        class="secondary"
+        onclick="forgotPin()"
+      >
         🔑 PIN भूल गए?
       </button>
 
     </div>
 
-    <!-- SIGNUP -->
+
+    <!-- ================= SIGNUP ================= -->
+
     <div id="signupBox" class="hidden">
 
-      <label>👦 आपका नाम</label>
-      <input id="signupName" type="text"
-             placeholder="बच्चे का नाम">
+      <label>
+        👦 आपका नाम
+      </label>
 
-      <label>📚 कक्षा</label>
-      <input id="signupClass" type="text"
-             placeholder="जैसे KG1, KG2, Class 1">
+      <input
+        id="signupName"
+        type="text"
+        placeholder="बच्चे का नाम"
+      >
 
-      <label>📧 Email</label>
-      <input id="signupEmail" type="email"
-             placeholder="Email">
 
-      <label>🔢 6 अंकों का PIN</label>
-      <input id="signupPin" type="password"
-             inputmode="numeric" maxlength="6"
-             placeholder="6 अंकों का PIN">
+      <label>
+        📚 कक्षा
+      </label>
 
-      <button class="primary" onclick="signupUser()">
+      <input
+        id="signupClass"
+        type="text"
+        placeholder="जैसे KG1, KG2, Class 1"
+      >
+
+
+      <label>
+        📧 Email
+      </label>
+
+      <input
+        id="signupEmail"
+        type="email"
+        autocomplete="email"
+        placeholder="Email"
+      >
+
+
+      <label>
+        🔢 6 अंकों का PIN
+      </label>
+
+      <input
+        id="signupPin"
+        type="password"
+        inputmode="numeric"
+        autocomplete="new-password"
+        maxlength="6"
+        placeholder="6 अंकों का PIN"
+      >
+
+
+      <button
+        class="primary"
+        onclick="signupUser()"
+      >
         🎒 Account बनाएँ
       </button>
 
+
+      <p class="note">
+        PIN ठीक 6 अंकों का होना चाहिए।
+        Account बनने के बाद उसी Email और PIN से Login करें।
+      </p>
+
     </div>
 
-    <div id="message" class="msg"></div>
-  </div>
 
-  <!-- ADMIN -->
-  <div class="card admin" id="adminPanel">
+    <!-- ================= ADMIN SETUP ================= -->
 
-    <h2>🛡️ Padh-Ai Admin Panel</h2>
+    <div id="adminSetupBox" class="hidden">
 
-    <div class="control">
-      <b>👑 Admin Account</b>
-      <p id="adminEmailView">-</p>
-    </div>
+      <h2 style="color:#6739d5;text-align:center">
+        🛡️ Admin Setup
+      </h2>
 
-    <div class="control">
-      <b>📲 APK Download</b>
-      <p>App Version: 1.0.5</p>
-      <a class="download"
-         href="https://github.com/sonwaniv842-cell/Padh-Ai/releases/download/v1.0.5/app-release.apk">
-         📲 APK खोलें
-      </a>
-    </div>
+      <p class="note">
+        पहली बार Admin account बनाने के लिए नीचे
+        Admin Email और अपना 6-अंकों का PIN डालें।
+      </p>
 
-    <div class="control">
-      <b>💳 Admin UPI</b>
-      <p id="upiView">7067132801@ptyes</p>
-    </div>
 
-    <div class="control">
-      <b>📞 WhatsApp Support</b>
-      <p>+91 7067132801</p>
-      <a class="secondary"
-         style="display:block;text-align:center;text-decoration:none"
-         href="https://wa.me/917067132801"
-         target="_blank">
-         💬 WhatsApp खोलें
-      </a>
-    </div>
+      <label>
+        👑 Admin Email
+      </label>
 
-    <div class="control">
-      <b>🎨 Website Settings</b>
+      <input
+        id="adminEmail"
+        type="email"
+        value="Sonwaniv842@gmail.com"
+        readonly
+      >
 
-      <label>मुख्य शीर्षक</label>
-      <input id="siteTitleInput" value="Padh-Ai 🤖">
 
-      <button class="primary" onclick="saveSiteSettings()">
-        💾 Settings Save करें
+      <label>
+        🔢 नया Admin PIN
+      </label>
+
+      <input
+        id="adminPin"
+        type="password"
+        inputmode="numeric"
+        maxlength="6"
+        placeholder="अपना 6 अंकों का PIN"
+      >
+
+
+      <button
+        class="primary"
+        onclick="setupAdmin()"
+      >
+        👑 Admin Account बनाएं
       </button>
+
+
+      <button
+        class="secondary"
+        onclick="showLogin()"
+      >
+        🔙 वापस Login
+      </button>
+
     </div>
 
-    <button class="primary logout" onclick="logoutUser()">
-      🚪 Admin Logout
-    </button>
 
-  </div>
+    <!-- MESSAGE -->
 
-  <!-- USER AREA -->
-  <div class="card hidden" id="userPanel">
-    <h2>🎉 स्वागत है!</h2>
-    <p id="welcomeText"></p>
+    <div id="message"></div>
 
-    <button class="primary" onclick="logoutUser()">
+  </section>
+
+
+  <!-- ================= USER PANEL ================= -->
+
+  <section
+    class="card user-panel"
+    id="userPanel"
+  >
+
+    <div class="welcome">
+
+      <div class="emoji">
+        🎉
+      </div>
+
+      <h2>
+        स्वागत है!
+      </h2>
+
+      <p id="welcomeText"></p>
+
+    </div>
+
+
+    <a
+      class="download"
+      style="display:block;text-align:center"
+      href="https://github.com/sonwaniv842-cell/Padh-Ai/releases/download/v1.0.5/app-release.apk"
+      target="_blank"
+      rel="noopener"
+    >
+      📲 Padh-Ai App डाउनलोड करें
+    </a>
+
+
+    <button
+      class="primary"
+      onclick="logoutUser()"
+    >
       🚪 Logout
     </button>
-  </div>
+
+  </section>
+
+
+  <!-- ================= ADMIN PANEL ================= -->
+
+  <section
+    class="card admin-panel"
+    id="adminPanel"
+  >
+
+    <h2 class="admin-title">
+      🛡️ Padh-Ai Admin Panel
+    </h2>
+
+
+    <div class="admin-box">
+
+      <h3>
+        👑 Admin Information
+      </h3>
+
+      <p>
+        <b>Email:</b>
+        <span id="adminEmailView">
+          Sonwaniv842@gmail.com
+        </span>
+      </p>
+
+    </div>
+
+
+    <!-- APK CONTROL -->
+
+    <div class="admin-box">
+
+      <h3>
+        📲 APK App
+      </h3>
+
+      <p>
+        Current Version:
+        <b>1.0.5</b>
+      </p>
+
+      <a
+        class="download"
+        style="display:block;text-align:center"
+        href="https://github.com/sonwaniv842-cell/Padh-Ai/releases/download/v1.0.5/app-release.apk"
+        target="_blank"
+        rel="noopener"
+      >
+        📲 APK खोलें
+      </a>
+
+    </div>
+
+
+    <!-- UPI -->
+
+    <div class="admin-box">
+
+      <h3>
+        💳 Payment / UPI
+      </h3>
+
+      <p>
+        <b>Admin UPI ID:</b>
+      </p>
+
+      <input
+        id="upiInput"
+        value="7067132801@ptyes"
+        readonly
+      >
+
+      <button
+        class="admin-action"
+        onclick="copyUPI()"
+      >
+        📋 UPI Copy करें
+      </button>
+
+    </div>
+
+
+    <!-- WHATSAPP -->
+
+    <div class="admin-box">
+
+      <h3>
+        📞 Support
+      </h3>
+
+      <p>
+        <b>WhatsApp:</b>
+        +91 7067132801
+      </p>
+
+      <a
+        class="download"
+        style="display:block;text-align:center"
+        href="https://wa.me/917067132801"
+        target="_blank"
+        rel="noopener"
+      >
+        💬 WhatsApp Support
+      </a>
+
+    </div>
+
+
+    <!-- WEBSITE SETTINGS -->
+
+    <div class="admin-box">
+
+      <h3>
+        🎨 Website Settings
+      </h3>
+
+      <label>
+        Website Title
+      </label>
+
+      <input
+        id="siteTitleInput"
+        value="Padh-Ai 🤖"
+      >
+
+      <button
+        class="admin-action"
+        onclick="saveSiteTitle()"
+      >
+        💾 Title Save करें
+      </button>
+
+    </div>
+
+
+    <!-- SESSION -->
+
+    <div class="admin-box">
+
+      <h3>
+        🔐 Account Session
+      </h3>
+
+      <p class="note">
+        Admin logout करने के बाद दोबारा Admin Email और
+        अपना Admin PIN डालकर Login करना होगा।
+      </p>
+
+      <button
+        class="admin-action danger"
+        onclick="logoutUser()"
+      >
+        🚪 Admin Logout
+      </button>
+
+    </div>
+
+
+  </section>
+
+
+  <!-- ================= SUPPORT ================= -->
 
   <div class="support">
-    <div>💬 सहायता चाहिए?</div>
-    <a href="https://wa.me/917067132801" target="_blank">
+
+    <div class="support-title">
+      💬 सहायता चाहिए?
+    </div>
+
+    <a
+      class="support-link"
+      href="https://wa.me/917067132801"
+      target="_blank"
+      rel="noopener"
+    >
       WhatsApp Support खोलें
     </a>
+
   </div>
+
 
   <footer>
     © Padh-Ai • बच्चों की मजेदार पढ़ाई 🤖📚
@@ -275,9 +1015,11 @@ footer{text-align:center;padding:30px 10px;color:#777}
 
 </div>
 
+
 <script>
+
 /* =========================================================
-   PADH-AI SUPABASE CONFIG
+   PADH-AI CONFIGURATION
    ========================================================= */
 
 const SUPABASE_URL =
@@ -298,51 +1040,134 @@ const SUPPORT_WHATSAPP =
 const APK_URL =
   "https://github.com/sonwaniv842-cell/Padh-Ai/releases/download/v1.0.5/app-release.apk";
 
-/* Supabase client */
-const sb = window.supabase.createClient(
-  SUPABASE_URL,
-  SUPABASE_PUBLISHABLE_KEY
-);
+
+/* =========================================================
+   SUPABASE CLIENT
+   ========================================================= */
+
+const supabaseClient =
+  window.supabase.createClient(
+    SUPABASE_URL,
+    SUPABASE_PUBLISHABLE_KEY
+  );
 
 
 /* =========================================================
-   MESSAGE
+   MESSAGE SYSTEM
    ========================================================= */
 
 function showMessage(text,type="error"){
-  const box=document.getElementById("message");
-  box.textContent=text;
-  box.className="msg "+type;
-  box.style.display="block";
+
+  const box =
+    document.getElementById("message");
+
+  box.className =
+    "message " + type;
+
+  box.innerHTML =
+    text;
+
+  box.style.display =
+    "block";
+
+  box.scrollIntoView({
+    behavior:"smooth",
+    block:"nearest"
+  });
 }
 
+
 function hideMessage(){
-  document.getElementById("message").style.display="none";
+
+  const box =
+    document.getElementById("message");
+
+  box.style.display =
+    "none";
+
+  box.innerHTML = "";
 }
 
 
 /* =========================================================
-   LOGIN / SIGNUP TABS
+   SCREEN SWITCHING
    ========================================================= */
 
-function showLogin(){
-  document.getElementById("loginBox").classList.remove("hidden");
-  document.getElementById("signupBox").classList.add("hidden");
+function hideAllForms(){
 
-  document.getElementById("loginTab").classList.add("active");
-  document.getElementById("signupTab").classList.remove("active");
+  document
+    .getElementById("loginBox")
+    .classList.add("hidden");
 
-  hideMessage();
+  document
+    .getElementById("signupBox")
+    .classList.add("hidden");
+
+  document
+    .getElementById("adminSetupBox")
+    .classList.add("hidden");
 }
 
-function showSignup(){
-  document.getElementById("loginBox").classList.add("hidden");
-  document.getElementById("signupBox").classList.remove("hidden");
 
-  document.getElementById("loginTab").classList.remove("active");
-  document.getElementById("signupTab").classList.add("active");
+function showLogin(){
 
+  hideAllForms();
   hideMessage();
+
+  document
+    .getElementById("loginBox")
+    .classList.remove("hidden");
+
+  document
+    .getElementById("loginTab")
+    .classList.add("active");
+
+  document
+    .getElementById("signupTab")
+    .classList.remove("active");
+}
+
+
+function showSignup(){
+
+  hideAllForms();
+  hideMessage();
+
+  document
+    .getElementById("signupBox")
+    .classList.remove("hidden");
+
+  document
+    .getElementById("signupTab")
+    .classList.add("active");
+
+  document
+    .getElementById("loginTab")
+    .classList.remove("active");
+}
+
+
+function showAdminMode(){
+
+  hideAllForms();
+  hideMessage();
+
+  document
+    .getElementById("adminSetupBox")
+    .classList.remove("hidden");
+
+  document
+    .getElementById("loginTab")
+    .classList.remove("active");
+
+  document
+    .getElementById("signupTab")
+    .classList.remove("active");
+
+  document
+    .getElementById("adminPin")
+    .focus();
+
 }
 
 
@@ -351,12 +1176,68 @@ function showSignup(){
    ========================================================= */
 
 function validPIN(pin){
+
   return /^[0-9]{6}$/.test(pin);
+
 }
 
 
 /* =========================================================
-   SIGN UP
+   ERROR MESSAGE
+   ========================================================= */
+
+function friendlyError(error){
+
+  const raw =
+    (error?.message || String(error || ""))
+    .toLowerCase();
+
+  if(raw.includes("invalid api key")){
+    return `
+      ❌ Supabase API key स्वीकार नहीं हुई।<br>
+      कृपया Supabase Publishable Key और Project URL जाँचें।
+    `;
+  }
+
+  if(raw.includes("invalid login credentials")){
+    return `
+      ❌ Email या PIN गलत है।<br>
+      अगर यह पहली बार Admin Login है तो पहले
+      <b>Admin Setup</b> से Admin Account बनाएं।
+    `;
+  }
+
+  if(raw.includes("email not confirmed")){
+    return `
+      📧 Email अभी confirm नहीं हुआ है।<br>
+      अपने Email inbox में Supabase का confirmation mail देखें।
+    `;
+  }
+
+  if(raw.includes("user already registered")){
+    return `
+      ⚠️ यह Email पहले से registered है।<br>
+      सीधे Login करें या PIN reset करें।
+    `;
+  }
+
+  if(raw.includes("password")){
+    return `
+      ❌ PIN/Password स्वीकार नहीं हुआ।<br>
+      PIN ठीक 6 अंकों का होना चाहिए।
+    `;
+  }
+
+  return `
+    ❌ ${escapeHTML(
+      error?.message || "कुछ गलत हो गया"
+    )}
+  `;
+}
+
+
+/* =========================================================
+   NORMAL USER SIGNUP
    ========================================================= */
 
 async function signupUser(){
@@ -364,41 +1245,66 @@ async function signupUser(){
   hideMessage();
 
   const name =
-    document.getElementById("signupName").value.trim();
+    document.getElementById("signupName")
+    .value.trim();
 
   const studentClass =
-    document.getElementById("signupClass").value.trim();
+    document.getElementById("signupClass")
+    .value.trim();
 
   const email =
-    document.getElementById("signupEmail").value.trim();
+    document.getElementById("signupEmail")
+    .value.trim();
 
   const pin =
-    document.getElementById("signupPin").value.trim();
+    document.getElementById("signupPin")
+    .value.trim();
+
 
   if(!name){
-    showMessage("कृपया बच्चे का नाम डालें");
+
+    showMessage(
+      "👦 कृपया बच्चे का नाम डालें"
+    );
+
     return;
   }
+
 
   if(!studentClass){
-    showMessage("कृपया कक्षा डालें");
+
+    showMessage(
+      "📚 कृपया कक्षा डालें"
+    );
+
     return;
   }
+
 
   if(!email){
-    showMessage("कृपया Email डालें");
+
+    showMessage(
+      "📧 कृपया Email डालें"
+    );
+
     return;
   }
 
+
   if(!validPIN(pin)){
-    showMessage("PIN ठीक 6 अंकों का होना चाहिए");
+
+    showMessage(
+      "🔢 PIN ठीक 6 अंकों का होना चाहिए"
+    );
+
     return;
   }
+
 
   try{
 
-    const {data,error} =
-      await sb.auth.signUp({
+    const result =
+      await supabaseClient.auth.signUp({
 
         email:email,
 
@@ -407,45 +1313,189 @@ async function signupUser(){
         options:{
           data:{
             name:name,
-            class:studentClass
+            class:studentClass,
+            account_type:"student"
           }
         }
 
       });
 
-    if(error) throw error;
 
-    if(data.session){
+    if(result.error){
 
-      showMessage(
-        "🎉 Account बन गया! अब आप Login कर सकते हैं।",
-        "success"
-      );
+      throw result.error;
+    }
 
-      document.getElementById("loginEmail").value=email;
+
+    if(result.data?.session){
+
+      document
+        .getElementById("loginEmail")
+        .value = email;
 
       showLogin();
+
+      showMessage(
+        "🎉 Account बन गया! अब Login करें।",
+        "success"
+      );
 
     }else{
 
-      showMessage(
-        "✅ Account बन गया। अगर Email confirmation चालू है तो पहले Email verify करें।",
-        "success"
-      );
-
-      document.getElementById("loginEmail").value=email;
+      document
+        .getElementById("loginEmail")
+        .value = email;
 
       showLogin();
+
+      showMessage(
+        "✅ Account बन गया। यदि Email confirmation चालू है तो पहले Email verify करें, फिर Login करें।",
+        "success"
+      );
     }
+
 
   }catch(error){
 
-    console.error(error);
+    console.error(
+      "SIGNUP ERROR:",
+      error
+    );
 
     showMessage(
-      error.message || "Account बनाने में समस्या हुई"
+      friendlyError(error)
     );
   }
+
+}
+
+
+/* =========================================================
+   FIRST-TIME ADMIN SETUP
+   ========================================================= */
+
+async function setupAdmin(){
+
+  hideMessage();
+
+  const email =
+    ADMIN_EMAIL;
+
+  const pin =
+    document
+      .getElementById("adminPin")
+      .value.trim();
+
+
+  if(!validPIN(pin)){
+
+    showMessage(
+      "🔢 Admin PIN ठीक 6 अंकों का होना चाहिए"
+    );
+
+    return;
+  }
+
+
+  try{
+
+    const result =
+      await supabaseClient.auth.signUp({
+
+        email:email,
+
+        password:pin,
+
+        options:{
+          data:{
+            name:"Padh-Ai Administrator",
+            account_type:"admin"
+          }
+        }
+
+      });
+
+
+    if(result.error){
+
+      /*
+       यदि account पहले से मौजूद है,
+       तो user को Login करने के लिए भेजेंगे।
+      */
+
+      const msg =
+        (result.error.message || "")
+        .toLowerCase();
+
+      if(
+        msg.includes("already registered") ||
+        msg.includes("already been registered")
+      ){
+
+        document
+          .getElementById("loginEmail")
+          .value = ADMIN_EMAIL;
+
+        document
+          .getElementById("loginPin")
+          .value = pin;
+
+        showLogin();
+
+        showMessage(
+          "ℹ️ Admin account पहले से मौजूद है। अब Login करें।",
+          "info"
+        );
+
+        return;
+      }
+
+      throw result.error;
+    }
+
+
+    if(result.data?.session){
+
+      openAdmin(
+        result.data.user
+      );
+
+      showMessage(
+        "🎉 Admin Account तैयार है!",
+        "success"
+      );
+
+    }else{
+
+      document
+        .getElementById("loginEmail")
+        .value = ADMIN_EMAIL;
+
+      document
+        .getElementById("loginPin")
+        .value = pin;
+
+      showLogin();
+
+      showMessage(
+        "✅ Admin account बन गया। यदि Email confirmation चालू है तो पहले Email verify करें। फिर Admin Login करें।",
+        "success"
+      );
+    }
+
+
+  }catch(error){
+
+    console.error(
+      "ADMIN SETUP ERROR:",
+      error
+    );
+
+    showMessage(
+      friendlyError(error)
+    );
+  }
+
 }
 
 
@@ -458,61 +1508,100 @@ async function loginUser(){
   hideMessage();
 
   const email =
-    document.getElementById("loginEmail").value.trim();
+    document
+      .getElementById("loginEmail")
+      .value.trim();
 
   const pin =
-    document.getElementById("loginPin").value.trim();
+    document
+      .getElementById("loginPin")
+      .value.trim();
+
 
   if(!email){
-    showMessage("Email डालें");
+
+    showMessage(
+      "📧 Email डालें"
+    );
+
     return;
   }
 
+
   if(!validPIN(pin)){
-    showMessage("PIN ठीक 6 अंकों का होना चाहिए");
+
+    showMessage(
+      "🔢 PIN ठीक 6 अंकों का होना चाहिए"
+    );
+
     return;
   }
+
 
   try{
 
-    const {data,error} =
-      await sb.auth.signInWithPassword({
+    const result =
+      await supabaseClient.auth
+      .signInWithPassword({
+
         email:email,
+
         password:pin
+
       });
 
-    if(error) throw error;
 
-    if(data.user){
+    if(result.error){
 
-      if(
-        data.user.email &&
-        data.user.email.toLowerCase() ===
-        ADMIN_EMAIL.toLowerCase()
-      ){
-        openAdmin(data.user);
-      }else{
-        openUser(data.user);
-      }
+      throw result.error;
+    }
+
+
+    const user =
+      result.data.user;
+
+
+    if(!user){
+
+      showMessage(
+        "❌ Login session नहीं बनी।"
+      );
+
+      return;
+    }
+
+
+    /*
+      Admin पहचान केवल fixed email से।
+    */
+
+    if(
+      user.email &&
+      user.email.toLowerCase() ===
+      ADMIN_EMAIL.toLowerCase()
+    ){
+
+      openAdmin(user);
+
+    }else{
+
+      openUser(user);
 
     }
+
 
   }catch(error){
 
-    console.error(error);
+    console.error(
+      "LOGIN ERROR:",
+      error
+    );
 
-    let msg=error.message || "Login failed";
-
-    if(msg.toLowerCase().includes("invalid login credentials")){
-      msg="❌ Email या PIN गलत है";
-    }
-
-    if(msg.toLowerCase().includes("api key")){
-      msg="❌ Supabase API key स्वीकार नहीं हुई। URL और Publishable Key फिर जाँचें।";
-    }
-
-    showMessage(msg);
+    showMessage(
+      friendlyError(error)
+    );
   }
+
 }
 
 
@@ -525,108 +1614,151 @@ async function forgotPin(){
   hideMessage();
 
   const email =
-    document.getElementById("loginEmail").value.trim();
+    document
+      .getElementById("loginEmail")
+      .value.trim();
+
 
   if(!email){
-    showMessage("पहले Email डालें");
+
+    showMessage(
+      "📧 पहले अपना Email डालें"
+    );
+
     return;
   }
 
+
   try{
 
-    const {error} =
-      await sb.auth.resetPasswordForEmail(email,{
-        redirectTo:window.location.origin
-      });
+    const result =
+      await supabaseClient.auth
+      .resetPasswordForEmail(
+        email,
+        {
+          redirectTo:
+            window.location.origin
+        }
+      );
 
-    if(error) throw error;
+
+    if(result.error){
+
+      throw result.error;
+    }
+
 
     showMessage(
-      "📧 Password/PIN reset link आपके Email पर भेज दिया गया है।",
+      "📧 PIN reset करने का link आपके Email पर भेज दिया गया है।",
       "success"
     );
 
+
   }catch(error){
 
+    console.error(
+      "RESET ERROR:",
+      error
+    );
+
     showMessage(
-      error.message || "Reset link भेजने में समस्या हुई"
+      friendlyError(error)
     );
   }
+
 }
 
 
 /* =========================================================
-   ADMIN LOGIN
-   ========================================================= */
-
-function showAdminLogin(){
-
-  showLogin();
-
-  document.getElementById("loginEmail").value=
-    ADMIN_EMAIL;
-
-  showMessage(
-    "🛡️ Admin Login के लिए अपना Admin PIN डालकर Login करें.",
-    "success"
-  );
-
-  window.scrollTo({
-    top:document.getElementById("authCard").offsetTop-20,
-    behavior:"smooth"
-  });
-}
-
-
-/* =========================================================
-   USER PANEL
+   OPEN USER PANEL
    ========================================================= */
 
 function openUser(user){
 
-  document.getElementById("authCard").classList.add("hidden");
+  document
+    .getElementById("authCard")
+    .classList.add("hidden");
 
-  document.getElementById("adminPanel").style.display="none";
+  document
+    .getElementById("adminPanel")
+    .style.display="none";
 
-  document.getElementById("userPanel").classList.remove("hidden");
+  document
+    .getElementById("userPanel")
+    .style.display="block";
+
 
   const name =
-    user.user_metadata?.name || "दोस्त";
+    user.user_metadata?.name ||
+    "दोस्त";
 
   const studentClass =
-    user.user_metadata?.class || "";
+    user.user_metadata?.class ||
+    "—";
 
-  document.getElementById("welcomeText").innerHTML =
-    "👋 नमस्ते <b>"+escapeHTML(name)+"</b>!<br><br>"+
-    "📚 कक्षा: <b>"+escapeHTML(studentClass)+"</b><br>"+
-    "📧 Email: <b>"+escapeHTML(user.email || "")+"</b>";
-}
+  const email =
+    user.email ||
+    "—";
 
 
-/* =========================================================
-   ADMIN PANEL
-   ========================================================= */
+  document
+    .getElementById("welcomeText")
+    .innerHTML = `
 
-function openAdmin(user){
+      👋 नमस्ते
+      <b>${escapeHTML(name)}</b>!
 
-  document.getElementById("authCard").classList.add("hidden");
+      <br><br>
 
-  document.getElementById("userPanel").classList.add("hidden");
+      📚 कक्षा:
+      <b>${escapeHTML(studentClass)}</b>
 
-  document.getElementById("adminPanel").style.display="block";
+      <br><br>
 
-  document.getElementById("adminEmailView").textContent=
-    user.email || ADMIN_EMAIL;
+      📧 Email:
+      <b>${escapeHTML(email)}</b>
 
-  document.getElementById("upiView").textContent=
-    ADMIN_UPI_ID;
+    `;
 
-  loadSiteSettings();
 
   window.scrollTo({
     top:0,
     behavior:"smooth"
   });
+
+}
+
+
+/* =========================================================
+   OPEN ADMIN PANEL
+   ========================================================= */
+
+function openAdmin(user){
+
+  document
+    .getElementById("authCard")
+    .classList.add("hidden");
+
+  document
+    .getElementById("userPanel")
+    .style.display="none";
+
+  document
+    .getElementById("adminPanel")
+    .style.display="block";
+
+
+  document
+    .getElementById("adminEmailView")
+    .textContent =
+      user?.email || ADMIN_EMAIL;
+
+
+  window.scrollTo({
+    top:0,
+    behavior:"smooth"
+  });
+
 }
 
 
@@ -636,127 +1768,277 @@ function openAdmin(user){
 
 async function logoutUser(){
 
-  await sb.auth.signOut();
+  try{
 
-  document.getElementById("authCard").classList.remove("hidden");
+    await supabaseClient.auth.signOut();
 
-  document.getElementById("userPanel").classList.add("hidden");
+  }catch(error){
 
-  document.getElementById("adminPanel").style.display="none";
+    console.error(error);
+
+  }
+
+
+  document
+    .getElementById("authCard")
+    .classList.remove("hidden");
+
+  document
+    .getElementById("userPanel")
+    .style.display="none";
+
+  document
+    .getElementById("adminPanel")
+    .style.display="none";
+
+
+  document
+    .getElementById("loginPin")
+    .value="";
+
 
   showLogin();
 
+
   showMessage(
-    "आप Logout हो गए हैं।",
+    "🚪 आप Logout हो गए हैं।",
     "success"
   );
+
 }
 
 
 /* =========================================================
-   ADMIN SITE SETTINGS
+   COPY UPI
    ========================================================= */
 
-function saveSiteSettings(){
+async function copyUPI(){
 
-  const title =
-    document.getElementById("siteTitleInput").value.trim();
+  try{
 
-  if(title){
-    localStorage.setItem(
-      "padhai_site_title",
-      title
+    await navigator.clipboard
+      .writeText(ADMIN_UPI_ID);
+
+    showMessage(
+      "📋 UPI ID copy हो गई: " +
+      escapeHTML(ADMIN_UPI_ID),
+      "success"
     );
+
+  }catch(error){
+
+    showMessage(
+      "UPI ID: " +
+      escapeHTML(ADMIN_UPI_ID),
+      "info"
+    );
+
   }
 
-  showMessage(
-    "💾 Settings इस device पर save हो गईं।",
-    "success"
-  );
-}
-
-function loadSiteSettings(){
-
-  const saved =
-    localStorage.getItem("padhai_site_title");
-
-  if(saved){
-    document.getElementById("siteTitleInput").value=saved;
-  }
 }
 
 
 /* =========================================================
-   SECURITY / HTML ESCAPE
+   SAVE SITE TITLE
+   ========================================================= */
+
+function saveSiteTitle(){
+
+  const title =
+    document
+      .getElementById("siteTitleInput")
+      .value.trim();
+
+
+  if(!title){
+
+    showMessage(
+      "Website title खाली नहीं हो सकता"
+    );
+
+    return;
+  }
+
+
+  localStorage.setItem(
+    "padhai_site_title",
+    title
+  );
+
+
+  document.title =
+    title;
+
+
+  showMessage(
+    "💾 Website title इस device पर save हो गया।",
+    "success"
+  );
+
+}
+
+
+/* =========================================================
+   LOAD SAVED TITLE
+   ========================================================= */
+
+function loadSiteTitle(){
+
+  const saved =
+    localStorage.getItem(
+      "padhai_site_title"
+    );
+
+
+  if(saved){
+
+    document.title =
+      saved;
+
+    const input =
+      document.getElementById(
+        "siteTitleInput"
+      );
+
+    if(input){
+      input.value =
+        saved;
+    }
+
+  }
+
+}
+
+
+/* =========================================================
+   ESCAPE HTML
    ========================================================= */
 
 function escapeHTML(value){
 
   return String(value)
+
     .replaceAll("&","&amp;")
+
     .replaceAll("<","&lt;")
+
     .replaceAll(">","&gt;")
+
     .replaceAll('"',"&quot;")
+
     .replaceAll("'","&#039;");
 }
 
 
 /* =========================================================
-   INITIAL AUTH CHECK
+   INITIAL SESSION CHECK
    ========================================================= */
 
-(async function(){
+async function checkCurrentSession(){
 
   try{
 
-    const {data} =
-      await sb.auth.getSession();
+    const result =
+      await supabaseClient.auth
+      .getSession();
 
-    const session=data.session;
 
-    if(session && session.user){
+    if(result.error){
+
+      console.error(
+        "SESSION ERROR:",
+        result.error
+      );
+
+      return;
+    }
+
+
+    const session =
+      result.data.session;
+
+
+    if(
+      session &&
+      session.user
+    ){
 
       if(
         session.user.email &&
         session.user.email.toLowerCase() ===
         ADMIN_EMAIL.toLowerCase()
       ){
-        openAdmin(session.user);
+
+        openAdmin(
+          session.user
+        );
+
       }else{
-        openUser(session.user);
+
+        openUser(
+          session.user
+        );
+
       }
 
     }
 
+
   }catch(error){
 
     console.error(
-      "Supabase initialization error:",
+      "INITIALIZATION ERROR:",
       error
     );
+
   }
 
-})();
+}
 
 
 /* =========================================================
-   AUTH STATE
+   AUTH STATE LISTENER
    ========================================================= */
 
-sb.auth.onAuthStateChange((event,session)=>{
+supabaseClient.auth
+.onAuthStateChange(
+  (event,session)=>{
 
-  if(event==="SIGNED_OUT"){
-    document.getElementById("authCard")
-      .classList.remove("hidden");
+    console.log(
+      "AUTH EVENT:",
+      event
+    );
 
-    document.getElementById("userPanel")
-      .classList.add("hidden");
+    if(
+      event === "SIGNED_OUT"
+    ){
 
-    document.getElementById("adminPanel")
-      .style.display="none";
+      document
+        .getElementById("authCard")
+        .classList.remove("hidden");
+
+      document
+        .getElementById("userPanel")
+        .style.display="none";
+
+      document
+        .getElementById("adminPanel")
+        .style.display="none";
+
+    }
+
   }
+);
 
-});
+
+/* =========================================================
+   START
+   ========================================================= */
+
+loadSiteTitle();
+
+checkCurrentSession();
+
 </script>
 
 </body>
