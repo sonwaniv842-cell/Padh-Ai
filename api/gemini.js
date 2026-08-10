@@ -1,8 +1,6 @@
 // /api/gemini.js
-// Ye Vercel Serverless Function hai. Iska kaam: browser se photo lena,
-// Gemini API ko bhejna (key yahin server par chhupi rehti hai), aur Hindi jawaab wapas dena.
-// Gemini key IS FILE ME NAHI hai -- Vercel dashboard ke "Environment Variables" me
-// GEMINI_API_KEY naam se save hogi. Isse browser/console me kabhi nahi dikhegi.
+// Vercel Serverless Function. Gemini key sirf yahin, server par, chhupi rehti hai
+// (Vercel Project Settings -> Environment Variables -> GEMINI_API_KEY).
 
 export default async function handler(req, res) {
   if (req.method !== 'POST') {
@@ -17,17 +15,34 @@ export default async function handler(req, res) {
   }
 
   try {
-    const { imageBase64, mimeType } = req.body || {};
-    if (!imageBase64) {
-      return res.status(400).json({ error: 'Photo nahi mili' });
+    const { imageBase64, mimeType, question } = req.body || {};
+
+    if (!imageBase64 && !question) {
+      return res.status(400).json({ error: 'Photo ya sawaal, kuch to bhejo' });
     }
 
-    const prompt =
-      'Tum ek pyaare, dhairyavaan Hindi teacher ho jo chhote bachchon ko padhate ho. ' +
-      'Is photo me jo bhi likha hai (kitaab ka panna, sawaal, ya diagram), use dhyan se padho. ' +
-      'Phir bahut simple, saral Hindi mein, jaise ek bade bhaiya/didi bachche ko samjhaate hain, ' +
-      'samjhao ki isme kya likha hai aur iska matlab kya hai. Chhote-chhote vaakya likho. ' +
-      'Agar koi sawaal hai to uska jawaab bhi do. Emoji ka thoda use karke isse mazedaar banao.';
+    const parts = [];
+
+    if (imageBase64) {
+      parts.push({
+        text:
+          'Tum ek pyaare, dhairyavaan Hindi teacher ho jo chhote bachchon ko padhate ho. ' +
+          'Is photo me jo bhi likha hai (kitaab ka panna, sawaal, ya diagram), use dhyan se padho. ' +
+          'Phir bahut simple, saral Hindi mein, jaise ek bade bhaiya/didi bachche ko samjhaate hain, ' +
+          'samjhao ki isme kya likha hai aur iska matlab kya hai. Chhote-chhote vaakya likho. ' +
+          'Agar koi sawaal hai to uska jawaab bhi do. Emoji ka thoda use karke isse mazedaar banao.'
+      });
+      parts.push({
+        inline_data: { mime_type: mimeType || 'image/jpeg', data: imageBase64 }
+      });
+    } else {
+      parts.push({
+        text:
+          'Tum "Aditya" ho, ek pyaara AI dost jo chhote bachchon ke saath Hindi mein baat karta hai aur ' +
+          'unke sawaalon ke jawaab deta hai. Bahut simple, saral Hindi mein, chhote vaakyon mein jawaab do. ' +
+          'Dosti bhare tarike se, thoda emoji use karke. Bachche ka sawaal: ' + question
+      });
+    }
 
     const model = 'gemini-2.0-flash';
     const url = `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${apiKey}`;
@@ -35,21 +50,7 @@ export default async function handler(req, res) {
     const geminiRes = await fetch(url, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        contents: [
-          {
-            parts: [
-              { text: prompt },
-              {
-                inline_data: {
-                  mime_type: mimeType || 'image/jpeg',
-                  data: imageBase64
-                }
-              }
-            ]
-          }
-        ]
-      })
+      body: JSON.stringify({ contents: [{ parts }] })
     });
 
     const data = await geminiRes.json();
