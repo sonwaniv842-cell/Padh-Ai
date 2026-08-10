@@ -1,13 +1,19 @@
+import 'dart:async';
+import 'dart:convert';
+import 'dart:io';
+import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:flutter_tts/flutter_tts.dart';
 import 'package:google_generative_ai/google_generative_ai.dart';
-import 'dart:async';
+import 'package:image_picker/image_picker.dart';
+import 'package:url_launcher/url_launcher.dart';
 
-// --- CONFIG ---
-const supabaseUrl = 'https://tyonurrbwdjqfrmqrgpk.supabase.co';
-const supabaseAnonKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InR5b251cnJid2RqcWZybXFyZ3BrIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODYxNzMzODMsImV4cCI6MjEwMTc0OTM4M30.95tDST7gwxemb2w2SS71arWh77omlFf0ezPwkTun2cM';
-const geminiKey = 'AQ.Ab8RN6Jncjc5ohHgdhh4-0hKsT21_SXalluvdSsQArNjy90xOQ';
+// --- CONFIGURATION ---
+const String supabaseUrl = 'https://tyonurrbwdjqfrmqrgpk.supabase.co';
+const String supabaseAnonKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InR5b251cnJid2RqcWZybXFyZ3BrIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODYxNzMzODMsImV4cCI6MjEwMTc0OTM4M30.95tDST7gwxemb2w2SS71arWh77omlFf0ezPwkTun2cM';
+const String geminiApiKey = 'AQ.Ab8RN6Jncjc5ohHgdhh4-0hKsT21_SXalluvdSsQArNjy90xOQ';
+const String superAdminEmail = 'sonwaniv842@gmail.com';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -19,90 +25,92 @@ final supabase = Supabase.instance.client;
 
 class PadhAIApp extends StatelessWidget {
   const PadhAIApp({super.key});
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
-      theme: ThemeData.dark().copyWith(
+      title: 'Padh-Ai',
+      theme: ThemeData(
+        brightness: Brightness.dark,
         primaryColor: const Color(0xFF00E5FF),
-        scaffoldBackgroundColor: const Color(0xFF0A0E21),
-        cardTheme: CardTheme(
-          color: const Color(0xFF1D1B2E), 
-          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20))
+        scaffoldBackgroundColor: const Color(0xFF0D0F1A),
+        fontFamily: 'Inter',
+        colorScheme: const ColorScheme.dark(
+          primary: Color(0xFF00E5FF),
+          secondary: Color(0xFF00E5FF),
+          surface: Color(0xFF161A26),
+        ),
+        elevatedButtonTheme: ElevatedButtonThemeData(
+          style: ElevatedButton.styleFrom(
+            backgroundColor: const Color(0xFF00E5FF),
+            foregroundColor: Colors.black,
+            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+          ),
         ),
       ),
-      home: supabase.auth.currentSession == null ? const AuthGate() : const MainLMS(),
+      home: const AuthGate(),
     );
   }
 }
 
-// --- 1. AUTH GATE (BUG-FREE AUTHENTICATION) ---
-class AuthGate extends StatefulWidget {
+// --- 1. AUTH GATE ---
+class AuthGate extends StatelessWidget {
   const AuthGate({super.key});
+
   @override
-  State<AuthGate> createState() => _AuthGateState();
+  Widget build(BuildContext context) {
+    return StreamBuilder<AuthState>(
+      stream: supabase.auth.onAuthStateChange,
+      builder: (context, snapshot) {
+        if (supabase.auth.currentSession != null) {
+          return const LMSWrapper();
+        }
+        return const AuthScreen();
+      },
+    );
+  }
 }
 
-class _AuthGateState extends State<AuthGate> {
-  bool isLogin = true;
-  final emailC = TextEditingController();
-  final pinC = TextEditingController();
-  final nameC = TextEditingController();
-  bool isLoading = false;
+// --- 2. AUTHENTICATION SCREEN ---
+class AuthScreen extends StatefulWidget {
+  const AuthScreen({super.key});
+  @override
+  State<AuthScreen> createState() => _AuthScreenState();
+}
+
+class _AuthScreenState extends State<AuthScreen> {
+  bool _isLogin = true;
+  bool _loading = false;
+  final _email = TextEditingController();
+  final _pin = TextEditingController();
+  final _name = TextEditingController();
+  String _selectedGrade = "KG1-KG4";
 
   Future<void> _handleAuth() async {
-    final email = emailC.text.trim();
-    final pin = pinC.text.trim();
-    final name = nameC.text.trim();
-
-    if (email.isEmpty || pin.length < 6) {
-      _showMsg("वैध ईमेल और 6-अंकों का पिन लिखें!");
-      return;
-    }
-
-    setState(() => isLoading = true);
+    setState(() => _loading = true);
     try {
-      if (isLogin) {
-        // LOGIN FLOW
-        final res = await supabase.auth.signInWithPassword(email: email, password: pin);
-        if (res.user != null && mounted) {
-          Navigator.pushReplacement(context, MaterialPageRoute(builder: (c) => const MainLMS()));
-        }
+      if (_isLogin) {
+        await supabase.auth.signInWithPassword(email: _email.text.trim(), password: _pin.text.trim());
       } else {
-        // REGISTRATION FLOW
-        final res = await supabase.auth.signUp(email: email, password: pin);
-        final user = res.user;
-        
-        if (user != null) {
-          // Profile entry attempt
-          try {
-            await supabase.from('profiles').upsert({
-              'id': user.id,
-              'full_name': name.isEmpty ? "Student" : name,
-              'role': 'student',
-              'is_active': true,
-            });
-          } catch (_) {}
-
-          // Ensure session is active
-          if (supabase.auth.currentSession == null) {
-            await supabase.auth.signInWithPassword(email: email, password: pin);
-          }
-
-          if (mounted) {
-            _showMsg("सफलतापूर्वक अकाउंट बन गया!");
-            Navigator.pushReplacement(context, MaterialPageRoute(builder: (c) => const MainLMS()));
-          }
+        final res = await supabase.auth.signUp(email: _email.text.trim(), password: _pin.text.trim());
+        if (res.user != null) {
+          final bool isAdmin = _email.text.trim() == superAdminEmail;
+          await supabase.from('profiles').upsert({
+            'id': res.user!.id,
+            'full_name': _name.text.trim(),
+            'grade': _selectedGrade,
+            'role': isAdmin ? 'admin' : 'student',
+            'has_paid': isAdmin,
+          });
         }
       }
     } catch (e) {
-      _showMsg("त्रुटि: ${e.toString().replaceAll('AuthException:', '').replaceAll('Exception:', '')}");
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(e.toString())));
     } finally {
-      if (mounted) setState(() => isLoading = false);
+      if (mounted) setState(() => _loading = false);
     }
   }
-
-  void _showMsg(String m) => ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(m)));
 
   @override
   Widget build(BuildContext context) {
@@ -113,27 +121,27 @@ class _AuthGateState extends State<AuthGate> {
           child: Column(
             children: [
               const Text("🤖", style: TextStyle(fontSize: 80)),
-              const Text("Padh-Ai", style: TextStyle(fontSize: 35, fontWeight: FontWeight.bold, color: Color(0xFF00E5FF))),
+              const Text("Padh-Ai", style: TextStyle(fontSize: 38, fontWeight: FontWeight.w900, color: Color(0xFF00E5FF))),
               const SizedBox(height: 40),
-              if (!isLogin) ...[
-                TextField(controller: nameC, decoration: const InputDecoration(labelText: "छात्र का पूरा नाम", border: OutlineInputBorder())),
-                const SizedBox(height: 10),
+              if (!_isLogin) ...[
+                TextField(controller: _name, decoration: const InputDecoration(labelText: "Student Name", border: OutlineInputBorder())),
+                const SizedBox(height: 15),
+                DropdownButtonFormField<String>(
+                  value: _selectedGrade,
+                  items: ["KG1-KG4", "1-5", "9-12"].map((e) => DropdownMenuItem(value: e, child: Text(e))).toList(),
+                  onChanged: (v) => setState(() => _selectedGrade = v!),
+                  decoration: const InputDecoration(labelText: "Select Class", border: OutlineInputBorder()),
+                ),
+                const SizedBox(height: 15),
               ],
-              TextField(controller: emailC, keyboardType: TextInputType.emailAddress, decoration: const InputDecoration(labelText: "ईमेल आईडी", border: OutlineInputBorder())),
-              const SizedBox(height: 10),
-              TextField(controller: pinC, obscureText: true, decoration: const InputDecoration(labelText: "6-अंकों का पिन", border: OutlineInputBorder())),
+              TextField(controller: _email, decoration: const InputDecoration(labelText: "Email ID", border: OutlineInputBorder())),
+              const SizedBox(height: 15),
+              TextField(controller: _pin, obscureText: true, decoration: const InputDecoration(labelText: "6-Digit PIN", border: OutlineInputBorder())),
               const SizedBox(height: 30),
-              isLoading 
-                ? const CircularProgressIndicator() 
-                : ElevatedButton(
-                    onPressed: _handleAuth, 
-                    style: ElevatedButton.styleFrom(minimumSize: const Size(double.infinity, 55)), 
-                    child: Text(isLogin ? "प्रवेश करें" : "रजिस्टर करें")
-                  ),
-              TextButton(
-                onPressed: () => setState(() => isLogin = !isLogin), 
-                child: Text(isLogin ? "नया अकाउंट बनायें" : "पुराना अकाउंट लॉगिन करें")
-              ),
+              _loading 
+                ? const CircularProgressIndicator()
+                : SizedBox(width: double.infinity, height: 55, child: ElevatedButton(onPressed: _handleAuth, child: Text(_isLogin ? "LOGIN" : "REGISTER"))),
+              TextButton(onPressed: () => setState(() => _isLogin = !_isLogin), child: Text(_isLogin ? "New Student? Join Now" : "Already a member? Login")),
             ],
           ),
         ),
@@ -142,200 +150,260 @@ class _AuthGateState extends State<AuthGate> {
   }
 }
 
-// --- 2. MAIN LMS (GRADES & STUDY) ---
-class MainLMS extends StatefulWidget {
-  const MainLMS({super.key});
+// --- 3. LMS WRAPPER (MAIN APP NAVIGATION) ---
+class LMSWrapper extends StatefulWidget {
+  const LMSWrapper({super.key});
   @override
-  State<MainLMS> createState() => _MainLMSState();
+  State<LMSWrapper> createState() => _LMSWrapperState();
 }
 
-class _MainLMSState extends State<MainLMS> {
+class _LMSWrapperState extends State<LMSWrapper> {
   int _idx = 0;
-  Map<String, dynamic>? profile;
-  bool isLoadingProfile = true;
+  Map<String, dynamic>? _profile;
+  bool _studyLockActive = false;
 
   @override
-  void initState() { 
-    super.initState(); 
-    _load(); 
+  void initState() {
+    super.initState();
+    _fetch();
   }
 
-  _load() async {
+  _fetch() async {
     final user = supabase.auth.currentUser;
-    if (user == null) {
-      if (mounted) {
-        Navigator.pushReplacement(context, MaterialPageRoute(builder: (c) => const AuthGate()));
-      }
-      return;
-    }
-
-    try {
+    if (user != null) {
       final u = await supabase.from('profiles').select().eq('id', user.id).maybeSingle();
-      if (u != null) {
-        setState(() { profile = u; isLoadingProfile = false; });
-      } else {
-        // Fallback Profile if table row missing
-        final fallback = {
-          'id': user.id,
-          'full_name': user.email?.split('@')[0] ?? "Student",
-          'role': 'student',
-          'is_active': true
-        };
-        setState(() { profile = fallback; isLoadingProfile = false; });
+      if (mounted) {
+        setState(() => _profile = u);
       }
-    } catch (e) {
-      // Safe fallback: App NEVER gets stuck on loading
-      setState(() {
-        profile = {
-          'id': user.id,
-          'full_name': user.email?.split('@')[0] ?? "Student",
-          'role': 'student',
-        };
-        isLoadingProfile = false;
-      });
     }
   }
 
-  @override
-  Widget build(BuildContext context) {
-    if (isLoadingProfile) {
-      return const Scaffold(body: Center(child: CircularProgressIndicator()));
+  void _toggleStudyLock() {
+    if (_studyLockActive) {
+      _showPinDialog();
+    } else {
+      setState(() => _studyLockActive = true);
     }
+  }
 
-    final studentName = profile?['full_name'] ?? "Student";
-    final role = profile?['role'] ?? 'student';
-
-    final screens = [
-      _buildHome(),
-      AIChat(studentName: studentName), 
-      const Center(child: Text("Results Coming Soon!")),
-      if (role == 'admin') const MasterAdmin(),
-    ];
-
-    return Scaffold(
-      appBar: AppBar(
-        title: Text("नमस्ते $studentName!"),
+  void _showPinDialog() {
+    final pc = TextEditingController();
+    showDialog(
+      context: context,
+      barrierDismissible: false,
+      builder: (c) => AlertDialog(
+        title: const Text("Parental PIN Required"),
+        content: TextField(controller: pc, obscureText: true, keyboardType: TextInputType.number, decoration: const InputDecoration(hintText: "Enter 6-digit PIN")),
         actions: [
-          IconButton(
-            icon: const Icon(Icons.logout),
-            onPressed: () async {
-              await supabase.auth.signOut();
-              if (mounted) Navigator.pushReplacement(context, MaterialPageRoute(builder: (c) => const AuthGate()));
-            },
-          )
-        ],
-      ),
-      body: screens[_idx >= screens.length ? 0 : _idx],
-      bottomNavigationBar: BottomNavigationBar(
-        currentIndex: _idx >= screens.length ? 0 : _idx, 
-        onTap: (i) => setState(() => _idx = i), 
-        selectedItemColor: const Color(0xFF00E5FF), 
-        type: BottomNavigationBarType.fixed,
-        items: [
-          const BottomNavigationBarItem(icon: Icon(Icons.school), label: "Learn"),
-          const BottomNavigationBarItem(icon: Icon(Icons.chat), label: "Teacher"),
-          const BottomNavigationBarItem(icon: Icon(Icons.history), label: "Results"),
-          if (role == 'admin') const BottomNavigationBarItem(icon: Icon(Icons.admin_panel_settings), label: "Admin"),
+          TextButton(onPressed: () {
+            if (pc.text.isNotEmpty) {
+               setState(() => _studyLockActive = false);
+               Navigator.pop(c);
+            }
+          }, child: const Text("UNLOCK"))
         ],
       ),
     );
   }
 
-  Widget _buildHome() {
+  @override
+  Widget build(BuildContext context) {
+    if (_profile == null) return const Scaffold(body: Center(child: CircularProgressIndicator()));
+
+    final bool isPaid = _profile!['has_paid'] ?? false;
+    final bool isAdmin = _profile!['role'] == 'admin';
+
+    final List<Widget> tabs = [
+      isPaid ? HomeLearnTab(profile: _profile!) : PaymentLockTab(profile: _profile!),
+      AIChatTab(profile: _profile!),
+      const ScannerTab(),
+      if (isAdmin) const AdminDashboardTab(),
+    ];
+
+    return PopScope(
+      canPop: !_studyLockActive,
+      child: Scaffold(
+        appBar: AppBar(
+          title: Text("PADH-AI (${_profile!['grade'] ?? 'KG1-KG4'})", style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: Color(0xFF00E5FF))),
+          actions: [
+            IconButton(icon: Icon(_studyLockActive ? Icons.lock : Icons.lock_open, color: Colors.orange), onPressed: _toggleStudyLock),
+            IconButton(icon: const Icon(Icons.logout), onPressed: () => supabase.auth.signOut())
+          ],
+        ),
+        body: tabs[_idx],
+        bottomNavigationBar: _studyLockActive ? null : BottomNavigationBar(
+          currentIndex: _idx,
+          onTap: (i) => setState(() => _idx = i),
+          selectedItemColor: const Color(0xFF00E5FF),
+          unselectedItemColor: Colors.white54,
+          type: BottomNavigationBarType.fixed,
+          items: [
+            const BottomNavigationBarItem(icon: Icon(Icons.school), label: "Learn"),
+            const BottomNavigationBarItem(icon: Icon(Icons.chat), label: "AI Teacher"),
+            const BottomNavigationBarItem(icon: Icon(Icons.camera_alt), label: "Scanner"),
+            if (isAdmin) const BottomNavigationBarItem(icon: Icon(Icons.admin_panel_settings), label: "Admin"),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+// --- 4. PAYMENT LOCK SCREEN ---
+class PaymentLockTab extends StatefulWidget {
+  final Map<String, dynamic> profile;
+  const PaymentLockTab({super.key, required this.profile});
+  @override
+  State<PaymentLockTab> createState() => _PaymentLockTabState();
+}
+
+class _PaymentLockTabState extends State<PaymentLockTab> {
+  final _phone = TextEditingController();
+  XFile? _shot;
+
+  @override
+  Widget build(BuildContext context) {
+    return SingleChildScrollView(
+      padding: const EdgeInsets.all(25),
+      child: Column(
+        children: [
+          Container(
+            padding: const EdgeInsets.all(20),
+            decoration: BoxDecoration(color: Colors.cyan.withOpacity(0.1), borderRadius: BorderRadius.circular(20), border: Border.all(color: const Color(0xFF00E5FF))),
+            child: const Column(
+              children: [
+                Text("📢 ज़रूरी सूचना", style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold, color: Color(0xFF00E5FF))),
+                SizedBox(height: 10),
+                Text("₹50 की परीक्षा फीस आपसे नहीं ली जा रही है, यह पैसा आपको गिफ्ट के रूप में वापस मिलेगा! फ्लिपकार्ट गिफ्ट वाउचर आपके दिए गए नंबर पर भेज दिया जाएगा।", textAlign: TextAlign.center, style: TextStyle(fontSize: 14, height: 1.4)),
+              ],
+            ),
+          ),
+          const SizedBox(height: 30),
+          const Text("Step 1: Scan & Pay ₹50", style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16)),
+          const SizedBox(height: 15),
+          Image.network("https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=upi://pay?pa=sonwaniv842@okaxis&pn=PadhAI&am=50"),
+          const SizedBox(height: 30),
+          TextField(controller: _phone, keyboardType: TextInputType.phone, decoration: const InputDecoration(labelText: "WhatsApp Number for Gift Delivery", border: OutlineInputBorder())),
+          const SizedBox(height: 15),
+          ElevatedButton.icon(
+            onPressed: () async => _shot = await ImagePicker().pickImage(source: ImageSource.gallery),
+            icon: const Icon(Icons.upload_file),
+            label: Text(_shot == null ? "Upload Payment Screenshot" : "Screenshot Selected ✅"),
+          ),
+          const SizedBox(height: 25),
+          SizedBox(width: double.infinity, height: 50, child: ElevatedButton(onPressed: () async {
+            if (_phone.text.isNotEmpty) {
+               await supabase.from('profiles').update({'whatsapp': _phone.text.trim(), 'role': 'pending_approval'}).eq('id', widget.profile['id']);
+               if (mounted) {
+                 ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text("Request Sent! Admin will approve shortly.")));
+               }
+            } else {
+               ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text("Please enter active WhatsApp number!")));
+            }
+          }, child: const Text("SUBMIT FOR UNLOCK"))),
+        ],
+      ),
+    );
+  }
+}
+
+// --- 5. LEARNING TAB (CLASS BASED) ---
+class HomeLearnTab extends StatelessWidget {
+  final Map<String, dynamic> profile;
+  const HomeLearnTab({super.key, required this.profile});
+
+  @override
+  Widget build(BuildContext context) {
+    final grade = profile['grade'] ?? "KG1-KG4";
     return ListView(
       padding: const EdgeInsets.all(20),
       children: [
-        _btn("🔢 1-100 गिनती (Auto Play)", () => Navigator.push(context, MaterialPageRoute(builder: (c) => const AutoStudy(type: 'गिनती')))),
-        _btn("🍎 वर्णमाला ABCD (Auto Play)", () => Navigator.push(context, MaterialPageRoute(builder: (c) => const AutoStudy(type: 'वर्णमाला')))),
-        _btn("📖 मात्रा ज्ञान (क, का, कि, की...)", () => Navigator.push(context, MaterialPageRoute(builder: (c) => const AutoStudy(type: 'मात्रा')))),
+        _HeaderCard(name: profile['full_name'] ?? "Student"),
+        const SizedBox(height: 20),
+        if (grade == "KG1-KG4") ..._buildKG(),
+        if (grade == "1-5") ..._buildPrimary(),
+        if (grade == "9-12") ..._buildSenior(),
       ],
     );
   }
 
-  Widget _btn(String t, VoidCallback tap) => Card(
-    child: ListTile(
-      title: Text(t), 
-      trailing: const Icon(Icons.play_circle_fill, color: Colors.greenAccent), 
-      onTap: tap
-    )
-  );
-}
-
-// --- 3. SLOW AUTO STUDY MODULE ---
-class AutoStudy extends StatefulWidget {
-  final String type; 
-  const AutoStudy({super.key, required this.type});
-  @override
-  State<AutoStudy> createState() => _AutoStudyState();
-}
-
-class _AutoStudyState extends State<AutoStudy> {
-  int cur = 1; 
-  bool isP = false; 
-  final _tts = FlutterTts();
-
-  _play() async {
-    await _tts.setLanguage("hi-IN");
-    await _tts.setSpeechRate(0.3);
-    while (isP && cur <= 100) {
-      await _tts.speak(cur.toString());
-      await Future.delayed(const Duration(seconds: 4));
-      if (mounted) setState(() { if(cur < 100) cur++; else isP = false; });
-    }
+  List<Widget> _buildKG() {
+    return [
+      const _LearnCard(title: "A to Z Phonics", icon: "🍎", items: ["A for Apple", "B for Ball", "C for Cat", "D for Dog"]),
+      const _LearnCard(title: "1-100 Counting", icon: "🔢", items: ["1 One", "2 Two", "3 Three", "4 Four", "5 Five"]),
+      const _LearnCard(title: "Hindi Varnamala", icon: "🕉️", items: ["अ से अनार", "आ से आम", "क से कबूतर", "ख से खरगोश"]),
+    ];
   }
 
+  List<Widget> _buildPrimary() => [
+    const _LearnCard(title: "Mathematics Basic", icon: "➕", items: ["Addition Simple", "Subtraction Simple", "Multiplication Tables"]),
+    const _LearnCard(title: "Science & Nature", icon: "🌱", items: ["Parts of Plants", "Animals & Homes", "Our Solar System"])
+  ];
+
+  List<Widget> _buildSenior() => [
+    const _LearnCard(title: "Physics Fundamentals", icon: "⚛️", items: ["Newton's Laws of Motion", "Quantum Mechanics Basics", "Atomic Structure"]),
+    const _LearnCard(title: "Advanced Mathematics", icon: "📐", items: ["Calculus Principles", "Trigonometry Basics", "Coordinate Geometry"])
+  ];
+}
+
+class _LearnCard extends StatelessWidget {
+  final String title, icon; final List<String> items;
+  const _LearnCard({required this.title, required this.icon, required this.items});
+  
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(title: Text(widget.type)),
-      body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center, 
-          children: [
-            Text("$cur", style: const TextStyle(fontSize: 150, fontWeight: FontWeight.bold, color: Color(0xFF00E5FF))),
-            const SizedBox(height: 50),
-            ElevatedButton(
-              onPressed: () { 
-                setState(() => isP = !isP); 
-                if(isP) _play(); 
-              }, 
-              child: Text(isP ? "रोकें (STOP)" : "पढ़ना शुरू करें")
-            ),
-          ]
-        )
+    final tts = FlutterTts();
+    return Card(
+      margin: const EdgeInsets.only(bottom: 15),
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
+      child: ExpansionTile(
+        leading: Text(icon, style: const TextStyle(fontSize: 25)),
+        title: Text(title, style: const TextStyle(fontWeight: FontWeight.bold)),
+        children: items.map((i) => ListTile(
+          title: Text(i),
+          trailing: const Icon(Icons.volume_up, color: Color(0xFF00E5FF)),
+          onTap: () async {
+            await tts.setLanguage("hi-IN");
+            await tts.speak(i);
+          },
+        )).toList(),
       ),
     );
   }
 }
 
-// --- 4. PERSONALIZED AI TEACHER (GEMINI) ---
-class AIChat extends StatefulWidget {
-  final String studentName; 
-  const AIChat({super.key, required this.studentName});
+// --- 6. AI TEACHER CHAT TAB ---
+class AIChatTab extends StatefulWidget {
+  final Map<String, dynamic> profile;
+  const AIChatTab({super.key, required this.profile});
   @override
-  State<AIChat> createState() => _AIChatState();
+  State<AIChatTab> createState() => _AIChatTabState();
 }
 
-class _AIChatState extends State<AIChat> {
-  final _msgC = TextEditingController(); 
-  final List<Map<String, String>> _chats = []; 
+class _AIChatTabState extends State<AIChatTab> {
+  final List<Map<String, String>> _msgs = [];
+  final _controller = TextEditingController();
   final _tts = FlutterTts();
+  bool _typing = false;
 
-  _send() async {
-    String q = _msgC.text.trim(); 
-    if (q.isEmpty) return;
-    setState(() => _chats.add({"r": "u", "m": q})); 
-    _msgC.clear();
-    
+  Future<void> _chat() async {
+    final txt = _controller.text.trim();
+    if (txt.isEmpty) return;
+    _controller.clear();
+    setState(() { _msgs.add({"r": "u", "t": txt}); _typing = true; });
+
     try {
-      final model = GenerativeModel(model: 'gemini-1.5-flash', apiKey: geminiKey);
-      final prompt = "तुम Padh-Ai के गुरु हो। छात्र का नाम ${widget.studentName} है। उसे नाम लेकर प्यार से बात करो, प्रोत्साहित करो कि वो इनाम जीतेगा। अंत में धन्यवाद कहो।";
-      final res = await model.generateContent([Content.text("$prompt. सवाल: $q")]);
-      String ans = res.text ?? "बेटा, मुझे फिर से पूछो।";
-      setState(() => _chats.add({"r": "a", "m": ans}));
-      await _tts.speak(ans);
+      final model = GenerativeModel(model: 'gemini-1.5-flash', apiKey: geminiApiKey);
+      final response = await model.generateContent([Content.text("Student Name: ${widget.profile['full_name']}. Grade: ${widget.profile['grade']}. Answer as a polite AI Teacher in Hindi/English mix: $txt")]);
+      final reply = response.text ?? "उत्तर तैयार करने में त्रुटि हुई।";
+      setState(() { _msgs.add({"r": "a", "t": reply}); _typing = false; });
+      await _tts.setLanguage("hi-IN");
+      await _tts.speak(reply);
     } catch (e) {
-      debugPrint("AI Error: $e");
+      setState(() {
+        _msgs.add({"r": "a", "t": "नमस्ते! अभी गुरुजी व्यस्त हैं, लेकिन मैं आपकी पूरी मदद करूँगा।"});
+        _typing = false;
+      });
     }
   }
 
@@ -343,42 +411,154 @@ class _AIChatState extends State<AIChat> {
   Widget build(BuildContext context) {
     return Column(
       children: [
-        Expanded(
-          child: ListView.builder(
-            itemCount: _chats.length, 
-            itemBuilder: (c, i) => ListTile(
-              title: Text(_chats[i]['m']!), 
-              leading: Text(_chats[i]['r'] == 'u' ? "🧒" : "🤖"),
-            )
-          )
-        ),
-        Padding(
-          padding: const EdgeInsets.all(12), 
-          child: Row(
-            children: [
-              Expanded(child: TextField(controller: _msgC)), 
-              IconButton(icon: const Icon(Icons.send), onPressed: _send)
-            ]
-          )
-        )
-      ]
+        Expanded(child: ListView.builder(itemCount: _msgs.length, itemBuilder: (c, i) => _Bubble(msg: _msgs[i]))),
+        if (_typing) const LinearProgressIndicator(),
+        Padding(padding: const EdgeInsets.all(12), child: Row(children: [
+          Expanded(child: TextField(controller: _controller, decoration: const InputDecoration(hintText: "Ask your Guru...", border: OutlineInputBorder()))),
+          const SizedBox(width: 8),
+          IconButton(icon: const Icon(Icons.send, color: Color(0xFF00E5FF)), onPressed: _chat)
+        ])),
+      ],
     );
   }
 }
 
-// --- 5. MASTER ADMIN PANEL ---
-class MasterAdmin extends StatelessWidget {
-  const MasterAdmin({super.key});
+// --- 7. CAMERA SCANNER TAB ---
+class ScannerTab extends StatefulWidget {
+  const ScannerTab({super.key});
+  @override
+  State<ScannerTab> createState() => _ScannerTabState();
+}
+
+class _ScannerTabState extends State<ScannerTab> {
+  bool _busy = false; String _res = "Scan a question to get instant help!";
+
+  _scan() async {
+    final img = await ImagePicker().pickImage(source: ImageSource.camera);
+    if (img == null) return;
+    setState(() => _busy = true);
+
+    try {
+      final model = GenerativeModel(model: 'gemini-1.5-flash', apiKey: geminiApiKey);
+      final bytes = await img.readAsBytes();
+      final content = [Content.multi([TextPart("Solve this EdTech study question completely step-by-step:"), DataPart('image/jpeg', bytes)])];
+      final response = await model.generateContent(content);
+      setState(() { _res = response.text ?? "No solution found"; _busy = false; });
+      FlutterTts().setLanguage("hi-IN");
+      FlutterTts().speak(_res);
+    } catch (e) {
+      setState(() { _res = "स्कैन करने में समस्या आई। कृपया पुनः प्रयास करें।"; _busy = false; });
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Center(
+      child: SingleChildScrollView(
+        padding: const EdgeInsets.all(20),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            if (_busy) const CircularProgressIndicator() else const Icon(Icons.document_scanner, size: 100, color: Color(0xFF00E5FF)),
+            const SizedBox(height: 20),
+            Text(_res, textAlign: TextAlign.center, style: const TextStyle(fontSize: 16)),
+            const SizedBox(height: 30),
+            FloatingActionButton.extended(onPressed: _scan, label: const Text("SCAN QUESTION"), icon: const Icon(Icons.camera_alt)),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+// --- 8. ADMIN DASHBOARD TAB ---
+class AdminDashboardTab extends StatefulWidget {
+  const AdminDashboardTab({super.key});
+  @override
+  State<AdminDashboardTab> createState() => _AdminDashboardTabState();
+}
+
+class _AdminDashboardTabState extends State<AdminDashboardTab> {
+  List _students = [];
+
+  @override
+  void initState() { super.initState(); _load(); }
+  _load() async {
+    final data = await supabase.from('profiles').select().neq('role', 'admin');
+    setState(() => _students = data);
+  }
+
   @override
   Widget build(BuildContext context) {
     return ListView(
-      padding: const EdgeInsets.all(20), 
+      padding: const EdgeInsets.all(20),
       children: [
-        const Text("मास्टर एडमिन कंट्रोल", style: TextStyle(fontSize: 22, color: Color(0xFF00E5FF))),
-        const Divider(),
-        ListTile(title: const Text("एग्जाम फीस बदलें"), trailing: const Icon(Icons.edit)),
-        ListTile(title: const Text("छात्रों की लिस्ट (Payment Approve)"), trailing: const Icon(Icons.check_circle_outline)),
-      ]
+        const Text("Master Admin Control", style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold, color: Color(0xFF00E5FF))),
+        const SizedBox(height: 20),
+        _StatCard(title: "Total Registered Students", value: "${_students.length}"),
+        const SizedBox(height: 20),
+        const Text("Student Payment Approvals", style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16)),
+        const SizedBox(height: 10),
+        ..._students.map((s) => Card(
+          margin: const EdgeInsets.only(bottom: 10),
+          child: ListTile(
+            title: Text(s['full_name'] ?? 'Unknown Student'),
+            subtitle: Text("Grade: ${s['grade']} | WhatsApp: ${s['whatsapp'] ?? 'N/A'}"),
+            trailing: Switch(
+              value: s['has_paid'] ?? false,
+              activeColor: const Color(0xFF00E5FF),
+              onChanged: (v) async {
+                await supabase.from('profiles').update({'has_paid': v}).eq('id', s['id']);
+                _load();
+              },
+            ),
+          ),
+        )).toList(),
+      ],
+    );
+  }
+}
+
+// --- HELPER COMPONENTS ---
+class _HeaderCard extends StatelessWidget {
+  final String name; const _HeaderCard({required this.name});
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      width: double.infinity, padding: const EdgeInsets.all(25),
+      decoration: BoxDecoration(borderRadius: BorderRadius.circular(20), gradient: const LinearGradient(colors: [Color(0xFF00E5FF), Color(0xFF00B0FF)])),
+      child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+        const Text("नमस्ते,", style: TextStyle(color: Colors.black54, fontSize: 16)),
+        Text(name, style: const TextStyle(color: Colors.black, fontSize: 28, fontWeight: FontWeight.bold)),
+      ]),
+    );
+  }
+}
+
+class _StatCard extends StatelessWidget {
+  final String title, value; const _StatCard({required this.title, required this.value});
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      padding: const EdgeInsets.all(20),
+      decoration: BoxDecoration(color: Colors.white10, borderRadius: BorderRadius.circular(15), border: Border.all(color: Colors.white24)),
+      child: Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [Text(title), Text(value, style: const TextStyle(fontWeight: FontWeight.bold, color: Color(0xFF00E5FF), fontSize: 18))]),
+    );
+  }
+}
+
+class _Bubble extends StatelessWidget {
+  final Map<String, String> msg; const _Bubble({required this.msg});
+  @override
+  Widget build(BuildContext context) {
+    bool isA = msg['r'] == 'a';
+    return Align(
+      alignment: isA ? Alignment.centerLeft : Alignment.centerRight,
+      child: Container(
+        margin: const EdgeInsets.all(10), padding: const EdgeInsets.all(15),
+        decoration: BoxDecoration(color: isA ? Colors.white10 : const Color(0xFF00E5FF), borderRadius: BorderRadius.circular(15)),
+        child: Text(msg['t']!, style: TextStyle(color: isA ? Colors.white : Colors.black, fontSize: 15)),
+      ),
     );
   }
 }
