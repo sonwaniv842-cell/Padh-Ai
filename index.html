@@ -1,0 +1,453 @@
+<!DOCTYPE html>
+<html lang="hi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>Padh-Ai | आपका मज़ेदार एआई टीचर</title>
+<meta name="description" content="Padh-Ai - किताब का फोटो लो, हिंदी में समझो! भारत का अपना सुरक्षित पढ़ाई ऐप।">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🤖</text></svg>">
+<link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@500;600;700;800&family=Hind:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+<style>
+  :root{
+    --yellow:#FFC93C;
+    --sky:#3FB6F0;
+    --leaf:#5EC26A;
+    --coral:#FF6B6B;
+    --ink:#2D2A4A;
+    --paper:#FFFBF2;
+    --card:#FFFFFF;
+    --line: rgba(45,42,74,0.12);
+    --radius: 26px;
+  }
+  *{box-sizing:border-box; -webkit-tap-highlight-color:transparent;}
+  body{
+    margin:0; padding:0;
+    background:
+      radial-gradient(circle at 12% 8%, rgba(63,182,240,0.16), transparent 40%),
+      radial-gradient(circle at 88% 20%, rgba(255,201,60,0.20), transparent 42%),
+      radial-gradient(circle at 50% 95%, rgba(94,194,106,0.16), transparent 40%),
+      var(--paper);
+    color:var(--ink);
+    font-family:'Hind', sans-serif;
+    min-height:100vh;
+    overflow-x:hidden;
+  }
+  h1,h2,h3,.display{ font-family:'Baloo 2', sans-serif; }
+
+  .wrap{ max-width:460px; margin:0 auto; padding:22px 18px 50px; }
+
+  /* ---------- Header / mascot ---------- */
+  .topbar{ display:flex; align-items:center; justify-content:space-between; margin-bottom:6px; }
+  .brand{ display:flex; align-items:center; gap:8px; font-family:'Baloo 2'; font-weight:800; font-size:1.4rem; color:var(--ink); }
+  .brand .dot{ width:10px; height:10px; background:var(--leaf); border-radius:50%; display:inline-block; box-shadow:0 0 0 4px rgba(94,194,106,0.25); }
+  .logout-btn{
+    border:2px solid var(--line); background:var(--card); color:var(--ink);
+    font-family:'Hind'; font-weight:600; font-size:0.85rem; padding:8px 14px; border-radius:14px; cursor:pointer;
+  }
+
+  .hero{ text-align:center; padding:18px 0 8px; }
+  .mascot{ font-size:76px; display:inline-block; animation: bob 2.6s ease-in-out infinite; filter: drop-shadow(0 10px 14px rgba(45,42,74,0.18)); }
+  @keyframes bob{ 0%,100%{ transform: translateY(0) rotate(-3deg);} 50%{ transform: translateY(-14px) rotate(3deg);} }
+  .hero h1{ font-size:2.5rem; margin:6px 0 2px; color:var(--ink); }
+  .hero h1 span{ color:var(--sky); }
+  .hero p{ margin:0; opacity:0.75; font-size:1rem; }
+
+  /* ---------- Cards ---------- */
+  .card{
+    background:var(--card); border-radius:var(--radius); padding:26px 22px;
+    margin-top:20px; border:2.5px solid var(--ink); box-shadow: 6px 6px 0 var(--ink);
+  }
+  .card h2{ margin:0 0 16px; font-size:1.35rem; text-align:center; }
+
+  /* ---------- Auth ---------- */
+  .toggle-row{ display:flex; background:#F1EEE0; border-radius:16px; padding:4px; margin-bottom:18px; border:2px solid var(--line); }
+  .toggle-row button{
+    flex:1; border:none; background:transparent; padding:10px 0; font-family:'Hind'; font-weight:700;
+    font-size:0.95rem; border-radius:12px; cursor:pointer; color:var(--ink); opacity:0.55;
+  }
+  .toggle-row button.active{ background:var(--yellow); opacity:1; box-shadow:0 3px 0 rgba(45,42,74,0.18); }
+
+  .field{ margin-bottom:14px; }
+  .field label{ display:block; font-size:0.82rem; font-weight:600; margin-bottom:6px; opacity:0.7; }
+  .field input{
+    width:100%; padding:14px 16px; border-radius:14px; border:2.5px solid var(--line);
+    font-family:'Hind'; font-size:1rem; background:#FCFAF3; color:var(--ink); outline:none;
+  }
+  .field input:focus{ border-color:var(--sky); }
+
+  .btn-main{
+    width:100%; border:2.5px solid var(--ink); background:var(--leaf); color:#fff;
+    font-family:'Baloo 2'; font-weight:700; font-size:1.1rem; padding:14px; border-radius:16px;
+    cursor:pointer; box-shadow:4px 4px 0 var(--ink); margin-top:6px;
+  }
+  .btn-main:active{ transform:translate(2px,2px); box-shadow:2px 2px 0 var(--ink); }
+  .btn-main.blue{ background:var(--sky); }
+  .btn-main.coral{ background:var(--coral); }
+  .btn-main:disabled{ opacity:0.55; cursor:default; }
+
+  .swap-link{ text-align:center; margin-top:14px; font-size:0.88rem; color:var(--sky); font-weight:600; cursor:pointer; }
+
+  .msg{ font-size:0.85rem; text-align:center; margin-top:12px; font-weight:600; padding:10px; border-radius:12px; display:none; }
+  .msg.error{ background:#FFE2E2; color:#C22A2A; display:block; }
+  .msg.ok{ background:#E3F6E4; color:#1F7A32; display:block; }
+
+  /* ---------- Dashboard ---------- */
+  .welcome{ text-align:center; font-size:1.1rem; margin-bottom:4px; }
+  .welcome b{ color:var(--sky); }
+
+  .scan-zone{
+    border:3px dashed var(--sky); border-radius:20px; padding:26px 14px; text-align:center;
+    background:rgba(63,182,240,0.06); margin-top:16px; cursor:pointer;
+  }
+  .scan-zone .ic{ font-size:44px; }
+  .scan-zone p{ margin:8px 0 0; font-weight:600; font-size:0.95rem; }
+  #camInput{ display:none; }
+
+  .preview{ margin-top:16px; border-radius:18px; overflow:hidden; border:2.5px solid var(--ink); display:none; }
+  .preview img{ width:100%; display:block; }
+
+  .result{
+    margin-top:18px; background:#FFF8E1; border:2.5px solid var(--yellow); border-radius:18px;
+    padding:18px; display:none; white-space:pre-wrap; line-height:1.8; font-size:1rem;
+  }
+  .result-actions{ display:flex; gap:10px; margin-top:14px; }
+  .result-actions button{
+    flex:1; border:2px solid var(--ink); background:var(--card); border-radius:14px; padding:10px;
+    font-weight:700; font-family:'Hind'; cursor:pointer; font-size:0.9rem;
+  }
+
+  .loader{ display:none; text-align:center; margin-top:18px; }
+  .loader .spin{
+    width:42px; height:42px; border:5px solid var(--line); border-top-color:var(--sky);
+    border-radius:50%; margin:0 auto 10px; animation:spin 0.9s linear infinite;
+  }
+  @keyframes spin{ to{ transform:rotate(360deg);} }
+  .loader p{ font-weight:600; font-size:0.9rem; opacity:0.75; }
+
+  footer{ text-align:center; margin-top:34px; font-size:0.78rem; opacity:0.55; }
+
+  .hidden{ display:none !important; }
+</style>
+</head>
+<body>
+
+<div class="wrap">
+
+  <div class="topbar">
+    <div class="brand"><span class="dot"></span> Padh-Ai</div>
+    <button class="logout-btn hidden" id="logoutBtn">लॉगआउट</button>
+  </div>
+
+  <!-- ======= AUTH SCREEN ======= -->
+  <div id="authScreen">
+    <div class="hero">
+      <div class="mascot">🤖</div>
+      <h1>Padh<span>-Ai</span></h1>
+      <p>नमस्ते बच्चों! फोटो लो, हिंदी में समझो 📚</p>
+    </div>
+
+    <div class="card">
+      <div class="toggle-row">
+        <button id="tabLogin" class="active">छात्र लॉगिन</button>
+        <button id="tabRegister">नया रजिस्ट्रेशन</button>
+      </div>
+
+      <div id="registerFields">
+        <div class="field">
+          <label>तुम्हारा नाम</label>
+          <input type="text" id="regName" placeholder="जैसे: आरव शर्मा">
+        </div>
+        <div class="field">
+          <label>क्लास (वैकल्पिक)</label>
+          <input type="text" id="regClass" placeholder="जैसे: कक्षा 5">
+        </div>
+      </div>
+
+      <div class="field">
+        <label>ईमेल आईडी</label>
+        <input type="email" id="authEmail" placeholder="you@example.com" autocomplete="email">
+      </div>
+      <div class="field">
+        <label>6-अंकों का पिन</label>
+        <input type="password" id="authPin" placeholder="••••••" maxlength="6" inputmode="numeric" autocomplete="current-password">
+      </div>
+
+      <button class="btn-main blue" id="authSubmitBtn">प्रवेश करें</button>
+      <div class="swap-link" id="swapLink">नया रजिस्ट्रेशन यहाँ करें</div>
+      <div class="msg" id="authMsg"></div>
+    </div>
+
+    <footer>© 2026 Padh-Ai Assistant | भारत का अपना सुरक्षित ऐप 🇮🇳</footer>
+  </div>
+
+  <!-- ======= DASHBOARD SCREEN ======= -->
+  <div id="dashScreen" class="hidden">
+    <div class="hero" style="padding-top:6px;">
+      <div class="mascot" style="font-size:56px;">🤖</div>
+      <p class="welcome">नमस्ते, <b id="userNameSpan">दोस्त</b>! 👋</p>
+    </div>
+
+    <div class="card">
+      <h2>📸 किताब का फोटो लो</h2>
+
+      <div class="scan-zone" id="scanZone">
+        <div class="ic">📷</div>
+        <p>यहाँ टैप करके फोटो खींचो</p>
+      </div>
+      <input type="file" id="camInput" accept="image/*" capture="environment">
+
+      <div class="preview" id="previewBox">
+        <img id="previewImg" src="" alt="preview">
+      </div>
+
+      <button class="btn-main coral hidden" id="explainBtn">✨ समझाओ</button>
+      <button class="btn-main blue hidden" id="resetBtn" style="margin-top:8px;">🔄 नया फोटो लो</button>
+
+      <div class="loader" id="loader">
+        <div class="spin"></div>
+        <p>Padh-Ai सोच रहा है... 🤔</p>
+      </div>
+
+      <div class="result" id="resultBox"></div>
+      <div class="result-actions hidden" id="resultActions">
+        <button id="speakBtn">🔊 सुनो</button>
+        <button id="stopBtn">⏹️ रोको</button>
+      </div>
+    </div>
+
+    <footer>© 2026 Padh-Ai Assistant | भारत का अपना सुरक्षित ऐप 🇮🇳</footer>
+  </div>
+
+</div>
+
+<script type="module">
+  import { createClient } from 'https://esm.sh/@supabase/supabase-js@2';
+
+  // ---- Supabase config ----
+  const SUPABASE_URL = 'https://tyonurrbwdjqfrmqrgpk.supabase.co';
+  const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InR5b251cnJid2RqcWZybXFyZ3BrIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODYxNzMzODMsImV4cCI6MjEwMTc0OTM4M30.95tDST7gwxemb2w2SS71arWh77omlFf0ezPwkTun2cM';
+  const supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
+  // ---- Elements ----
+  const authScreen = document.getElementById('authScreen');
+  const dashScreen = document.getElementById('dashScreen');
+  const logoutBtn = document.getElementById('logoutBtn');
+
+  const tabLogin = document.getElementById('tabLogin');
+  const tabRegister = document.getElementById('tabRegister');
+  const registerFields = document.getElementById('registerFields');
+  const regName = document.getElementById('regName');
+  const regClass = document.getElementById('regClass');
+  const authEmail = document.getElementById('authEmail');
+  const authPin = document.getElementById('authPin');
+  const authSubmitBtn = document.getElementById('authSubmitBtn');
+  const swapLink = document.getElementById('swapLink');
+  const authMsg = document.getElementById('authMsg');
+
+  const userNameSpan = document.getElementById('userNameSpan');
+  const scanZone = document.getElementById('scanZone');
+  const camInput = document.getElementById('camInput');
+  const previewBox = document.getElementById('previewBox');
+  const previewImg = document.getElementById('previewImg');
+  const explainBtn = document.getElementById('explainBtn');
+  const resetBtn = document.getElementById('resetBtn');
+  const loader = document.getElementById('loader');
+  const resultBox = document.getElementById('resultBox');
+  const resultActions = document.getElementById('resultActions');
+  const speakBtn = document.getElementById('speakBtn');
+  const stopBtn = document.getElementById('stopBtn');
+
+  let mode = 'login'; // or 'register'
+  let selectedImageBase64 = null;
+  let selectedMimeType = null;
+
+  function showMsg(text, type){
+    authMsg.textContent = text;
+    authMsg.className = 'msg ' + type;
+  }
+  function clearMsg(){
+    authMsg.className = 'msg';
+    authMsg.textContent = '';
+  }
+
+  tabLogin.addEventListener('click', () => setMode('login'));
+  tabRegister.addEventListener('click', () => setMode('register'));
+  swapLink.addEventListener('click', () => setMode(mode === 'login' ? 'register' : 'login'));
+
+  function setMode(m){
+    mode = m;
+    clearMsg();
+    if(m === 'login'){
+      tabLogin.classList.add('active');
+      tabRegister.classList.remove('active');
+      registerFields.classList.add('hidden');
+      authSubmitBtn.textContent = 'प्रवेश करें';
+      swapLink.textContent = 'नया रजिस्ट्रेशन यहाँ करें';
+    } else {
+      tabRegister.classList.add('active');
+      tabLogin.classList.remove('active');
+      registerFields.classList.remove('hidden');
+      authSubmitBtn.textContent = 'रजिस्टर करें';
+      swapLink.textContent = 'पहले से खाता है? लॉगिन करें';
+    }
+  }
+
+  authSubmitBtn.addEventListener('click', async () => {
+    clearMsg();
+    const email = authEmail.value.trim();
+    const pin = authPin.value.trim();
+
+    if(!email || !/^\S+@\S+\.\S+$/.test(email)){
+      showMsg('सही ईमेल डालो', 'error'); return;
+    }
+    if(!/^\d{6}$/.test(pin)){
+      showMsg('पिन 6 अंकों का होना चाहिए', 'error'); return;
+    }
+
+    authSubmitBtn.disabled = true;
+
+    if(mode === 'register'){
+      const name = regName.value.trim();
+      if(!name){ showMsg('अपना नाम लिखो', 'error'); authSubmitBtn.disabled = false; return; }
+
+      const { data, error } = await supabase.auth.signUp({ email, password: pin });
+      if(error){
+        showMsg(error.message, 'error');
+        authSubmitBtn.disabled = false;
+        return;
+      }
+      if(data.user){
+        await supabase.from('profiles').insert({
+          id: data.user.id,
+          full_name: name,
+          class_name: regClass.value.trim() || null
+        });
+      }
+      if(data.session){
+        showMsg('रजिस्ट्रेशन हो गया! 🎉', 'ok');
+        await enterDashboard(name);
+      } else {
+        showMsg('रजिस्ट्रेशन हो गया! अब लॉगिन करो।', 'ok');
+        setMode('login');
+      }
+    } else {
+      const { data, error } = await supabase.auth.signInWithPassword({ email, password: pin });
+      if(error){
+        showMsg('ईमेल या पिन गलत है', 'error');
+        authSubmitBtn.disabled = false;
+        return;
+      }
+      const { data: profile } = await supabase
+        .from('profiles').select('full_name').eq('id', data.user.id).single();
+      await enterDashboard(profile?.full_name || 'दोस्त');
+    }
+    authSubmitBtn.disabled = false;
+  });
+
+  async function enterDashboard(name){
+    userNameSpan.textContent = name;
+    authScreen.classList.add('hidden');
+    dashScreen.classList.remove('hidden');
+    logoutBtn.classList.remove('hidden');
+  }
+
+  logoutBtn.addEventListener('click', async () => {
+    await supabase.auth.signOut();
+    dashScreen.classList.add('hidden');
+    authScreen.classList.remove('hidden');
+    logoutBtn.classList.add('hidden');
+    resetScan();
+  });
+
+  // Auto-login if session already exists
+  (async () => {
+    const { data } = await supabase.auth.getSession();
+    if(data.session){
+      const { data: profile } = await supabase
+        .from('profiles').select('full_name').eq('id', data.session.user.id).single();
+      await enterDashboard(profile?.full_name || 'दोस्त');
+    }
+  })();
+
+  // ---- Camera / scan ----
+  scanZone.addEventListener('click', () => camInput.click());
+
+  camInput.addEventListener('change', () => {
+    const file = camInput.files[0];
+    if(!file) return;
+    selectedMimeType = file.type || 'image/jpeg';
+
+    const reader = new FileReader();
+    reader.onload = () => {
+      const result = reader.result;
+      previewImg.src = result;
+      previewBox.style.display = 'block';
+      selectedImageBase64 = result.split(',')[1];
+      explainBtn.classList.remove('hidden');
+      resetBtn.classList.remove('hidden');
+      resultBox.style.display = 'none';
+      resultActions.classList.add('hidden');
+    };
+    reader.readAsDataURL(file);
+  });
+
+  resetBtn.addEventListener('click', resetScan);
+  function resetScan(){
+    selectedImageBase64 = null;
+    camInput.value = '';
+    previewBox.style.display = 'none';
+    explainBtn.classList.add('hidden');
+    resetBtn.classList.add('hidden');
+    resultBox.style.display = 'none';
+    resultActions.classList.add('hidden');
+    window.speechSynthesis?.cancel();
+  }
+
+  explainBtn.addEventListener('click', async () => {
+    if(!selectedImageBase64) return;
+    loader.style.display = 'block';
+    resultBox.style.display = 'none';
+    resultActions.classList.add('hidden');
+    explainBtn.disabled = true;
+
+    try {
+      const res = await fetch('/api/gemini', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ imageBase64: selectedImageBase64, mimeType: selectedMimeType })
+      });
+      const data = await res.json();
+      loader.style.display = 'none';
+      explainBtn.disabled = false;
+
+      if(!res.ok){
+        resultBox.textContent = '😔 ' + (data.error || 'कुछ गड़बड़ हो गई, दोबारा कोशिश करो');
+        resultBox.style.display = 'block';
+        return;
+      }
+      resultBox.textContent = data.text;
+      resultBox.style.display = 'block';
+      resultActions.classList.remove('hidden');
+    } catch(err){
+      loader.style.display = 'none';
+      explainBtn.disabled = false;
+      resultBox.textContent = '😔 इंटरनेट चेक करो और दोबारा कोशिश करो';
+      resultBox.style.display = 'block';
+    }
+  });
+
+  // ---- Hindi Text to Speech ----
+  speakBtn.addEventListener('click', () => {
+    if(!resultBox.textContent) return;
+    window.speechSynthesis.cancel();
+    const utter = new SpeechSynthesisUtterance(resultBox.textContent);
+    utter.lang = 'hi-IN';
+    utter.rate = 0.95;
+    window.speechSynthesis.speak(utter);
+  });
+  stopBtn.addEventListener('click', () => window.speechSynthesis.cancel());
+
+</script>
+</body>
+</html>
