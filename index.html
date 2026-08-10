@@ -1,1083 +1,1678 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="hi">
 <head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
 <meta name="theme-color" content="#7046e8">
-<title>Padh-Ai | 3D बाल शिक्षा</title>
 
-<link rel="icon" href="assets/padh-ai-3d.png">
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@500;600;700;800&family=Hind:wght@400;500;600;700&display=swap" rel="stylesheet">
+<title>Padh-AI | Smart Kids Learning</title>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
 <style>
-:root{
-  --purple:#7046e8;
-  --purple2:#9b62ff;
-  --blue:#32baf4;
-  --green:#19c98b;
-  --yellow:#ffd044;
-  --pink:#ff5c7a;
-  --dark:#27214b;
-  --bg:#f3f5ff;
-  --white:#fff;
-  --muted:#73718a;
-  --danger:#e84c5b;
-  --shadow:0 10px 0 var(--dark),0 20px 35px rgba(39,33,75,.14);
-}
-*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
-html,body{margin:0;min-height:100%;font-family:Hind,sans-serif;color:var(--dark)}
+*{box-sizing:border-box}
+
 body{
+ margin:0;
+ font-family:Arial,"Noto Sans Devanagari",sans-serif;
  background:
- radial-gradient(circle at 5% 5%,#b9efff 0,transparent 25%),
- radial-gradient(circle at 95% 8%,#ffe58c 0,transparent 23%),
- linear-gradient(180deg,#fbfcff,#edf0ff);
+ radial-gradient(circle at 10% 10%,#b9f2ff,transparent 30%),
+ radial-gradient(circle at 90% 10%,#ffe993,transparent 28%),
+ linear-gradient(180deg,#fafaff,#e9ecff);
+ color:#29234b;
 }
-button,input,select{font:inherit}
-button{cursor:pointer}
+
+button,input,select,textarea{font:inherit}
+
+button,a{
+ cursor:pointer;
+ -webkit-tap-highlight-color:transparent;
+}
+
 .hidden{display:none!important}
-.app{width:min(760px,100%);margin:auto;padding:12px 14px 80px}
 
-.top{
- display:flex;align-items:center;justify-content:space-between;
- padding:9px 12px;border:3px solid var(--dark);border-radius:22px;
- background:#ffffffdf;backdrop-filter:blur(12px);
- box-shadow:0 5px 0 #bcb7d4;
- position:sticky;top:8px;z-index:50
-}
-.logo{font:800 1.45rem "Baloo 2";color:var(--purple)}
-.logo span{color:var(--green)}
-.top button{
- border:2px solid var(--dark);border-radius:14px;background:white;
- padding:7px 12px;font-weight:700;box-shadow:3px 3px 0 var(--dark)
+.app{
+ width:100%;
+ max-width:760px;
+ margin:auto;
+ padding:12px 14px 60px;
 }
 
-.hero{text-align:center;padding:18px 0}
-.hero-img{
- width:min(100%,620px);display:block;margin:auto;border-radius:32px;
- border:4px solid var(--dark);box-shadow:0 13px 0 var(--dark),0 25px 40px #423a832b
+.topbar{
+ position:sticky;
+ top:7px;
+ z-index:100;
+ display:flex;
+ align-items:center;
+ justify-content:space-between;
+ background:#fff;
+ border:3px solid #29234b;
+ border-radius:24px;
+ padding:10px 14px;
+ box-shadow:0 6px 0 #29234b;
 }
-.hero h1{font:800 2.5rem "Baloo 2";margin:15px 0 0}
-.hero h1 span{color:var(--purple)}
-.hero p{margin:0;color:var(--muted);font-weight:600}
+
+.logo{
+ font-size:25px;
+ font-weight:900;
+ color:#7046e8;
+}
+
+.logo span{color:#19bd91}
+
+.logout{
+ background:#ff5c72;
+ color:white;
+ border:2px solid #29234b;
+ border-radius:13px;
+ padding:8px 12px;
+ font-weight:bold;
+}
+
+.hero{
+ text-align:center;
+ padding:18px 0;
+}
+
+.hero img{
+ width:100%;
+ max-width:600px;
+ border-radius:30px;
+ border:4px solid #29234b;
+ box-shadow:0 10px 0 #29234b;
+}
+
+.hero h1{
+ font-size:32px;
+ margin:20px 0 5px;
+}
+
+.hero h1 span{color:#7046e8}
+
+.hero p{
+ margin:0;
+ font-weight:bold;
+ color:#716e88;
+}
+
+/* APK 3D BUTTON */
+
+.apk-button{
+ display:flex;
+ align-items:center;
+ justify-content:center;
+ gap:10px;
+ width:100%;
+ max-width:600px;
+ margin:22px auto 8px;
+ padding:16px 18px;
+ text-decoration:none;
+ color:white;
+ font-size:18px;
+ font-weight:900;
+ border:4px solid #29234b;
+ border-radius:22px;
+ background:linear-gradient(135deg,#ff5477 0%,#7046e8 48%,#28bde8 100%);
+ box-shadow:
+ 0 8px 0 #29234b,
+ 0 14px 25px rgba(41,35,75,.25);
+ transform:translateY(0);
+ transition:.15s ease;
+}
+
+.apk-button:hover{
+ transform:translateY(-3px);
+ box-shadow:
+ 0 11px 0 #29234b,
+ 0 18px 30px rgba(41,35,75,.30);
+}
+
+.apk-button:active{
+ transform:translateY(6px);
+ box-shadow:
+ 0 2px 0 #29234b,
+ 0 8px 15px rgba(41,35,75,.20);
+}
+
+.apk-icon{
+ font-size:29px;
+}
+
+.apk-text{
+ display:flex;
+ flex-direction:column;
+ align-items:flex-start;
+ line-height:1.15;
+}
+
+.apk-main{
+ font-size:18px;
+}
+
+.apk-sub{
+ font-size:11px;
+ opacity:.9;
+ margin-top:3px;
+}
 
 .card{
- margin-top:18px;background:#fffffff2;border:3px solid var(--dark);
- border-radius:28px;padding:20px 17px;box-shadow:var(--shadow)
+ background:#fff;
+ border:3px solid #29234b;
+ border-radius:28px;
+ padding:20px;
+ margin-top:20px;
+ box-shadow:0 8px 0 #29234b;
 }
-.card h2{font:800 1.45rem "Baloo 2";margin:0 0 15px;text-align:center}
 
-.tabs{display:flex;gap:7px;background:#e9eaff;padding:5px;border-radius:18px;margin-bottom:15px}
+.tabs{
+ display:flex;
+ gap:7px;
+ background:#ecebff;
+ padding:5px;
+ border-radius:18px;
+ margin-bottom:17px;
+}
+
 .tabs button{
- flex:1;border:0;background:transparent;border-radius:13px;padding:9px 5px;
- font-weight:800;color:var(--dark)
+ flex:1;
+ border:0;
+ border-radius:14px;
+ padding:12px 5px;
+ font-weight:900;
+ color:#29234b;
+ background:transparent;
 }
-.tabs button.active{background:var(--yellow);box-shadow:0 3px 0 #b28a00}
 
-.field{margin:11px 0}
-.field label{display:block;font-weight:700;font-size:.82rem;margin-bottom:5px}
-.field input,.field select{
- width:100%;padding:13px;border:3px solid #d8d7e5;border-radius:15px;
- background:#fafaff;outline:none;color:var(--dark)
+.tabs button.active{
+ background:#ffd449;
+ box-shadow:0 4px 0 #b58b00;
 }
-.field input:focus,.field select:focus{
- border-color:var(--blue);box-shadow:0 0 0 4px #32baf422
+
+.field{margin:13px 0}
+
+.field label{
+ display:block;
+ font-weight:900;
+ margin-bottom:6px;
+}
+
+.field input,
+.field select,
+.field textarea{
+ width:100%;
+ padding:14px;
+ border:3px solid #d8d7e6;
+ border-radius:17px;
+ outline:none;
+ background:#fbfbff;
+}
+
+.field input:focus,
+.field textarea:focus{
+ border-color:#31b9ed;
 }
 
 .btn{
- width:100%;border:3px solid var(--dark);border-radius:17px;
- padding:12px;font:800 1rem "Baloo 2";color:white;
- box-shadow:0 6px 0 var(--dark);margin-top:7px
+ display:block;
+ width:100%;
+ padding:13px;
+ border:3px solid #29234b;
+ border-radius:17px;
+ margin-top:8px;
+ font-weight:900;
+ color:white;
+ text-decoration:none;
+ text-align:center;
+ box-shadow:0 6px 0 #29234b;
 }
-.btn:active{transform:translateY(4px);box-shadow:0 2px 0 var(--dark)}
-.green{background:linear-gradient(135deg,#19c98b,#21aee7)}
-.blue{background:linear-gradient(135deg,#31baf4,#5668ff)}
-.purple{background:linear-gradient(135deg,#7046e8,#a15cff)}
-.pink{background:linear-gradient(135deg,#ff5c7a,#ff944b)}
-.yellow{background:linear-gradient(135deg,#ffd84a,#ffae00);color:var(--dark)}
 
-.msg{
- display:none;margin-top:10px;padding:9px;border-radius:13px;
- text-align:center;font-weight:700;font-size:.84rem
+.btn:active{
+ transform:translateY(4px);
+ box-shadow:0 2px 0 #29234b;
 }
-.msg.show{display:block}
-.msg.error{background:#ffe1e5;color:#b51e35}
-.msg.ok{background:#dff9eb;color:#087b4d}
+
+.green{background:linear-gradient(135deg,#19c98b,#24b5dd)}
+.blue{background:linear-gradient(135deg,#32baf4,#5d67ee)}
+.purple{background:linear-gradient(135deg,#7046e8,#a55cff)}
+.pink{background:linear-gradient(135deg,#ff5477,#ff9645)}
+.yellow{
+ background:linear-gradient(135deg,#ffd84a,#ffad00);
+ color:#29234b;
+}
+
+.message{
+ margin-top:13px;
+ padding:12px;
+ border-radius:15px;
+ text-align:center;
+ font-weight:bold;
+}
+
+.error{
+ background:#ffe0e5;
+ color:#b3203b;
+}
+
+.success{
+ background:#dcf8e9;
+ color:#08784d;
+}
 
 .link{
- border:0;background:transparent;color:var(--purple);
- font-weight:800;margin:12px auto 0;display:block
+ display:block;
+ margin:15px auto 0;
+ border:0;
+ background:none;
+ color:#7046e8;
+ font-weight:900;
 }
 
 .nav{
- display:flex;gap:8px;overflow:auto;padding:10px 2px 5px;
- position:sticky;top:69px;z-index:40;background:#f3f5ffdd;backdrop-filter:blur(8px)
+ display:flex;
+ gap:8px;
+ overflow-x:auto;
+ padding:13px 2px 7px;
+ position:sticky;
+ top:72px;
+ z-index:80;
+ background:#f1f3ffdd;
+ backdrop-filter:blur(8px);
 }
+
 .nav button{
- flex:0 0 auto;border:3px solid var(--dark);background:white;border-radius:16px;
- padding:8px 13px;font-weight:800;box-shadow:0 4px 0 var(--dark)
+ white-space:nowrap;
+ border:3px solid #29234b;
+ border-radius:15px;
+ padding:9px 13px;
+ background:white;
+ font-weight:900;
+ box-shadow:0 4px 0 #29234b;
 }
-.nav button.active{background:var(--purple);color:white}
+
+.nav button.active{
+ background:#7046e8;
+ color:white;
+}
 
 .welcome{
- background:linear-gradient(135deg,#7046e8,#35baf4);color:white;
- border:3px solid var(--dark);border-radius:25px;padding:15px;
- box-shadow:0 7px 0 var(--dark);margin-top:15px
+ margin-top:15px;
+ padding:17px;
+ border:3px solid #29234b;
+ border-radius:22px;
+ color:white;
+ background:linear-gradient(135deg,#7046e8,#2db8e8);
+ box-shadow:0 6px 0 #29234b;
 }
-.welcome b{font:800 1.3rem "Baloo 2"}
 
-.number{text-align:center}
+.welcome b{
+ font-size:22px;
+}
+
+.grid{
+ display:grid;
+ grid-template-columns:1fr 1fr;
+ gap:10px;
+}
+
+.number{
+ text-align:center;
+}
+
 .big-number{
- font:800 6rem "Baloo 2";line-height:1;color:var(--purple);
- text-shadow:0 6px 0 #d8ceff
+ font-size:90px;
+ font-weight:900;
+ color:#7046e8;
+ text-shadow:0 6px 0 #ddd3ff;
 }
-.word{font-size:1.5rem;font-weight:800;color:var(--pink)}
-.emoji{font-size:1.6rem;min-height:35px}
 
-.two{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.word{
+ font-size:25px;
+ font-weight:900;
+ color:#ff5273;
+}
 
-.letters{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
+.letters{
+ display:grid;
+ grid-template-columns:repeat(3,1fr);
+ gap:10px;
+}
+
 .letter{
- padding:13px 5px;text-align:center;background:linear-gradient(#fff,#f0f1ff);
- border:3px solid #deddeb;border-radius:18px;box-shadow:0 5px 0 #c7c5d6
-}
-.letter .e{font-size:1.7rem}
-.letter .l{font:800 1.7rem "Baloo 2";color:var(--purple)}
-.letter .w{font-size:.8rem;color:var(--muted)}
-
-.table-line{
- display:flex;justify-content:space-between;padding:10px;
- border-bottom:2px dashed #d5d3e2;font-size:1.15rem;font-weight:700
+ border:3px solid #dcdbea;
+ border-radius:18px;
+ background:#fafaff;
+ padding:13px 4px;
+ box-shadow:0 4px 0 #c7c5d5;
 }
 
-.ai-box{
- padding:15px;border-radius:20px;background:#eef9ff;border:3px dashed var(--blue)
+.letter .emoji{font-size:27px}
+.letter .main{
+ font-size:27px;
+ font-weight:900;
+ color:#7046e8;
 }
-.ai-box textarea{
- width:100%;min-height:90px;border:3px solid #d4d4e3;border-radius:15px;
- padding:12px;resize:vertical;outline:none
+
+.letter small{
+ color:#77748b;
+ font-weight:bold;
 }
-.ai-actions{display:grid;grid-template-columns:1fr 1fr;gap:8px}
-#camera{display:none}
-.preview{margin-top:12px;display:none}
-.preview img{width:100%;border-radius:16px;border:3px solid var(--dark)}
+
+.table-row{
+ display:flex;
+ justify-content:space-between;
+ padding:12px;
+ border-bottom:2px dashed #d5d2e3;
+ font-weight:bold;
+ font-size:18px;
+}
+
+.ai{
+ background:#eefaff;
+ border:3px dashed #32baf4;
+ border-radius:20px;
+ padding:15px;
+}
+
 .answer{
- white-space:pre-wrap;line-height:1.8;background:#fff8df;
- border:3px solid var(--yellow);border-radius:18px;padding:15px;margin-top:15px
+ white-space:pre-wrap;
+ margin-top:15px;
+ padding:15px;
+ border:3px solid #ffd044;
+ border-radius:18px;
+ background:#fff8dd;
+ line-height:1.7;
 }
-
-.price{text-align:center;font:800 3rem "Baloo 2";color:var(--pink)}
-.qr{text-align:center}
-.qr img{width:200px;height:200px;border:3px solid var(--dark);border-radius:18px}
-.status{padding:12px;border-radius:15px;text-align:center;font-weight:800}
-.pending{background:#fff1c9;color:#855d00}
-.approved{background:#dcf9e9;color:#08784c}
-.rejected{background:#ffe0e5;color:#b51d36}
-
-.quiz-q{font-weight:800;font-size:1.05rem;margin:10px 0}
-.option{
- width:100%;text-align:left;background:#fafaff;border:3px solid #dddbea;
- border-radius:14px;padding:11px;margin:5px 0;font-weight:700
-}
-.option.correct{background:#dcf9e9;border-color:var(--green)}
-.option.wrong{background:#ffe0e5;border-color:var(--pink)}
 
 .admin-stat{
- display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:14px
+ display:grid;
+ grid-template-columns:repeat(3,1fr);
+ gap:8px;
 }
+
 .stat{
- text-align:center;padding:12px;background:#f0efff;border-radius:17px;
- border:2px solid #d8d5ed
-}
-.stat b{display:block;font:800 1.5rem "Baloo 2";color:var(--purple)}
-
-.admin-item{
- background:#fafaff;border:3px solid #deddeb;border-radius:18px;
- padding:13px;margin:10px 0
-}
-.admin-item img{width:100%;max-height:280px;object-fit:contain;border-radius:12px;margin-top:8px}
-.admin-actions{display:grid;grid-template-columns:1fr 1fr;gap:7px;margin-top:9px}
-.admin-actions button{
- border:2px solid var(--dark);border-radius:12px;padding:9px;font-weight:800
+ text-align:center;
+ background:#f0efff;
+ border:2px solid #d6d3eb;
+ border-radius:16px;
+ padding:12px;
 }
 
-.check{
- display:flex;align-items:center;gap:8px;margin:9px 0;font-weight:700
+.stat b{
+ display:block;
+ font-size:25px;
+ color:#7046e8;
 }
-.check input{width:20px;height:20px}
 
-footer{text-align:center;color:#77758a;font-size:.78rem;margin-top:30px}
+.admin-box{
+ margin-top:15px;
+ padding:14px;
+ background:#fafaff;
+ border:3px solid #dedbea;
+ border-radius:18px;
+}
+
+.admin-box img{
+ max-width:100%;
+ max-height:260px;
+ display:block;
+ margin:10px auto;
+ border-radius:12px;
+}
+
+.admin-buttons{
+ display:grid;
+ grid-template-columns:1fr 1fr;
+ gap:8px;
+}
+
+.support-box{
+ margin-top:15px;
+ padding:15px;
+ border:3px dashed #19bd91;
+ border-radius:20px;
+ background:#effff9;
+ text-align:center;
+}
+
+.support-box a{
+ color:#08784d;
+ font-weight:900;
+ text-decoration:none;
+}
+
+footer{
+ text-align:center;
+ color:#77748b;
+ margin-top:30px;
+ font-size:13px;
+}
 
 @media(max-width:450px){
  .letters{grid-template-columns:repeat(2,1fr)}
- .hero h1{font-size:2.1rem}
- .admin-stat{grid-template-columns:1fr 1fr}
+ .grid{grid-template-columns:1fr}
+ .hero h1{font-size:26px}
+ .apk-main{font-size:16px}
 }
 </style>
 </head>
 
 <body>
+
 <div class="app">
 
-<header class="top">
-  <div class="logo">Padh-<span>AI</span> 🤖</div>
-  <button id="logout" class="hidden">🚪 बाहर</button>
+<header class="topbar">
+ <div class="logo">Padh-<span>AI</span> 🤖</div>
+ <button id="logout" class="logout hidden">🚪 बाहर</button>
 </header>
 
 <section id="auth">
 
-  <div class="hero">
-    <img class="hero-img" src="assets/padh-ai-3d.png" alt="Padh-Ai">
-    <h1>पढ़ो और सीखो <span>AI के साथ!</span></h1>
-    <p>गिनती • वर्णमाला • पहाड़ा • AI Teacher</p>
-  </div>
+ <div class="hero">
 
-  <div class="card">
-    <div class="tabs">
-      <button id="loginTab" class="active">🔐 Login</button>
-      <button id="registerTab">🎒 नया Account</button>
-    </div>
+   <img src="assets/padh-ai-3d.png" alt="Padh-AI">
 
-    <div id="registerFields" class="hidden">
-      <div class="field">
-        <label>👦 आपका नाम</label>
-        <input id="name" placeholder="जैसे राहुल">
-      </div>
-      <div class="field">
-        <label>📚 कक्षा</label>
-        <input id="className" placeholder="जैसे कक्षा 3">
-      </div>
-    </div>
+   <h1>पढ़ो और सीखो <span>AI के साथ!</span></h1>
+   <p>गिनती • वर्णमाला • पहाड़ा • AI Teacher</p>
 
-    <div class="field">
-      <label>📧 Email</label>
-      <input id="email" type="email" autocomplete="email" placeholder="आपका email">
-    </div>
+   <!-- APK DOWNLOAD BUTTON -->
+   <a
+     class="apk-button"
+     href="https://github.com/sonwaniv842-cell/Padh-Ai/releases/download/v1.0.5/app-release.apk"
+     download="Padh-Ai.apk"
+     target="_blank"
+     rel="noopener"
+   >
+     <span class="apk-icon">📲</span>
 
-    <div class="field">
-      <label>🔢 6 अंकों का PIN</label>
-      <input id="pin" type="password" inputmode="numeric" maxlength="6"
-             autocomplete="current-password" placeholder="••••••">
-    </div>
+     <span class="apk-text">
+       <span class="apk-main">
+         Padh-Ai App (APK) डाउनलोड करें
+       </span>
 
-    <button id="authBtn" class="btn green">🔐 Login करें</button>
+       <span class="apk-sub">
+         Android App • v1.0.5 • Free Download
+       </span>
+     </span>
+   </a>
 
-    <button id="forgot" class="link">🔑 PIN भूल गए?</button>
+ </div>
 
-    <div id="resetBox" class="hidden">
-      <div class="field">
-        <label>नया 6 अंकों का PIN</label>
-        <input id="newPin" type="password" inputmode="numeric" maxlength="6">
-      </div>
-      <button id="resetBtn" class="btn purple">💾 नया PIN Save करें</button>
-    </div>
+ <div class="card">
 
-    <div id="authMsg" class="msg"></div>
-  </div>
+   <div class="tabs">
+     <button id="loginTab" class="active">🔐 Login</button>
+     <button id="registerTab">🎒 नया Account</button>
+   </div>
+
+   <div id="registerArea" class="hidden">
+
+     <div class="field">
+       <label>👦 आपका नाम</label>
+       <input id="name" placeholder="जैसे राहुल">
+     </div>
+
+     <div class="field">
+       <label>📚 कक्षा</label>
+       <input id="className" placeholder="जैसे KG1">
+     </div>
+
+   </div>
+
+   <div class="field">
+     <label>📧 Email</label>
+     <input id="email" type="email" placeholder="आपका Email">
+   </div>
+
+   <div class="field">
+     <label>🔢 6 अंकों का PIN</label>
+     <input
+       id="pin"
+       type="password"
+       maxlength="6"
+       inputmode="numeric"
+       placeholder="••••••"
+     >
+   </div>
+
+   <button id="authBtn" class="btn green">
+     🔐 Login करें
+   </button>
+
+   <button id="forgot" class="link">
+     🔑 PIN भूल गए?
+   </button>
+
+   <div id="authMsg" class="message hidden"></div>
+
+ </div>
+
+ <div class="support-box">
+   📞 सहायता चाहिए?
+   <br>
+   <a
+     href="https://wa.me/917067132801"
+     target="_blank"
+     rel="noopener"
+   >
+     WhatsApp Support खोलें
+   </a>
+ </div>
+
 </section>
+
 
 <section id="dashboard" class="hidden">
 
-  <div class="welcome">
-    नमस्ते 👋<br>
-    <b id="userName">दोस्त</b>, आज क्या पढ़ना है? 🚀
-  </div>
+ <div class="welcome">
+   नमस्ते 👋
+   <br>
+   <b id="userName">दोस्त</b>
+   <br>
+   आज क्या पढ़ना है? 🚀
+ </div>
 
-  <nav class="nav" id="nav">
-    <button data-page="home" class="active">🏠 Home</button>
-    <button data-page="ginti">🔢 गिनती</button>
-    <button data-page="varna">🔤 वर्णमाला</button>
-    <button data-page="pahada">✖️ पहाड़ा</button>
-    <button data-page="ai">🤖 AI Teacher</button>
-    <button data-page="exam">📝 परीक्षा</button>
-    <button data-page="admin" id="adminNav" class="hidden">🛡️ Admin</button>
-  </nav>
+ <nav class="nav">
 
-  <main>
+   <button data-page="home" class="active">🏠 Home</button>
+   <button data-page="ginti">🔢 गिनती</button>
+   <button data-page="varna">🔤 वर्णमाला</button>
+   <button data-page="pahada">✖️ पहाड़ा</button>
+   <button data-page="ai">🤖 AI Teacher</button>
+   <button data-page="admin" id="adminNav" class="hidden">🛡️ Admin</button>
 
-    <section id="page-home" class="card">
-      <h2>🌈 Padh-Ai में आपका स्वागत है!</h2>
-      <div class="two">
-        <button class="btn blue" data-go="ginti">🔢 गिनती सीखें</button>
-        <button class="btn purple" data-go="varna">🔤 वर्णमाला</button>
-        <button class="btn yellow" data-go="pahada">✖️ पहाड़ा</button>
-        <button class="btn green" data-go="ai">🤖 AI Teacher</button>
-      </div>
-    </section>
+ </nav>
 
-    <section id="page-ginti" class="card hidden">
-      <h2>🔢 गिनती सीखो</h2>
-      <div class="number">
-        <div id="number" class="big-number">1</div>
-        <div id="word" class="word">एक</div>
-        <div id="emoji" class="emoji">🎈</div>
-      </div>
-      <div class="two">
-        <button id="prev" class="btn purple">⬅️ पिछला</button>
-        <button id="next" class="btn blue">अगला ➡️</button>
-      </div>
-      <button id="speakNumber" class="btn green">🔊 बोलकर सुनाओ</button>
-    </section>
+ <section id="page-home" class="card">
 
-    <section id="page-varna" class="card hidden">
-      <h2>🔤 वर्णमाला</h2>
-      <div class="tabs">
-        <button id="hindiTab" class="active">हिंदी</button>
-        <button id="englishTab">English</button>
-      </div>
-      <div id="letters" class="letters"></div>
-    </section>
+   <h2>🌈 Padh-AI में स्वागत है!</h2>
 
-    <section id="page-pahada" class="card hidden">
-      <h2>✖️ पहाड़ा</h2>
-      <div class="field">
-        <select id="table"></select>
-      </div>
-      <div id="tableRows"></div>
-      <button id="speakTable" class="btn blue">🔊 पूरा पहाड़ा सुनाओ</button>
-    </section>
+   <a
+     class="btn pink"
+     href="https://github.com/sonwaniv842-cell/Padh-Ai/releases/download/v1.0.5/app-release.apk"
+     download="Padh-Ai.apk"
+     target="_blank"
+     rel="noopener"
+   >
+     📲 Padh-Ai App (APK) डाउनलोड करें
+   </a>
 
-    <section id="page-ai" class="card hidden">
-      <h2>🤖 AI Teacher</h2>
+   <div class="grid">
 
-      <div class="ai-box">
-        <textarea id="question" placeholder="अपना सवाल लिखो... जैसे 5 + 7 कितना होता है?"></textarea>
+     <button class="btn blue" data-go="ginti">
+       🔢 गिनती सीखें
+     </button>
 
-        <div class="ai-actions">
-          <button id="ask" class="btn green">✨ पूछो</button>
-          <button id="mic" class="btn blue">🎤 बोलो</button>
-        </div>
+     <button class="btn purple" data-go="varna">
+       🔤 वर्णमाला
+     </button>
 
-        <div style="text-align:center;margin:13px">या फोटो से सवाल पूछो 📸</div>
+     <button class="btn yellow" data-go="pahada">
+       ✖️ पहाड़ा
+     </button>
 
-        <input id="camera" type="file" accept="image/*" capture="environment">
-        <button id="cameraBtn" class="btn purple">📷 फोटो खींचो / चुनो</button>
+     <button class="btn green" data-go="ai">
+       🤖 AI Teacher
+     </button>
 
-        <div id="preview" class="preview">
-          <img id="previewImg">
-          <button id="explain" class="btn yellow">🧠 फोटो समझाओ</button>
-        </div>
-      </div>
+   </div>
 
-      <div id="aiLoading" class="hidden" style="text-align:center;padding:18px">
-        🤖 AI Teacher सोच रहा है... ⏳
-      </div>
+ </section>
 
-      <div id="answer" class="answer hidden"></div>
 
-      <div id="answerBtns" class="two hidden">
-        <button id="speakAnswer" class="btn green">🔊 सुनाओ</button>
-        <button id="stopAnswer" class="btn pink">⏹️ रोकें</button>
-      </div>
-    </section>
+ <section id="page-ginti" class="card hidden">
 
-    <section id="page-exam" class="card hidden">
-      <h2>📝 मासिक परीक्षा</h2>
-      <div id="exam"></div>
-    </section>
+   <h2>🔢 गिनती सीखो</h2>
 
-    <section id="page-admin" class="card hidden">
-      <h2>🛡️ Admin Control Center</h2>
-      <div id="admin"></div>
-    </section>
+   <div class="number">
 
-  </main>
+     <div id="bigNumber" class="big-number">1</div>
+     <div id="numberWord" class="word">एक</div>
+     <div id="numberEmoji">🎈</div>
+
+   </div>
+
+   <div class="grid">
+
+     <button id="prev" class="btn purple">⬅️ पिछला</button>
+     <button id="next" class="btn blue">अगला ➡️</button>
+
+   </div>
+
+   <button id="speakNumber" class="btn green">
+     🔊 बोलकर सुनाओ
+   </button>
+
+ </section>
+
+
+ <section id="page-varna" class="card hidden">
+
+   <h2>🔤 वर्णमाला</h2>
+
+   <div class="tabs">
+     <button id="hindiTab" class="active">हिंदी</button>
+     <button id="englishTab">English</button>
+   </div>
+
+   <div id="letters" class="letters"></div>
+
+ </section>
+
+
+ <section id="page-pahada" class="card hidden">
+
+   <h2>✖️ पहाड़ा</h2>
+
+   <div class="field">
+     <select id="tableSelect"></select>
+   </div>
+
+   <div id="tableRows"></div>
+
+   <button id="speakTable" class="btn blue">
+     🔊 पहाड़ा सुनाओ
+   </button>
+
+ </section>
+
+
+ <section id="page-ai" class="card hidden">
+
+   <h2>🤖 AI Teacher</h2>
+
+   <div class="ai">
+
+     <textarea
+       id="question"
+       placeholder="अपना सवाल लिखो... जैसे 5 + 7 कितना होता है?"
+       rows="4"
+     ></textarea>
+
+     <div class="grid">
+
+       <button id="askAI" class="btn green">✨ पूछो</button>
+       <button id="voiceBtn" class="btn blue">🎤 बोलो</button>
+
+     </div>
+
+     <br>
+
+     <input
+       id="imageInput"
+       type="file"
+       accept="image/*"
+       capture="environment"
+     >
+
+   </div>
+
+   <div id="aiLoading" class="hidden"
+        style="text-align:center;padding:18px">
+     🤖 AI Teacher सोच रहा है... ⏳
+   </div>
+
+   <div id="answer" class="answer hidden"></div>
+
+   <div id="answerButtons" class="grid hidden">
+
+     <button id="speakAnswer" class="btn green">
+       🔊 सुनाओ
+     </button>
+
+     <button id="stopAnswer" class="btn pink">
+       ⏹️ रोकें
+     </button>
+
+   </div>
+
+ </section>
+
+
+ <section id="page-admin" class="card hidden">
+
+   <h2>🛡️ Admin Control Center</h2>
+
+   <div id="adminContent">
+     Loading...
+   </div>
+
+ </section>
+
 </section>
 
-<footer>© Padh-Ai • बच्चों की मजेदार पढ़ाई 🤖📚</footer>
+
+<footer>
+ © Padh-AI • बच्चों की मजेदार पढ़ाई 🤖📚
+</footer>
+
 </div>
 
-<script type="module">
-import {createClient} from "https://esm.sh/@supabase/supabase-js@2";
 
-/* =========================================================
-   आपकी डिटेल्स जोड़ दी गई हैं! 
-========================================================= */
-const SUPABASE_URL="https://tyonurrbwdjqfrmqrgpk.supabase.co";
-const SUPABASE_ANON_KEY="EyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InR5b251cnJid2RqcWZybXFyZ3BrIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODYxNzMzODMsImV4cCI6MjEwMTc0OTM4M30.95tDST7gwxemb2w2SS71arWh77omlFf0ezPwkTun2cM";
-const ADMIN_UID="YOUR_SUPABASE_USER_UUID"; // ← Supabase Authentication -> Users से अपनी ID यहाँ डालें
-const ADMIN_UPI_ID="7067132801@ptyes";
-const ADMIN_UPI_NAME="Padh-Ai";
-const SUPPORT_WHATSAPP="917067132801"; // ← आपका WhatsApp नंबर (कंट्री कोड 91 के साथ)
-const EXAM_FEE=50;
-/* ========================================================= */
+<script>
 
-const supabase=createClient(SUPABASE_URL,SUPABASE_ANON_KEY);
+/* =====================================================
+   PADH-AI CONFIG
+===================================================== */
+
+const SUPABASE_URL =
+"https://tyonurrbwdjqfrmqrgpk.supabase.co";
+
+/* Supabase ANON Key (अपडेटेड) */
+const SUPABASE_ANON_KEY =
+"EyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InR5b251cnJid2RqcWZybXFyZ3BrIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODYxNzMzODMsImV4cCI6MjEwMTc0OTM4M30.95tDST7gwxemb2w2SS71arWh77omlFf0ezPwkTun2cM";
+
+
+/* ADMIN SETTINGS */
+
+const ADMIN_EMAIL =
+"Sonwaniv842@gmail.com";
+
+const ADMIN_UPI_ID =
+"7067132801@ptyes";
+
+const SUPPORT_WHATSAPP =
+"917067132801";
+
+
+/* APK */
+
+const APK_URL =
+"https://github.com/sonwaniv842-cell/Padh-Ai/releases/download/v1.0.5/app-release.apk";
+
+
+/* ===================================================== */
+
+const {createClient}=supabase;
+
+const db=createClient(
+ SUPABASE_URL,
+ SUPABASE_ANON_KEY
+);
 
 const $=id=>document.getElementById(id);
-const auth=$("auth"),dash=$("dashboard");
-let user=null,profile=null,mode="login",number=1;
-let selectedImage=null,selectedMime="image/jpeg";
 
-const nums=["","एक","दो","तीन","चार","पांच","छह","सात","आठ","नौ","दस",
-"ग्यारह","बारह","तेरह","चौदह","पंद्रह","सोलह","सत्रह","अठारह","उन्नीस","बीस"];
+let currentUser=null;
+let currentProfile=null;
+let authMode="login";
+let number=1;
 
-const hindi=[
-["अ","अनार","🍎"],["आ","आम","🥭"],["इ","इमली","🌳"],["ई","ईख","🌱"],
-["उ","उल्लू","🦉"],["ऊ","ऊन","🧶"],["ए","एड़ी","🦶"],["ऐ","ऐनक","👓"],
-["ओ","ओखली","🥣"],["औ","औजार","🔧"],["क","कमल","🌸"],["ख","खरगोश","🐇"],
-["ग","गमला","🪴"],["घ","घर","🏠"],["च","चम्मच","🥄"],["छ","छाता","☂️"],
-["ज","जहाज","✈️"],["झ","झंडा","🚩"],["ट","टमाटर","🍅"],["ठ","ठेला","🛒"],
-["ड","डमरू","🥁"],["ढ","ढक्कन","🫙"],["त","तरबूज","🍉"],["थ","थैला","👜"],
-["द","दही","🥣"],["ध","धनुष","🏹"],["न","नल","🚰"],["प","पतंग","🪁"],
-["फ","फल","🍊"],["ब","बकरी","🐐"],["भ","भालू","🐻"],["म","मछली","🐟"],
-["य","योग","🧘"],["र","रसगुल्ला","🍬"],["ल","लड्डू","🍡"],["व","वानर","🐒"],
-["श","शेर","🦁"],["ष","षट्कोण","⬡"],["स","सूरज","☀️"],["ह","हाथी","🐘"]
-];
 
-const english=[
-["A","Apple","🍎"],["B","Ball","⚽"],["C","Cat","🐱"],["D","Dog","🐶"],
-["E","Elephant","🐘"],["F","Fish","🐟"],["G","Grapes","🍇"],["H","House","🏠"],
-["I","Ice Cream","🍦"],["J","Juice","🧃"],["K","Kite","🪁"],["L","Lion","🦁"],
-["M","Mango","🥭"],["N","Nest","🪺"],["O","Orange","🍊"],["P","Parrot","🦜"],
-["Q","Queen","👑"],["R","Rabbit","🐇"],["S","Sun","☀️"],["T","Tiger","🐯"],
-["U","Umbrella","☂️"],["V","Van","🚐"],["W","Watch","⌚"],["X","Xylophone","🎵"],
-["Y","Yak","🐂"],["Z","Zebra","🦓"]
-];
+/* AUTH */
 
-const questions=[
- {q:"2 + 3 कितना है?",o:["4","5","6"],a:1},
- {q:"5 × 2 कितना है?",o:["7","10","12"],a:1},
- {q:"A के बाद कौन सा अक्षर आता है?",o:["B","C","D"],a:0},
- {q:"भारत का राष्ट्रीय फल कौन सा है?",o:["आम","सेब","केला"],a:0},
- {q:"10 में से 4 घटाने पर कितना बचेगा?",o:["5","6","7"],a:1}
-];
+$("loginTab").onclick=()=>{
 
-/* ---------- AUTH ---------- */
-$("loginTab").onclick=()=>setMode("login");
-$("registerTab").onclick=()=>setMode("register");
+ authMode="login";
 
-function setMode(m){
- mode=m;
- $("loginTab").classList.toggle("active",m==="login");
- $("registerTab").classList.toggle("active",m==="register");
- $("registerFields").classList.toggle("hidden",m!=="register");
- $("authBtn").textContent=m==="login"?"🔐 Login करें":"🎒 Account बनाएं";
- msg("");
+ $("loginTab").classList.add("active");
+ $("registerTab").classList.remove("active");
+
+ $("registerArea").classList.add("hidden");
+
+ $("authBtn").textContent="🔐 Login करें";
+
+ clearMessage();
+
+};
+
+
+$("registerTab").onclick=()=>{
+
+ authMode="register";
+
+ $("registerTab").classList.add("active");
+ $("loginTab").classList.remove("active");
+
+ $("registerArea").classList.remove("hidden");
+
+ $("authBtn").textContent="🎒 Account बनाएं";
+
+ clearMessage();
+
+};
+
+
+function showMessage(text,type="error"){
+
+ const box=$("authMsg");
+
+ box.textContent=text;
+ box.className="message "+type;
+
 }
 
-function msg(text,type=""){
- const x=$("authMsg");
- x.textContent=text;
- x.className="msg"+(text?" show ":" ")+(type||"");
+
+function clearMessage(){
+
+ $("authMsg").className="message hidden";
+ $("authMsg").textContent="";
+
 }
+
+
+/* LOGIN / REGISTER */
 
 $("authBtn").onclick=async()=>{
+
  const email=$("email").value.trim();
  const pin=$("pin").value.trim();
 
- if(!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(email))
-   return msg("सही Email डालिए","error");
+ if(!email)
+   return showMessage("Email डालिए");
 
  if(!/^\d{6}$/.test(pin))
-   return msg("PIN ठीक 6 अंकों का होना चाहिए","error");
+   return showMessage("PIN ठीक 6 अंकों का होना चाहिए");
 
  $("authBtn").disabled=true;
 
  try{
-   if(mode==="register"){
+
+   if(authMode==="register"){
+
      const name=$("name").value.trim();
-     if(!name)throw Error("अपना नाम डालिए");
+     const className=$("className").value.trim();
 
-     const r=await supabase.auth.signUp({email,password:pin});
+     if(!name)
+       throw new Error("अपना नाम डालिए");
 
-     if(r.error)throw r.error;
+     const result=
+     await db.auth.signUp({
 
-     if(r.data.user){
-       await supabase.from("profiles").upsert({
-         id:r.data.user.id,
-         full_name:name,
-         class_name:$("className").value.trim()||null
-       });
-     }
+       email,
+       password:pin,
 
-     if(!r.data.session){
-       msg("Account बन गया 🎉 अब अपने Email को verify करके Login करें।","ok");
-       setMode("login");
-     }else{
-       await enter(r.data.user);
-     }
-   }else{
-     const r=await supabase.auth.signInWithPassword({
-       email,password:pin
-     });
-
-     if(r.error){
-       const t=String(r.error.message||"").toLowerCase();
-
-       if(t.includes("email not confirmed"))
-         throw Error("Email verify नहीं हुआ है। पहले verification email खोलें।");
-
-       throw Error("Email या PIN गलत है। PIN भूल गए हों तो नीचे 'PIN भूल गए?' दबाएँ।");
-     }
-
-     await enter(r.data.user);
-   }
- }catch(e){
-   msg(e.message||"Login में समस्या हुई","error");
- }finally{
-   $("authBtn").disabled=false;
- }
-};
-
-$("forgot").onclick=async()=>{
- const email=$("email").value.trim();
-
- if(!email)return msg("पहले Email डालिए","error");
-
- const r=await supabase.auth.resetPasswordForEmail(email,{
-   redirectTo:location.origin+location.pathname
- });
-
- if(r.error)msg(r.error.message,"error");
- else{
-   $("resetBox").classList.remove("hidden");
-   msg("Password/PIN reset link Email पर भेज दिया गया है 📩","ok");
- }
-};
-
-$("resetBtn").onclick=async()=>{
- const p=$("newPin").value.trim();
-
- if(!/^\d{6}$/.test(p))
-   return msg("नया PIN ठीक 6 अंकों का रखें","error");
-
- const r=await supabase.auth.updateUser({password:p});
-
- if(r.error)msg(r.error.message,"error");
- else msg("नया PIN save हो गया ✅ अब Login करें।","ok");
-};
-
-async function enter(u){
- user=u;
- const r=await supabase.from("profiles")
-   .select("full_name,class_name")
-   .eq("id",u.id).maybeSingle();
-
- profile=r.data||{};
- $("userName").textContent=profile.full_name||"दोस्त";
-
- auth.classList.add("hidden");
- dash.classList.remove("hidden");
- $("logout").classList.remove("hidden");
-
- $("adminNav").classList.toggle("hidden",u.id!==ADMIN_UID);
-
- renderLetters("hindi");
- renderNumber();
- initTable();
-
- showPage("home");
-}
-
-$("logout").onclick=async()=>{
- await supabase.auth.signOut();
- location.reload();
-};
-
-supabase.auth.onAuthStateChange(async(event,session)=>{
- if(event==="PASSWORD_RECOVERY")$("resetBox").classList.remove("hidden");
-});
-
-/* existing session */
-const session=await supabase.auth.getSession();
-if(session.data.session)await enter(session.data.session.user);
-
-/* ---------- NAV ---------- */
-function showPage(page){
- document.querySelectorAll("main>section").forEach(x=>x.classList.add("hidden"));
- $("page-"+page).classList.remove("hidden");
-
- document.querySelectorAll("#nav button").forEach(b=>{
-   b.classList.toggle("active",b.dataset.page===page);
- });
-
- if(page==="exam")loadExam();
- if(page==="admin")loadAdmin();
-}
-
-$("nav").onclick=e=>{
- const b=e.target.closest("[data-page]");
- if(b)showPage(b.dataset.page);
-};
-
-document.querySelectorAll("[data-go]").forEach(b=>{
- b.onclick=()=>showPage(b.dataset.go);
-});
-
-/* ---------- GINTI ---------- */
-function renderNumber(){
- $("number").textContent=number;
- $("word").textContent=nums[number]||number;
- $("emoji").textContent="🎈".repeat(Math.min(number,10));
-}
-$("prev").onclick=()=>{if(number>1){number--;renderNumber()}};
-$("next").onclick=()=>{if(number<20){number++;renderNumber()}};
-$("speakNumber").onclick=()=>speak(`${number} ${nums[number]}`);
-
-/* ---------- VARNAMALA ---------- */
-$("hindiTab").onclick=()=>renderLetters("hindi");
-$("englishTab").onclick=()=>renderLetters("english");
-
-function renderLetters(type){
- $("hindiTab").classList.toggle("active",type==="hindi");
- $("englishTab").classList.toggle("active",type==="english");
-
- $("letters").innerHTML=(type==="hindi"?hindi:english).map(x=>`
-   <button class="letter" data-letter="${x[0]}" data-word="${x[1]}" data-lang="${type}">
-     <div class="e">${x[2]}</div>
-     <div class="l">${x[0]}</div>
-     <div class="w">${x[1]}</div>
-   </button>
- `).join("");
-}
-
-$("letters").onclick=e=>{
- const b=e.target.closest(".letter");
- if(!b)return;
- speak(
-   b.dataset.lang==="hindi"
-   ? `${b.dataset.letter} से ${b.dataset.word}`
-   : `${b.dataset.letter} for ${b.dataset.word}`
- );
-};
-
-/* ---------- PAHADA ---------- */
-function initTable(){
- $("table").innerHTML="";
- for(let n=2;n<=20;n++)
-   $("table").innerHTML+=`<option value="${n}">${n} का पहाड़ा</option>`;
- renderTable();
-}
-$("table").onchange=renderTable;
-
-function renderTable(){
- const n=Number($("table").value||2);
- $("tableRows").innerHTML="";
- for(let i=1;i<=10;i++)
-   $("tableRows").innerHTML+=`
-    <div class="table-line">
-      <span>${n} × ${i}</span><b>${n*i}</b>
-    </div>`;
-}
-
-$("speakTable").onclick=()=>{
- const n=Number($("table").value||2);
- speak(Array.from({length:10},(_,i)=>
-   `${n} गुणा ${i+1} बराबर ${n*(i+1)}`
- ).join(". "));
-};
-
-/* ---------- SPEECH ---------- */
-function speak(text){
- speechSynthesis.cancel();
- const u=new SpeechSynthesisUtterance(text);
- u.lang="hi-IN";
- u.rate=.92;
- speechSynthesis.speak(u);
-}
-
-/* ---------- AI ---------- */
-$("ask").onclick=()=>{
- const q=$("question").value.trim();
- if(q)askAI({question:q});
-};
-
-let recognition=null;
-const SR=window.SpeechRecognition||window.webkitSpeechRecognition;
-
-if(SR){
- recognition=new SR();
- recognition.lang="hi-IN";
- recognition.onresult=e=>{
-   $("question").value=e.results[0][0].transcript;
-   askAI({question:e.results[0][0].transcript});
- };
-}
-
-$("mic").onclick=()=>{
- if(!recognition)return alert("इस browser में voice सुविधा उपलब्ध नहीं है।");
- recognition.start();
-};
-
-$("cameraBtn").onclick=()=>$("camera").click();
-
-$("camera").onchange=e=>{
- const file=e.target.files[0];
- if(!file)return;
-
- selectedMime=file.type||"image/jpeg";
-
- const reader=new FileReader();
- reader.onload=()=>{
-   selectedImage=reader.result.split(",")[1];
-   $("previewImg").src=reader.result;
-   $("preview").style.display="block";
- };
- reader.readAsDataURL(file);
-};
-
-$("explain").onclick=()=>{
- if(selectedImage)
-   askAI({imageBase64:selectedImage,mimeType:selectedMime});
-};
-
-async function askAI(payload){
- $("aiLoading").classList.remove("hidden");
- $("answer").classList.add("hidden");
- $("answerBtns").classList.add("hidden");
-
- try{
-   const r=await fetch("/api/gemini",{
-     method:"POST",
-     headers:{"Content-Type":"application/json"},
-     body:JSON.stringify(payload)
-   });
-
-   const data=await r.json();
-
-   if(!r.ok)throw Error(data.error||"AI जवाब नहीं दे पाया");
-
-   $("answer").textContent=data.text;
-   $("answer").classList.remove("hidden");
-   $("answerBtns").classList.remove("hidden");
-   speak(data.text);
-
- }catch(e){
-   $("answer").textContent="😔 "+e.message;
-   $("answer").classList.remove("hidden");
- }finally{
-   $("aiLoading").classList.add("hidden");
- }
-}
-
-$("speakAnswer").onclick=()=>speak($("answer").textContent);
-$("stopAnswer").onclick=()=>speechSynthesis.cancel();
-
-/* ---------- EXAM ---------- */
-function month(){
- const d=new Date();
- return d.getFullYear()+"-"+String(d.getMonth()+1).padStart(2,"0");
-}
-
-async function loadExam(){
- const box=$("exam");
- box.innerHTML="⏳ Loading...";
-
- const r=await supabase.from("payments")
-   .select("*")
-   .eq("user_id",user.id)
-   .eq("month",month())
-   .order("created_at",{ascending:false})
-   .limit(1);
-
- if(r.error){
-   box.innerHTML=`<div class="msg show error">${r.error.message}</div>`;
-   return;
- }
-
- const p=r.data?.[0];
-
- if(p?.status==="approved"){
-   startQuiz(box);
-   return;
- }
-
- if(p?.status==="pending"){
-   box.innerHTML=`
-    <div class="status pending">
-      ⏳ आपका payment Admin approval का इंतजार कर रहा है।
-    </div>`;
-   return;
- }
-
- renderPayment(box,p);
-}
-
-function renderPayment(box,last){
- const upi=`upi://pay?pa=${encodeURIComponent(ADMIN_UPI_ID)}&pn=${encodeURIComponent(ADMIN_UPI_NAME)}&am=${EXAM_FEE}&cu=INR`;
- const qr=`https://api.qrserver.com/v1/create-qr-code/?size=250x250&data=${encodeURIComponent(upi)}`;
-
- box.innerHTML=`
-  ${last?.status==="rejected"?`
-   <div class="status rejected">❌ पिछला payment reject हुआ था। दोबारा भेजें।</div>`:""}
-
-  <p style="text-align:center">इस महीने की परीक्षा के लिए payment करें</p>
-
-  <div class="price">₹${EXAM_FEE}</div>
-
-  <div class="qr">
-   <img src="${qr}" alt="UPI QR">
-   <p><b>UPI:</b> ${ADMIN_UPI_ID}</p>
-  </div>
-
-  <div class="field">
-   <label>UTR / Reference Number</label>
-   <input id="utr" placeholder="Payment के बाद UTR">
-  </div>
-
-  <div class="field">
-   <label>Payment Screenshot</label>
-   <input id="paymentFile" type="file" accept="image/*">
-  </div>
-
-  <button id="paySubmit" class="btn pink">✅ Payment भेजें</button>
-  <div id="payMsg" class="msg"></div>
-
-  <a
-   class="btn yellow"
-   style="display:block;text-align:center;text-decoration:none"
-   href="https://wa.me/${SUPPORT_WHATSAPP}"
-   target="_blank">
-   💬 WhatsApp Support
-  </a>
- `;
-
- $("paySubmit").onclick=submitPayment;
-}
-
-async function submitPayment(){
- const utr=$("utr").value.trim();
- const file=$("paymentFile").files[0];
-
- if(!utr)return paymentMsg("UTR डालिए","error");
- if(!file)return paymentMsg("Screenshot upload करें","error");
-
- const btn=$("paySubmit");
- btn.disabled=true;
- btn.textContent="⏳ भेजा जा रहा है...";
-
- try{
-   const path=`${user.id}/${Date.now()}-${file.name}`;
-
-   const up=await supabase.storage
-    .from("payment-screenshots")
-    .upload(path,file,{upsert:false});
-
-   if(up.error)throw up.error;
-
-   const publicUrl=supabase.storage
-    .from("payment-screenshots")
-    .getPublicUrl(path).data.publicUrl;
-
-   const r=await supabase.from("payments").insert({
-     user_id:user.id,
-     student_name:profile.full_name||"Student",
-     student_email:user.email,
-     month:month(),
-     utr_number:utr,
-     screenshot_url:publicUrl,
-     status:"pending"
-   });
-
-   if(r.error)throw r.error;
-
-   await loadExam();
-
- }catch(e){
-   paymentMsg(e.message||"Payment submit नहीं हुआ","error");
-   btn.disabled=false;
-   btn.textContent="✅ Payment भेजें";
- }
-}
-
-function paymentMsg(t,type){
- const x=$("payMsg");
- x.textContent=t;
- x.className="msg show "+type;
-}
-
-/* ---------- QUIZ ---------- */
-function startQuiz(box){
- let i=0,score=0;
-
- function next(){
-   if(i>=questions.length){
-     box.innerHTML=`
-      <div class="status approved">
-       🎉 परीक्षा पूरी!<br>
-       Score: ${score}/${questions.length}
-      </div>
-     `;
-     return;
-   }
-
-   const q=questions[i];
-
-   box.innerHTML=`
-    <div class="status approved">✅ Payment Approved</div>
-    <div class="quiz-q">सवाल ${i+1}/${questions.length}: ${q.q}</div>
-    <div id="options"></div>
-   `;
-
-   q.o.forEach((o,index)=>{
-     const b=document.createElement("button");
-     b.className="option";
-     b.textContent=o;
-
-     b.onclick=()=>{
-       document.querySelectorAll(".option").forEach(x=>x.disabled=true);
-
-       if(index===q.a){
-         b.classList.add("correct");
-         score++;
-       }else{
-         b.classList.add("wrong");
-         document.querySelectorAll(".option")[q.a].classList.add("correct");
+       options:{
+         data:{
+           full_name:name,
+           class_name:className
+         }
        }
 
-       setTimeout(()=>{
-         i++;
-         next();
-       },900);
-     };
+     });
 
-     $("options").appendChild(b);
-   });
+     if(result.error)
+       throw result.error;
+
+     if(result.data.session){
+
+       await startApp(result.data.user);
+
+     }else{
+
+       showMessage(
+         "Account बन गया 🎉 Email verify करके फिर Login करें।",
+         "success"
+       );
+
+       $("loginTab").click();
+
+     }
+
+   }else{
+
+     const result=
+     await db.auth.signInWithPassword({
+
+       email,
+       password:pin
+
+     });
+
+     if(result.error){
+
+       const msg=
+       String(result.error.message||"").toLowerCase();
+
+       if(msg.includes("invalid login credentials"))
+         throw new Error("Email या PIN गलत है।");
+
+       if(msg.includes("email not confirmed"))
+         throw new Error("पहले Email verify करें।");
+
+       throw result.error;
+
+     }
+
+     await startApp(result.data.user);
+
+   }
+
+ }catch(error){
+
+   showMessage(
+     error.message||"Login में समस्या हुई"
+   );
+
+ }finally{
+
+   $("authBtn").disabled=false;
+
  }
 
- next();
-}
+};
 
-/* =========================================================
-   ADMIN PANEL
-========================================================= */
-async function loadAdmin(){
- const box=$("admin");
 
- if(user.id!==ADMIN_UID){
-   box.innerHTML=`<div class="status rejected">🚫 यह पेज सिर्फ Admin के लिए है।</div>`;
-   return;
+/* FORGOT */
+
+$("forgot").onclick=async()=>{
+
+ const email=$("email").value.trim();
+
+ if(!email)
+   return showMessage("पहले Email डालिए");
+
+ const result=
+ await db.auth.resetPasswordForEmail(
+   email,
+   {
+     redirectTo:
+       window.location.origin+
+       window.location.pathname
+   }
+ );
+
+ if(result.error){
+
+   showMessage(result.error.message);
+
+ }else{
+
+   showMessage(
+     "PIN reset करने का link Email पर भेज दिया गया 📩",
+     "success"
+   );
+
  }
 
- box.innerHTML="⏳ Admin data loading...";
+};
 
- const r=await supabase.from("payments")
-   .select("*")
-   .order("created_at",{ascending:false})
-   .limit(100);
 
- if(r.error){
-   box.innerHTML=`<div class="msg show error">${r.error.message}</div>`;
-   return;
- }
+/* START APP */
 
- const rows=r.data||[];
- const pending=rows.filter(x=>x.status==="pending").length;
- const approved=rows.filter(x=>x.status==="approved").length;
- const rejected=rows.filter(x=>x.status==="rejected").length;
+async function startApp(user){
 
- box.innerHTML=`
-  <div class="admin-stat">
-   <div class="stat"><b>${rows.length}</b>Total</div>
-   <div class="stat"><b>${pending}</b>Pending</div>
-   <div class="stat"><b>${approved}</b>Approved</div>
-  </div>
+ currentUser=user;
 
-  <h3>⚙️ Website Controls</h3>
+ currentProfile={
 
-  <div class="field">
-   <label>Website Title</label>
-   <input id="setTitle" value="${localStorage.getItem("padh_title")||"Padh-Ai"}">
-  </div>
+   full_name:
+     user.user_metadata?.full_name||
+     user.email?.split("@")[0]||
+     "दोस्त",
 
-  <div class="field">
-   <label>Welcome Message</label>
-   <input id="setWelcome" value="${localStorage.getItem("padh_welcome")||"आज क्या पढ़ना है?"}">
-  </div>
+   class_name:
+     user.user_metadata?.class_name||""
 
-  <label class="check">
-   <input id="maintenance" type="checkbox"
-    ${localStorage.getItem("padh_maintenance")==="1"?"checked":""}>
-   Maintenance Mode
-  </label>
-
-  <button id="saveSettings" class="btn purple">💾 Settings Save करें</button>
-
-  <hr>
-
-  <h3>💳 Payment Requests</h3>
-  <div id="payments"></div>
- `;
-
- $("saveSettings").onclick=()=>{
-   localStorage.setItem("padh_title",$("setTitle").value.trim());
-   localStorage.setItem("padh_welcome",$("setWelcome").value.trim());
-   localStorage.setItem("padh_maintenance",$("maintenance").checked?"1":"0");
-   alert("Settings save हो गईं ✅");
  };
 
- const list=$("payments");
+ $("userName").textContent=
+ currentProfile.full_name;
 
- if(!rows.length){
-   list.innerHTML="<p>अभी कोई payment नहीं है 🎉</p>";
-   return;
+ $("auth").classList.add("hidden");
+ $("dashboard").classList.remove("hidden");
+ $("logout").classList.remove("hidden");
+
+ const isAdmin=
+ user.email?.toLowerCase()===
+ ADMIN_EMAIL.toLowerCase();
+
+ $("adminNav")
+ .classList
+ .toggle("hidden",!isAdmin);
+
+ renderNumbers();
+ renderLetters("hindi");
+ renderTable();
+
+ showPage("home");
+
+}
+
+
+/* SESSION */
+
+(async()=>{
+
+ try{
+
+   const result=
+   await db.auth.getSession();
+
+   if(result.data.session){
+
+     await startApp(
+       result.data.session.user
+     );
+
+   }
+
+ }catch(e){
+
+   console.error(e);
+
  }
 
- rows.forEach(p=>{
-   const div=document.createElement("div");
-   div.className="admin-item";
+})();
 
-   div.innerHTML=`
-    <b>👤 ${safe(p.student_name)}</b><br>
-    📧 ${safe(p.student_email)}<br>
-    📅 ${safe(p.month)}<br>
-    🔢 UTR: ${safe(p.utr_number)}<br>
-    📌 Status: <b>${safe(p.status)}</b>
 
-    ${p.screenshot_url?
-      `<img src="${safeAttr(p.screenshot_url)}" alt="Payment screenshot">`
-      :""}
+/* LOGOUT */
 
-    <div class="admin-actions">
-      <button data-id="${p.id}" data-status="approved"
-       style="background:#19c98b;color:white">
-       ✅ Approve
-      </button>
+$("logout").onclick=async()=>{
 
-      <button data-id="${p.id}" data-status="rejected"
-       style="background:#ff5c7a;color:white">
-       ❌ Reject
-      </button>
-    </div>
+ await db.auth.signOut();
+
+ location.reload();
+
+};
+
+
+/* NAVIGATION */
+
+function showPage(page){
+
+ document
+ .querySelectorAll("#dashboard > section")
+ .forEach(section=>{
+   if(section.id.startsWith("page-"))
+     section.classList.add("hidden");
+ });
+
+ const pageElement=$("page-"+page);
+
+ if(pageElement)
+   pageElement.classList.remove("hidden");
+
+ document
+ .querySelectorAll(".nav button")
+ .forEach(button=>{
+
+   button.classList.toggle(
+     "active",
+     button.dataset.page===page
+   );
+
+ });
+
+ if(page==="admin")
+   loadAdmin();
+
+}
+
+
+document
+ .querySelector(".nav")
+ .addEventListener("click",event=>{
+
+   const button=
+   event.target.closest("[data-page]");
+
+   if(button)
+     showPage(button.dataset.page);
+
+ });
+
+
+document
+ .querySelectorAll("[data-go]")
+ .forEach(button=>{
+
+   button.onclick=()=>{
+     showPage(button.dataset.go);
+   };
+
+ });
+
+
+/* GINTI */
+
+const numberWords=[
+ "",
+ "एक","दो","तीन","चार","पाँच",
+ "छह","सात","आठ","नौ","दस",
+ "ग्यारह","बारह","तेरह","चौदह",
+ "पंद्रह","सोलह","सत्रह","अठारह",
+ "उन्नीस","बीस"
+];
+
+
+function renderNumbers(){
+
+ $("bigNumber").textContent=number;
+
+ $("numberWord").textContent=
+ numberWords[number]||number;
+
+ $("numberEmoji").textContent=
+ "🎈".repeat(Math.min(number,8));
+
+}
+
+
+$("prev").onclick=()=>{
+
+ if(number>1){
+   number--;
+   renderNumbers();
+ }
+
+};
+
+
+$("next").onclick=()=>{
+
+ if(number<20){
+   number++;
+   renderNumbers();
+ }
+
+};
+
+
+$("speakNumber").onclick=()=>{
+
+ speak(
+   `${number} ${numberWords[number]}`
+ );
+
+};
+
+
+/* VARNAMALA */
+
+const hindiLetters=[
+ ["अ","अनार","🍎"],["आ","आम","🥭"],
+ ["इ","इमली","🌳"],["ई","ईख","🌱"],
+ ["उ","उल्लू","🦉"],["ऊ","ऊन","🧶"],
+ ["ए","एड़ी","🦶"],["ऐ","ऐनक","👓"],
+ ["ओ","ओखली","🥣"],["औ","औजार","🔧"],
+ ["क","कमल","🌸"],["ख","खरगोश","🐇"],
+ ["ग","गमला","🪴"],["घ","घर","🏠"],
+ ["च","चम्मच","🥄"],["छ","छाता","☂️"],
+ ["ज","जहाज","✈️"],["झ","झंडा","🚩"],
+ ["ट","टमाटर","🍅"],["ठ","ठेला","🛒"],
+ ["ड","डमरू","🥁"],["ढ","ढक्कन","🫙"],
+ ["त","तरबूज","🍉"],["थ","थैला","👜"],
+ ["द","दही","🥣"],["ध","धनुष","🏹"],
+ ["न","नल","🚰"],["प","पतंग","🪁"],
+ ["फ","फल","🍊"],["ब","बकरी","🐐"],
+ ["भ","भालू","🐻"],["म","मछली","🐟"],
+ ["य","योग","🧘"],["र","रसगुल्ला","🍬"],
+ ["ल","लड्डू","🍡"],["व","वानर","🐒"],
+ ["श","शेर","🦁"],["ष","षट्कोण","⬡"],
+ ["स","सूरज","☀️"],["ह","हाथी","🐘"]
+];
+
+
+const englishLetters=[
+ ["A","Apple","🍎"],["B","Ball","⚽"],
+ ["C","Cat","🐱"],["D","Dog","🐶"],
+ ["E","Elephant","🐘"],["F","Fish","🐟"],
+ ["G","Grapes","🍇"],["H","House","🏠"],
+ ["I","Ice Cream","🍦"],["J","Juice","🧃"],
+ ["K","Kite","🪁"],["L","Lion","🦁"],
+ ["M","Mango","🥭"],["N","Nest","🪺"],
+ ["O","Orange","🍊"],["P","Parrot","🦜"],
+ ["Q","Queen","👑"],["R","Rabbit","🐇"],
+ ["S","Sun","☀️"],["T","Tiger","🐯"],
+ ["U","Umbrella","☂️"],["V","Van","🚐"],
+ ["W","Watch","⌚"],["X","Xylophone","🎵"],
+ ["Y","Yak","🐂"],["Z","Zebra","🦓"]
+];
+
+
+function renderLetters(type){
+
+ const data=
+ type==="hindi"
+ ?hindiLetters
+ :englishLetters;
+
+ $("letters").innerHTML=
+ data.map(item=>`
+
+ <button
+ class="letter"
+ data-speak="${item[0]} ${item[1]}"
+ >
+
+ <div class="emoji">${item[2]}</div>
+ <div class="main">${item[0]}</div>
+ <small>${item[1]}</small>
+
+ </button>
+
+ `).join("");
+
+}
+
+
+$("hindiTab").onclick=()=>{
+
+ $("hindiTab").classList.add("active");
+ $("englishTab").classList.remove("active");
+
+ renderLetters("hindi");
+
+};
+
+
+$("englishTab").onclick=()=>{
+
+ $("englishTab").classList.add("active");
+ $("hindiTab").classList.remove("active");
+
+ renderLetters("english");
+
+};
+
+
+$("letters").onclick=event=>{
+
+ const button=
+ event.target.closest("[data-speak]");
+
+ if(button)
+   speak(button.dataset.speak);
+
+};
+
+
+/* PAHADA */
+
+for(let i=2;i<=20;i++){
+
+ const option=
+ document.createElement("option");
+
+ option.value=i;
+ option.textContent=
+ `${i} का पहाड़ा`;
+
+ $("tableSelect").appendChild(option);
+
+}
+
+
+$("tableSelect").onchange=renderTable;
+
+
+function renderTable(){
+
+ const n=
+ Number($("tableSelect").value||2);
+
+ let html="";
+
+ for(let i=1;i<=10;i++){
+
+   html+=`
+   <div class="table-row">
+     <span>${n} × ${i}</span>
+     <b>${n*i}</b>
+   </div>
    `;
 
-   list.appendChild(div);
- });
+ }
 
- list.onclick=async e=>{
-   const b=e.target.closest("[data-id]");
-   if(!b)return;
+ $("tableRows").innerHTML=html;
 
-   b.disabled=true;
+}
 
-   const r=await supabase.from("payments")
-    .update({status:b.dataset.status})
-    .eq("id",b.dataset.id);
 
-   if(r.error)alert(r.error.message);
-   else loadAdmin();
+$("speakTable").onclick=()=>{
+
+ const n=
+ Number($("tableSelect").value||2);
+
+ let text="";
+
+ for(let i=1;i<=10;i++){
+
+   text+=
+   `${n} गुणा ${i} बराबर ${n*i}. `;
+
+ }
+
+ speak(text);
+
+};
+
+
+/* SPEECH */
+
+function speak(text){
+
+ if(!("speechSynthesis" in window))
+   return alert(
+     "इस browser में voice सुविधा नहीं है।"
+   );
+
+ speechSynthesis.cancel();
+
+ const voice=
+ new SpeechSynthesisUtterance(text);
+
+ voice.lang="hi-IN";
+ voice.rate=.9;
+
+ speechSynthesis.speak(voice);
+
+}
+
+
+/* AI */
+
+$("askAI").onclick=async()=>{
+
+ const question=
+ $("question").value.trim();
+
+ if(!question)
+   return alert("पहले सवाल लिखिए।");
+
+ await askAI({question});
+
+};
+
+
+$("imageInput").onchange=async event=>{
+
+ const file=event.target.files[0];
+
+ if(!file)return;
+
+ const reader=new FileReader();
+
+ reader.onload=async()=>{
+
+   const base64=
+   reader.result.split(",")[1];
+
+   await askAI({
+     imageBase64:base64,
+     mimeType:file.type||"image/jpeg"
+   });
+
  };
+
+ reader.readAsDataURL(file);
+
+};
+
+
+async function askAI(payload){
+
+ $("aiLoading").classList.remove("hidden");
+ $("answer").classList.add("hidden");
+ $("answerButtons").classList.add("hidden");
+
+ try{
+
+   const response=
+   await fetch(
+     "/api/gemini",
+     {
+       method:"POST",
+       headers:{
+         "Content-Type":"application/json"
+       },
+       body:JSON.stringify(payload)
+     }
+   );
+
+   const data=
+   await response.json();
+
+   if(!response.ok)
+     throw new Error(
+       data.error||
+       "AI Teacher काम नहीं कर रहा।"
+     );
+
+   $("answer").textContent=data.text;
+
+   $("answer").classList.remove("hidden");
+   $("answerButtons").classList.remove("hidden");
+
+   speak(data.text);
+
+ }catch(error){
+
+   $("answer").textContent=
+   "❌ "+error.message;
+
+   $("answer").classList.remove("hidden");
+
+ }finally{
+
+   $("aiLoading").classList.add("hidden");
+
+ }
+
 }
 
-/* basic HTML safety */
-function safe(x){
- return String(x??"")
-  .replaceAll("&","&amp;")
-  .replaceAll("<","&lt;")
-  .replaceAll(">","&gt;")
-  .replaceAll('"',"&quot;");
-}
-function safeAttr(x){
- return safe(x).replaceAll("'","&#39;");
+
+$("voiceBtn").onclick=()=>{
+
+ const SpeechRecognition=
+ window.SpeechRecognition||
+ window.webkitSpeechRecognition;
+
+ if(!SpeechRecognition)
+   return alert(
+     "इस browser में voice input उपलब्ध नहीं है।"
+   );
+
+ const recognition=
+ new SpeechRecognition();
+
+ recognition.lang="hi-IN";
+
+ recognition.start();
+
+ recognition.onresult=event=>{
+
+   const text=
+   event.results[0][0].transcript;
+
+   $("question").value=text;
+
+   askAI({question:text});
+
+ };
+
+};
+
+
+$("speakAnswer").onclick=()=>{
+
+ speak($("answer").textContent);
+
+};
+
+
+$("stopAnswer").onclick=()=>{
+
+ speechSynthesis.cancel();
+
+};
+
+
+/* ADMIN */
+
+async function loadAdmin(){
+
+ const email=
+ currentUser?.email?.toLowerCase();
+
+ if(
+   !email||
+   email!==ADMIN_EMAIL.toLowerCase()
+ ){
+
+   $("adminContent").innerHTML=`
+
+   <div class="message error">
+     🚫 Admin access नहीं है।
+   </div>
+
+   `;
+
+   return;
+
+ }
+
+
+ $("adminContent").innerHTML=`
+
+ <div class="admin-stat">
+
+   <div class="stat">
+     <b>🟢</b>
+     Online
+   </div>
+
+   <div class="stat">
+     <b>₹</b>
+     ${ADMIN_UPI_ID}
+   </div>
+
+   <div class="stat">
+     <b>📲</b>
+     APK
+   </div>
+
+ </div>
+
+
+ <div class="admin-box">
+
+   <h3>🛡️ Admin Account</h3>
+
+   <p>
+     <b>Email:</b>
+     ${escapeHTML(currentUser.email)}
+   </p>
+
+   <p>
+     <b>UPI:</b>
+     ${escapeHTML(ADMIN_UPI_ID)}
+   </p>
+
+   <p>
+     <b>WhatsApp:</b>
+     ${escapeHTML(SUPPORT_WHATSAPP)}
+   </p>
+
+   <button
+     id="adminLogout"
+     class="btn pink"
+   >
+     🚪 Admin Logout
+   </button>
+
+ </div>
+
+
+ <div class="admin-box">
+
+   <h3>📲 App Download</h3>
+
+   <a
+     href="${APK_URL}"
+     download="Padh-Ai.apk"
+     target="_blank"
+     rel="noopener"
+     class="btn blue"
+   >
+     📥 APK Download Link खोलें
+   </a>
+
+ </div>
+
+
+ <div class="admin-box">
+
+   <h3>💳 Payment UPI</h3>
+
+   <p>
+     <b>${escapeHTML(ADMIN_UPI_ID)}</b>
+   </p>
+
+   <button
+     id="copyUPI"
+     class="btn yellow"
+   >
+     📋 UPI ID Copy करें
+   </button>
+
+ </div>
+
+
+ <div class="admin-box">
+
+   <h3>📞 Support</h3>
+
+   <a
+     href="https://wa.me/${SUPPORT_WHATSAPP}"
+     target="_blank"
+     rel="noopener"
+     class="btn green"
+   >
+     💬 WhatsApp खोलें
+   </a>
+
+ </div>
+
+ `;
+
+
+ $("adminLogout").onclick=
+ async()=>{
+
+   await db.auth.signOut();
+
+   location.reload();
+
+ };
+
+
+ $("copyUPI").onclick=async()=>{
+
+   try{
+
+     await navigator.clipboard.writeText(
+       ADMIN_UPI_ID
+     );
+
+     alert("UPI ID Copy हो गई ✅");
+
+   }catch(e){
+
+     alert(
+       "UPI ID: "+ADMIN_UPI_ID
+     );
+
+   }
+
+ };
+
 }
 
-/* Service worker optional */
-if("serviceWorker" in navigator && location.protocol!=="file:"){
- window.addEventListener("load",()=>{
-   navigator.serviceWorker.register("./sw.js").catch(()=>{});
- });
+
+/* SECURITY */
+
+function escapeHTML(value){
+
+ return String(value??"")
+ .replaceAll("&","&amp;")
+ .replaceAll("<","&lt;")
+ .replaceAll(">","&gt;")
+ .replaceAll('"',"&quot;")
+ .replaceAll("'","&#039;");
+
 }
+
 </script>
+
 </body>
 </html>
