@@ -12,13 +12,12 @@
         @keyframes float { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-15px); } }
         h1 { font-family: 'Fredoka', sans-serif; font-size: 3.5rem; color: var(--cyan); text-shadow: 0 0 15px var(--cyan); margin: 10px 0; }
         
-        /* DOWNLOAD BUTTON FIX */
         .btn-dl { 
             background: linear-gradient(135deg, var(--cyan), #00B0FF); 
             color: #000; padding: 18px 40px; border-radius: 50px; 
             border: none; font-weight: 800; font-size: 1.3rem; 
             cursor: pointer; box-shadow: 0 0 25px var(--cyan); 
-            margin: 25px 0; display: inline-block;
+            margin: 25px 0; display: inline-block; text-decoration: none;
         }
         .btn-dl:active { transform: scale(0.95); }
 
@@ -27,7 +26,6 @@
         .btn-auth { background: var(--cyan); width: 100%; padding: 14px; border: none; border-radius: 12px; font-weight: bold; cursor: pointer; color: #000; font-size: 1.1rem; }
         
         .footer { margin-top: 50px; opacity: 0.6; font-size: 0.8rem; }
-        iframe { display: none; }
     </style>
 </head>
 <body>
@@ -35,27 +33,19 @@
     <h1>Padh-Ai</h1>
     <p style="font-size: 1.2rem;">नमस्ते बच्चों! चलो मिलकर पढ़ाई को मज़ेदार बनाते हैं 🤖</p>
 
-    <!-- इस बटन से अब काली स्क्रीन नहीं आएगी -->
-    <button onclick="triggerDownload()" class="btn-dl">⬇️ मुफ़्त डाउनलोड करें</button>
-    <iframe id="dl_frame"></iframe>
+    <!-- 1-Click Direct Download Link (No Alert / No Popup) -->
+    <a href="https://github.com/sonwaniv842-cell/Padh-Ai/releases/latest/download/app-release.apk" class="btn-dl" download>
+        ⬇️ मुफ़्त डाउनलोड करें
+    </a>
 
     <div class="auth-box">
-        <h3 id="t">छात्र लॉगिन</h3>
+        <h3>छात्र लॉगिन</h3>
         <input type="email" placeholder="ईमेल आईडी">
         <input type="password" placeholder="6-अंकों का पिन">
         <button class="btn-auth">प्रवेश करें</button>
-        <p style="margin-top: 15px; color: var(--cyan); cursor: pointer;" onclick="alert('रजिस्ट्रेशन जल्द ही ऐप में शुरू होगा!')">नया रजिस्ट्रेशन यहाँ करें</p>
+        <p style="margin-top: 15px; color: var(--cyan); cursor: pointer;">नया रजिस्ट्रेशन ऐप के अंदर करें</p>
     </div>
 
-    <div class="footer">© 2024 Padh-Ai Assistant | भारत का अपना सुरक्षित ऐप 🇮🇳</div>
-
-    <script>
-        function triggerDownload() {
-            // गिटहब से नया APK खींचने का तरीका
-            const url = "https://github.com/sonwaniv842-cell/Padh-Ai/releases/latest/download/app-release.apk";
-            document.getElementById('dl_frame').src = url;
-            alert("डाउनलोड शुरू हो रहा है... कृपया ऊपर नोटिफिकेशन बार देखें!");
-        }
-    </script>
+    <div class="footer">© 2026 Padh-Ai Assistant | भारत का अपना सुरक्षित ऐप 🇮🇳</div>
 </body>
 </html>
