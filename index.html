@@ -1,710 +1,1083 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="hi">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-<title>Padh-Ai | बाल शिक्षा</title>
-<meta name="description" content="Padh-Ai - गिनती, वर्णमाला, पहाड़ा और AI टीचर। भारत का अपना सुरक्षित पढ़ाई ऐप।">
-<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🤖</text></svg>">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1">
+<meta name="theme-color" content="#7046e8">
+<title>Padh-Ai | 3D बाल शिक्षा</title>
+
+<link rel="icon" href="assets/padh-ai-3d.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@500;600;700;800&family=Hind:wght@400;500;600;700&display=swap" rel="stylesheet">
 
 <style>
-  :root{
-    --yellow:#FFC93C; --sky:#3FB6F0; --leaf:#5EC26A; --coral:#FF6B6B; --purple:#8C6CF0;
-    --ink:#2D2A4A; --paper:#FFFBF2; --card:#FFFFFF; --line: rgba(45,42,74,0.12); --radius:24px;
-  }
-  *{box-sizing:border-box; -webkit-tap-highlight-color:transparent;}
-  body{
-    margin:0; padding:0;
-    background:
-      radial-gradient(circle at 12% 8%, rgba(63,182,240,0.16), transparent 40%),
-      radial-gradient(circle at 88% 20%, rgba(255,201,60,0.20), transparent 42%),
-      radial-gradient(circle at 50% 95%, rgba(94,194,106,0.16), transparent 40%),
-      var(--paper);
-    color:var(--ink); font-family:'Hind', sans-serif; min-height:100vh; overflow-x:hidden;
-  }
-  h1,h2,h3,.display{ font-family:'Baloo 2', sans-serif; }
-  .wrap{ max-width:480px; margin:0 auto; padding:18px 16px 60px; }
-  .hidden{ display:none !important; }
+:root{
+  --purple:#7046e8;
+  --purple2:#9b62ff;
+  --blue:#32baf4;
+  --green:#19c98b;
+  --yellow:#ffd044;
+  --pink:#ff5c7a;
+  --dark:#27214b;
+  --bg:#f3f5ff;
+  --white:#fff;
+  --muted:#73718a;
+  --danger:#e84c5b;
+  --shadow:0 10px 0 var(--dark),0 20px 35px rgba(39,33,75,.14);
+}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html,body{margin:0;min-height:100%;font-family:Hind,sans-serif;color:var(--dark)}
+body{
+ background:
+ radial-gradient(circle at 5% 5%,#b9efff 0,transparent 25%),
+ radial-gradient(circle at 95% 8%,#ffe58c 0,transparent 23%),
+ linear-gradient(180deg,#fbfcff,#edf0ff);
+}
+button,input,select{font:inherit}
+button{cursor:pointer}
+.hidden{display:none!important}
+.app{width:min(760px,100%);margin:auto;padding:12px 14px 80px}
 
-  /* ---------- Header ---------- */
-  .topbar{ display:flex; align-items:center; justify-content:space-between; margin-bottom:4px; }
-  .brand{ display:flex; align-items:center; gap:8px; font-family:'Baloo 2'; font-weight:800; font-size:1.3rem; }
-  .brand .dot{ width:9px; height:9px; background:var(--leaf); border-radius:50%; box-shadow:0 0 0 4px rgba(94,194,106,0.25); }
-  .logout-btn{ border:2px solid var(--line); background:var(--card); font-weight:600; font-size:0.8rem; padding:7px 12px; border-radius:14px; }
+.top{
+ display:flex;align-items:center;justify-content:space-between;
+ padding:9px 12px;border:3px solid var(--dark);border-radius:22px;
+ background:#ffffffdf;backdrop-filter:blur(12px);
+ box-shadow:0 5px 0 #bcb7d4;
+ position:sticky;top:8px;z-index:50
+}
+.logo{font:800 1.45rem "Baloo 2";color:var(--purple)}
+.logo span{color:var(--green)}
+.top button{
+ border:2px solid var(--dark);border-radius:14px;background:white;
+ padding:7px 12px;font-weight:700;box-shadow:3px 3px 0 var(--dark)
+}
 
-  .hero{ text-align:center; padding:14px 0 4px; }
-  .mascot{ font-size:64px; display:inline-block; animation: bob 2.6s ease-in-out infinite; filter: drop-shadow(0 10px 14px rgba(45,42,74,0.18)); }
-  @keyframes bob{ 0%,100%{ transform: translateY(0) rotate(-3deg);} 50%{ transform: translateY(-14px) rotate(3deg);} }
-  .hero h1{ font-size:2.1rem; margin:4px 0 0; }
-  .hero h1 span{ color:var(--sky); }
-  .hero p{ margin:2px 0 0; opacity:0.72; font-size:0.92rem; }
+.hero{text-align:center;padding:18px 0}
+.hero-img{
+ width:min(100%,620px);display:block;margin:auto;border-radius:32px;
+ border:4px solid var(--dark);box-shadow:0 13px 0 var(--dark),0 25px 40px #423a832b
+}
+.hero h1{font:800 2.5rem "Baloo 2";margin:15px 0 0}
+.hero h1 span{color:var(--purple)}
+.hero p{margin:0;color:var(--muted);font-weight:600}
 
-  /* ---------- Cards / buttons ---------- */
-  .card{ background:var(--card); border-radius:var(--radius); padding:22px 20px; margin-top:16px; border:2.5px solid var(--ink); box-shadow:6px 6px 0 var(--ink); }
-  .card h2{ margin:0 0 14px; font-size:1.25rem; text-align:center; }
-  .field{ margin-bottom:12px; }
-  .field label{ display:block; font-size:0.8rem; font-weight:600; margin-bottom:5px; opacity:0.7; }
-  .field input{ width:100%; padding:13px 15px; border-radius:14px; border:2.5px solid var(--line); font-family:'Hind'; font-size:1rem; background:#FCFAF3; color:var(--ink); outline:none; }
-  .field input:focus{ border-color:var(--sky); }
-  .btn-main{ width:100%; border:2.5px solid var(--ink); background:var(--leaf); color:#fff; font-family:'Baloo 2'; font-weight:700; font-size:1.05rem; padding:13px; border-radius:16px; cursor:pointer; box-shadow:4px 4px 0 var(--ink); margin-top:4px; }
-  .btn-main:active{ transform:translate(2px,2px); box-shadow:2px 2px 0 var(--ink); }
-  .btn-main.blue{ background:var(--sky); } .btn-main.coral{ background:var(--coral); } .btn-main.purple{ background:var(--purple); } .btn-main.yellow{ background:var(--yellow); color:var(--ink); }
-  .btn-main:disabled{ opacity:0.5; }
-  .msg{ font-size:0.83rem; text-align:center; margin-top:10px; font-weight:600; padding:9px; border-radius:12px; display:none; }
-  .msg.error{ background:#FFE2E2; color:#C22A2A; display:block; }
-  .msg.ok{ background:#E3F6E4; color:#1F7A32; display:block; }
-  .swap-link{ text-align:center; margin-top:12px; font-size:0.85rem; color:var(--sky); font-weight:600; }
-  .toggle-row{ display:flex; background:#F1EEE0; border-radius:16px; padding:4px; margin-bottom:16px; border:2px solid var(--line); flex-wrap:wrap; }
-  .toggle-row button{ flex:1; min-width:70px; border:none; background:transparent; padding:9px 4px; font-family:'Hind'; font-weight:700; font-size:0.85rem; border-radius:12px; color:var(--ink); opacity:0.5; }
-  .toggle-row button.active{ background:var(--yellow); opacity:1; box-shadow:0 3px 0 rgba(45,42,74,0.18); }
+.card{
+ margin-top:18px;background:#fffffff2;border:3px solid var(--dark);
+ border-radius:28px;padding:20px 17px;box-shadow:var(--shadow)
+}
+.card h2{font:800 1.45rem "Baloo 2";margin:0 0 15px;text-align:center}
 
-  /* ---------- Bottom nav ---------- */
-  .navbar{ display:flex; overflow-x:auto; gap:8px; margin-top:14px; padding-bottom:4px; }
-  .navbar button{ flex-shrink:0; border:2.5px solid var(--ink); background:var(--card); font-weight:700; font-size:0.85rem; padding:9px 14px; border-radius:16px; white-space:nowrap; }
-  .navbar button.active{ background:var(--ink); color:#fff; }
+.tabs{display:flex;gap:7px;background:#e9eaff;padding:5px;border-radius:18px;margin-bottom:15px}
+.tabs button{
+ flex:1;border:0;background:transparent;border-radius:13px;padding:9px 5px;
+ font-weight:800;color:var(--dark)
+}
+.tabs button.active{background:var(--yellow);box-shadow:0 3px 0 #b28a00}
 
-  /* ---------- Ginti (counting) ---------- */
-  .num-card{ text-align:center; padding:10px 0 4px; }
-  .num-big{ font-size:5rem; font-family:'Baloo 2'; color:var(--purple); line-height:1; }
-  .num-word{ font-size:1.5rem; font-weight:700; color:var(--coral); margin-top:4px; }
-  .balloons{ font-size:1.5rem; margin-top:10px; letter-spacing:2px; }
-  .row-btns{ display:flex; gap:10px; margin-top:16px; }
-  .row-btns button{ flex:1; border:2.5px solid var(--ink); background:var(--card); border-radius:14px; padding:11px; font-weight:700; font-family:'Hind'; }
+.field{margin:11px 0}
+.field label{display:block;font-weight:700;font-size:.82rem;margin-bottom:5px}
+.field input,.field select{
+ width:100%;padding:13px;border:3px solid #d8d7e5;border-radius:15px;
+ background:#fafaff;outline:none;color:var(--dark)
+}
+.field input:focus,.field select:focus{
+ border-color:var(--blue);box-shadow:0 0 0 4px #32baf422
+}
 
-  /* ---------- Grid (varnamala / alphabets) ---------- */
-  .letter-grid{ display:grid; grid-template-columns:1fr 1fr; gap:12px; }
-  .letter-card{ background:#FCFAF3; border:2.5px solid var(--line); border-radius:18px; padding:16px 8px; text-align:center; cursor:pointer; }
-  .letter-card .emo{ font-size:2rem; }
-  .letter-card .let{ font-size:1.8rem; font-family:'Baloo 2'; color:var(--purple); font-weight:700; margin:4px 0 0; }
-  .letter-card .wrd{ font-size:0.85rem; opacity:0.7; }
+.btn{
+ width:100%;border:3px solid var(--dark);border-radius:17px;
+ padding:12px;font:800 1rem "Baloo 2";color:white;
+ box-shadow:0 6px 0 var(--dark);margin-top:7px
+}
+.btn:active{transform:translateY(4px);box-shadow:0 2px 0 var(--dark)}
+.green{background:linear-gradient(135deg,#19c98b,#21aee7)}
+.blue{background:linear-gradient(135deg,#31baf4,#5668ff)}
+.purple{background:linear-gradient(135deg,#7046e8,#a15cff)}
+.pink{background:linear-gradient(135deg,#ff5c7a,#ff944b)}
+.yellow{background:linear-gradient(135deg,#ffd84a,#ffae00);color:var(--dark)}
 
-  /* ---------- Pahada ---------- */
-  select#tableSelect{ width:100%; padding:13px; border-radius:14px; border:2.5px solid var(--line); font-size:1.05rem; background:#FCFAF3; margin-bottom:14px; }
-  .table-line{ display:flex; justify-content:space-between; padding:10px 6px; border-bottom:1.5px dashed var(--line); font-size:1.15rem; font-weight:600; }
+.msg{
+ display:none;margin-top:10px;padding:9px;border-radius:13px;
+ text-align:center;font-weight:700;font-size:.84rem
+}
+.msg.show{display:block}
+.msg.error{background:#ffe1e5;color:#b51e35}
+.msg.ok{background:#dff9eb;color:#087b4d}
 
-  /* ---------- AI Tutor ---------- */
-  .mic-btn{ width:100%; border:2.5px solid var(--ink); background:var(--leaf); color:#fff; font-family:'Baloo 2'; font-weight:700; font-size:1.1rem; padding:16px; border-radius:18px; box-shadow:4px 4px 0 var(--ink); display:flex; align-items:center; justify-content:center; gap:10px; }
-  .mic-btn.listening{ background:var(--coral); animation:pulse 1s infinite; }
-  @keyframes pulse{ 0%,100%{ opacity:1;} 50%{ opacity:0.6;} }
-  .or-line{ text-align:center; opacity:0.5; font-size:0.85rem; margin:14px 0; }
-  .scan-zone{ border:3px dashed var(--sky); border-radius:20px; padding:20px 14px; text-align:center; background:rgba(63,182,240,0.06); cursor:pointer; }
-  .scan-zone .ic{ font-size:38px; }
-  #camInput{ display:none; }
-  .preview{ margin-top:14px; border-radius:16px; overflow:hidden; border:2.5px solid var(--ink); display:none; }
-  .preview img{ width:100%; display:block; }
-  .result{ margin-top:16px; background:#FFF8E1; border:2.5px solid var(--yellow); border-radius:16px; padding:16px; display:none; white-space:pre-wrap; line-height:1.8; }
-  .result-actions{ display:flex; gap:10px; margin-top:12px; }
-  .result-actions button{ flex:1; border:2px solid var(--ink); background:var(--card); border-radius:14px; padding:9px; font-weight:700; }
-  .loader{ display:none; text-align:center; margin-top:16px; }
-  .loader .spin{ width:38px; height:38px; border:5px solid var(--line); border-top-color:var(--sky); border-radius:50%; margin:0 auto 8px; animation:spin 0.9s linear infinite; }
-  @keyframes spin{ to{ transform:rotate(360deg);} }
+.link{
+ border:0;background:transparent;color:var(--purple);
+ font-weight:800;margin:12px auto 0;display:block
+}
 
-  /* ---------- Exam / payment ---------- */
-  .price-tag{ text-align:center; font-size:2.4rem; font-family:'Baloo 2'; color:var(--coral); }
-  .qr-box{ text-align:center; margin:14px 0; }
-  .qr-box img{ width:200px; height:200px; border:3px solid var(--ink); border-radius:16px; }
-  .upi-row{ display:flex; align-items:center; justify-content:center; gap:8px; font-size:0.9rem; margin-top:8px; flex-wrap:wrap; }
-  .status-pill{ text-align:center; font-weight:700; padding:10px; border-radius:14px; margin-bottom:14px; }
-  .status-pill.pending{ background:#FFF3D6; color:#8a6300; }
-  .status-pill.approved{ background:#E3F6E4; color:#1F7A32; }
-  .quiz-q{ font-weight:700; margin-bottom:10px; }
-  .quiz-opt{ display:block; width:100%; text-align:left; padding:11px 14px; margin-bottom:8px; border-radius:12px; border:2.5px solid var(--line); background:#FCFAF3; font-family:'Hind'; font-size:0.95rem; }
-  .quiz-opt.correct{ border-color:var(--leaf); background:#E3F6E4; }
-  .quiz-opt.wrong{ border-color:var(--coral); background:#FFE2E2; }
+.nav{
+ display:flex;gap:8px;overflow:auto;padding:10px 2px 5px;
+ position:sticky;top:69px;z-index:40;background:#f3f5ffdd;backdrop-filter:blur(8px)
+}
+.nav button{
+ flex:0 0 auto;border:3px solid var(--dark);background:white;border-radius:16px;
+ padding:8px 13px;font-weight:800;box-shadow:0 4px 0 var(--dark)
+}
+.nav button.active{background:var(--purple);color:white}
 
-  /* ---------- Admin ---------- */
-  .pay-item{ background:#FCFAF3; border:2px solid var(--line); border-radius:16px; padding:14px; margin-bottom:12px; font-size:0.9rem; }
-  .pay-item img{ width:100%; border-radius:10px; margin:8px 0; border:2px solid var(--line); }
-  .pay-actions{ display:flex; gap:8px; margin-top:8px; }
-  .pay-actions button{ flex:1; border:2px solid var(--ink); border-radius:10px; padding:8px; font-weight:700; }
-  .approve-btn{ background:var(--leaf); color:#fff; }
-  .reject-btn{ background:var(--coral); color:#fff; }
+.welcome{
+ background:linear-gradient(135deg,#7046e8,#35baf4);color:white;
+ border:3px solid var(--dark);border-radius:25px;padding:15px;
+ box-shadow:0 7px 0 var(--dark);margin-top:15px
+}
+.welcome b{font:800 1.3rem "Baloo 2"}
 
-  footer{ text-align:center; margin-top:30px; font-size:0.75rem; opacity:0.5; }
+.number{text-align:center}
+.big-number{
+ font:800 6rem "Baloo 2";line-height:1;color:var(--purple);
+ text-shadow:0 6px 0 #d8ceff
+}
+.word{font-size:1.5rem;font-weight:800;color:var(--pink)}
+.emoji{font-size:1.6rem;min-height:35px}
+
+.two{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+
+.letters{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
+.letter{
+ padding:13px 5px;text-align:center;background:linear-gradient(#fff,#f0f1ff);
+ border:3px solid #deddeb;border-radius:18px;box-shadow:0 5px 0 #c7c5d6
+}
+.letter .e{font-size:1.7rem}
+.letter .l{font:800 1.7rem "Baloo 2";color:var(--purple)}
+.letter .w{font-size:.8rem;color:var(--muted)}
+
+.table-line{
+ display:flex;justify-content:space-between;padding:10px;
+ border-bottom:2px dashed #d5d3e2;font-size:1.15rem;font-weight:700
+}
+
+.ai-box{
+ padding:15px;border-radius:20px;background:#eef9ff;border:3px dashed var(--blue)
+}
+.ai-box textarea{
+ width:100%;min-height:90px;border:3px solid #d4d4e3;border-radius:15px;
+ padding:12px;resize:vertical;outline:none
+}
+.ai-actions{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+#camera{display:none}
+.preview{margin-top:12px;display:none}
+.preview img{width:100%;border-radius:16px;border:3px solid var(--dark)}
+.answer{
+ white-space:pre-wrap;line-height:1.8;background:#fff8df;
+ border:3px solid var(--yellow);border-radius:18px;padding:15px;margin-top:15px
+}
+
+.price{text-align:center;font:800 3rem "Baloo 2";color:var(--pink)}
+.qr{text-align:center}
+.qr img{width:200px;height:200px;border:3px solid var(--dark);border-radius:18px}
+.status{padding:12px;border-radius:15px;text-align:center;font-weight:800}
+.pending{background:#fff1c9;color:#855d00}
+.approved{background:#dcf9e9;color:#08784c}
+.rejected{background:#ffe0e5;color:#b51d36}
+
+.quiz-q{font-weight:800;font-size:1.05rem;margin:10px 0}
+.option{
+ width:100%;text-align:left;background:#fafaff;border:3px solid #dddbea;
+ border-radius:14px;padding:11px;margin:5px 0;font-weight:700
+}
+.option.correct{background:#dcf9e9;border-color:var(--green)}
+.option.wrong{background:#ffe0e5;border-color:var(--pink)}
+
+.admin-stat{
+ display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:14px
+}
+.stat{
+ text-align:center;padding:12px;background:#f0efff;border-radius:17px;
+ border:2px solid #d8d5ed
+}
+.stat b{display:block;font:800 1.5rem "Baloo 2";color:var(--purple)}
+
+.admin-item{
+ background:#fafaff;border:3px solid #deddeb;border-radius:18px;
+ padding:13px;margin:10px 0
+}
+.admin-item img{width:100%;max-height:280px;object-fit:contain;border-radius:12px;margin-top:8px}
+.admin-actions{display:grid;grid-template-columns:1fr 1fr;gap:7px;margin-top:9px}
+.admin-actions button{
+ border:2px solid var(--dark);border-radius:12px;padding:9px;font-weight:800
+}
+
+.check{
+ display:flex;align-items:center;gap:8px;margin:9px 0;font-weight:700
+}
+.check input{width:20px;height:20px}
+
+footer{text-align:center;color:#77758a;font-size:.78rem;margin-top:30px}
+
+@media(max-width:450px){
+ .letters{grid-template-columns:repeat(2,1fr)}
+ .hero h1{font-size:2.1rem}
+ .admin-stat{grid-template-columns:1fr 1fr}
+}
 </style>
 </head>
+
 <body>
+<div class="app">
 
-<div class="wrap">
+<header class="top">
+  <div class="logo">Padh-<span>AI</span> 🤖</div>
+  <button id="logout" class="hidden">🚪 बाहर</button>
+</header>
 
-  <div class="topbar">
-    <div class="brand"><span class="dot"></span> Padh-Ai</div>
-    <button class="logout-btn hidden" id="logoutBtn">लॉगआउट</button>
+<section id="auth">
+
+  <div class="hero">
+    <img class="hero-img" src="assets/padh-ai-3d.png" alt="Padh-Ai">
+    <h1>पढ़ो और सीखो <span>AI के साथ!</span></h1>
+    <p>गिनती • वर्णमाला • पहाड़ा • AI Teacher</p>
   </div>
 
-  <!-- ======= AUTH SCREEN ======= -->
-  <div id="authScreen">
-    <div class="hero">
-      <div class="mascot">🤖</div>
-      <h1>Padh<span>-Ai</span></h1>
-      <p>गिनती, वर्णमाला, पहाड़ा और AI टीचर 📚</p>
+  <div class="card">
+    <div class="tabs">
+      <button id="loginTab" class="active">🔐 Login</button>
+      <button id="registerTab">🎒 नया Account</button>
     </div>
-    <div class="card">
-      <div class="toggle-row">
-        <button id="tabLogin" class="active">छात्र लॉगिन</button>
-        <button id="tabRegister">नया रजिस्ट्रेशन</button>
+
+    <div id="registerFields" class="hidden">
+      <div class="field">
+        <label>👦 आपका नाम</label>
+        <input id="name" placeholder="जैसे राहुल">
       </div>
-      <div id="registerFields">
-        <div class="field"><label>तुम्हारा नाम</label><input type="text" id="regName" placeholder="जैसे: आरव शर्मा"></div>
-        <div class="field"><label>क्लास (वैकल्पिक)</label><input type="text" id="regClass" placeholder="जैसे: कक्षा 5"></div>
+      <div class="field">
+        <label>📚 कक्षा</label>
+        <input id="className" placeholder="जैसे कक्षा 3">
       </div>
-      <div class="field"><label>ईमेल आईडी</label><input type="email" id="authEmail" placeholder="you@example.com"></div>
-      <div class="field"><label>6-अंकों का पिन</label><input type="password" id="authPin" placeholder="••••••" maxlength="6" inputmode="numeric"></div>
-      <button class="btn-main blue" id="authSubmitBtn">प्रवेश करें</button>
-      <div class="swap-link" id="swapLink">नया रजिस्ट्रेशन यहाँ करें</div>
-      <div class="msg" id="authMsg"></div>
     </div>
-    <footer>© 2026 Padh-Ai | भारत का अपना सुरक्षित ऐप 🇮🇳</footer>
+
+    <div class="field">
+      <label>📧 Email</label>
+      <input id="email" type="email" autocomplete="email" placeholder="आपका email">
+    </div>
+
+    <div class="field">
+      <label>🔢 6 अंकों का PIN</label>
+      <input id="pin" type="password" inputmode="numeric" maxlength="6"
+             autocomplete="current-password" placeholder="••••••">
+    </div>
+
+    <button id="authBtn" class="btn green">🔐 Login करें</button>
+
+    <button id="forgot" class="link">🔑 PIN भूल गए?</button>
+
+    <div id="resetBox" class="hidden">
+      <div class="field">
+        <label>नया 6 अंकों का PIN</label>
+        <input id="newPin" type="password" inputmode="numeric" maxlength="6">
+      </div>
+      <button id="resetBtn" class="btn purple">💾 नया PIN Save करें</button>
+    </div>
+
+    <div id="authMsg" class="msg"></div>
+  </div>
+</section>
+
+<section id="dashboard" class="hidden">
+
+  <div class="welcome">
+    नमस्ते 👋<br>
+    <b id="userName">दोस्त</b>, आज क्या पढ़ना है? 🚀
   </div>
 
-  <!-- ======= DASHBOARD ======= -->
-  <div id="dashScreen" class="hidden">
-    <div class="hero" style="padding-top:2px;">
-      <p style="font-size:1.05rem;">नमस्ते, <b id="userNameSpan" style="color:var(--sky)">दोस्त</b>! 👋</p>
-    </div>
+  <nav class="nav" id="nav">
+    <button data-page="home" class="active">🏠 Home</button>
+    <button data-page="ginti">🔢 गिनती</button>
+    <button data-page="varna">🔤 वर्णमाला</button>
+    <button data-page="pahada">✖️ पहाड़ा</button>
+    <button data-page="ai">🤖 AI Teacher</button>
+    <button data-page="exam">📝 परीक्षा</button>
+    <button data-page="admin" id="adminNav" class="hidden">🛡️ Admin</button>
+  </nav>
 
-    <div class="navbar" id="navbar">
-      <button data-tab="ginti" class="active">🔢 गिनती</button>
-      <button data-tab="varnamala">🔤 वर्णमाला</button>
-      <button data-tab="pahada">✖️ पहाड़ा</button>
-      <button data-tab="tutor">🤖 AI ट्यूटर</button>
-      <button data-tab="exam">📝 परीक्षा</button>
-      <button data-tab="admin" id="adminNavBtn" class="hidden">🛡️ Admin</button>
-    </div>
+  <main>
 
-    <!-- GINTI -->
-    <div class="tab-panel card" id="panel-ginti">
+    <section id="page-home" class="card">
+      <h2>🌈 Padh-Ai में आपका स्वागत है!</h2>
+      <div class="two">
+        <button class="btn blue" data-go="ginti">🔢 गिनती सीखें</button>
+        <button class="btn purple" data-go="varna">🔤 वर्णमाला</button>
+        <button class="btn yellow" data-go="pahada">✖️ पहाड़ा</button>
+        <button class="btn green" data-go="ai">🤖 AI Teacher</button>
+      </div>
+    </section>
+
+    <section id="page-ginti" class="card hidden">
       <h2>🔢 गिनती सीखो</h2>
-      <div class="num-card">
-        <div class="num-big" id="numBig">1</div>
-        <div class="num-word" id="numWord">एक</div>
-        <div class="balloons" id="numBalloons">🎈</div>
+      <div class="number">
+        <div id="number" class="big-number">1</div>
+        <div id="word" class="word">एक</div>
+        <div id="emoji" class="emoji">🎈</div>
       </div>
-      <div class="row-btns">
-        <button id="numPrev">⬅️ पिछला</button>
-        <button id="numSpeak">🔊 सुनो</button>
-        <button id="numNext">अगला ➡️</button>
+      <div class="two">
+        <button id="prev" class="btn purple">⬅️ पिछला</button>
+        <button id="next" class="btn blue">अगला ➡️</button>
       </div>
-    </div>
+      <button id="speakNumber" class="btn green">🔊 बोलकर सुनाओ</button>
+    </section>
 
-    <!-- VARNAMALA -->
-    <div class="tab-panel card hidden" id="panel-varnamala">
+    <section id="page-varna" class="card hidden">
       <h2>🔤 वर्णमाला</h2>
-      <div class="toggle-row">
-        <button id="vTabHindi" class="active">क-ज्ञ हिंदी</button>
-        <button id="vTabEnglish">A-Z English</button>
+      <div class="tabs">
+        <button id="hindiTab" class="active">हिंदी</button>
+        <button id="englishTab">English</button>
       </div>
-      <div class="letter-grid" id="letterGrid"></div>
-    </div>
+      <div id="letters" class="letters"></div>
+    </section>
 
-    <!-- PAHADA -->
-    <div class="tab-panel card hidden" id="panel-pahada">
+    <section id="page-pahada" class="card hidden">
       <h2>✖️ पहाड़ा</h2>
-      <select id="tableSelect"></select>
-      <div id="tableBody"></div>
-      <button class="btn-main purple" id="speakTableBtn" style="margin-top:14px;">🔊 पूरा पहाड़ा सुनो</button>
-    </div>
-
-    <!-- AI TUTOR -->
-    <div class="tab-panel card hidden" id="panel-tutor">
-      <h2>🤖 Aditya से पूछो</h2>
-      <button class="mic-btn" id="micBtn">🎤 बोलकर सवाल पूछो</button>
-      <div class="field" style="margin-top:14px;"><input type="text" id="typedQ" placeholder="या यहाँ टाइप करो..."></div>
-      <button class="btn-main blue" id="askTypedBtn">भेजो</button>
-
-      <div class="or-line">— या फोटो खींचकर पूछो —</div>
-      <div class="scan-zone" id="scanZone"><div class="ic">📷</div><p style="margin:6px 0 0;font-weight:600;">किताब की फोटो लो</p></div>
-      <input type="file" id="camInput" accept="image/*" capture="environment">
-      <div class="preview" id="previewBox"><img id="previewImg" src="" alt="preview"></div>
-      <button class="btn-main coral hidden" id="explainBtn" style="margin-top:10px;">✨ समझाओ</button>
-
-      <div class="loader" id="loader"><div class="spin"></div><p>Padh-Ai सोच रहा है... 🤔</p></div>
-      <div class="result" id="resultBox"></div>
-      <div class="result-actions hidden" id="resultActions">
-        <button id="speakBtn">🔊 सुनो</button>
-        <button id="stopBtn">⏹️ रोको</button>
+      <div class="field">
+        <select id="table"></select>
       </div>
-    </div>
+      <div id="tableRows"></div>
+      <button id="speakTable" class="btn blue">🔊 पूरा पहाड़ा सुनाओ</button>
+    </section>
 
-    <!-- EXAM -->
-    <div class="tab-panel card hidden" id="panel-exam">
+    <section id="page-ai" class="card hidden">
+      <h2>🤖 AI Teacher</h2>
+
+      <div class="ai-box">
+        <textarea id="question" placeholder="अपना सवाल लिखो... जैसे 5 + 7 कितना होता है?"></textarea>
+
+        <div class="ai-actions">
+          <button id="ask" class="btn green">✨ पूछो</button>
+          <button id="mic" class="btn blue">🎤 बोलो</button>
+        </div>
+
+        <div style="text-align:center;margin:13px">या फोटो से सवाल पूछो 📸</div>
+
+        <input id="camera" type="file" accept="image/*" capture="environment">
+        <button id="cameraBtn" class="btn purple">📷 फोटो खींचो / चुनो</button>
+
+        <div id="preview" class="preview">
+          <img id="previewImg">
+          <button id="explain" class="btn yellow">🧠 फोटो समझाओ</button>
+        </div>
+      </div>
+
+      <div id="aiLoading" class="hidden" style="text-align:center;padding:18px">
+        🤖 AI Teacher सोच रहा है... ⏳
+      </div>
+
+      <div id="answer" class="answer hidden"></div>
+
+      <div id="answerBtns" class="two hidden">
+        <button id="speakAnswer" class="btn green">🔊 सुनाओ</button>
+        <button id="stopAnswer" class="btn pink">⏹️ रोकें</button>
+      </div>
+    </section>
+
+    <section id="page-exam" class="card hidden">
       <h2>📝 मासिक परीक्षा</h2>
-      <div id="examContent">लोड हो रहा है...</div>
-    </div>
+      <div id="exam"></div>
+    </section>
 
-    <!-- ADMIN -->
-    <div class="tab-panel card hidden" id="panel-admin">
-      <h2>🛡️ Admin Panel</h2>
-      <div id="adminContent">लोड हो रहा है...</div>
-    </div>
+    <section id="page-admin" class="card hidden">
+      <h2>🛡️ Admin Control Center</h2>
+      <div id="admin"></div>
+    </section>
 
-    <footer>© 2026 Padh-Ai | भारत का अपना सुरक्षित ऐप 🇮🇳</footer>
-  </div>
+  </main>
+</section>
+
+<footer>© Padh-Ai • बच्चों की मजेदार पढ़ाई 🤖📚</footer>
 </div>
 
 <script type="module">
-  import { createClient } from 'https://esm.sh/@supabase/supabase-js@2';
+import {createClient} from "https://esm.sh/@supabase/supabase-js@2";
 
-  // ============ CONFIG ============
-  const SUPABASE_URL = 'https://tyonurrbwdjqfrmqrgpk.supabase.co';
-  const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InR5b251cnJid2RqcWZybXFyZ3BrIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODYxNzMzODMsImV4cCI6MjEwMTc0OTM4M30.95tDST7gwxemb2w2SS71arWh77omlFf0ezPwkTun2cM';
-  const supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+/* =========================================================
+   आपकी डिटेल्स जोड़ दी गई हैं! 
+========================================================= */
+const SUPABASE_URL="https://tyonurrbwdjqfrmqrgpk.supabase.co";
+const SUPABASE_ANON_KEY="EyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InR5b251cnJid2RqcWZybXFyZ3BrIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODYxNzMzODMsImV4cCI6MjEwMTc0OTM4M30.95tDST7gwxemb2w2SS71arWh77omlFf0ezPwkTun2cM";
+const ADMIN_UID="YOUR_SUPABASE_USER_UUID"; // ← Supabase Authentication -> Users से अपनी ID यहाँ डालें
+const ADMIN_UPI_ID="7067132801@ptyes";
+const ADMIN_UPI_NAME="Padh-Ai";
+const SUPPORT_WHATSAPP="917067132801"; // ← आपका WhatsApp नंबर (कंट्री कोड 91 के साथ)
+const EXAM_FEE=50;
+/* ========================================================= */
 
-  // ⚠️ Apna real Supabase Auth UID yahan paste karo (Admin account banane ke baad)
-  const ADMIN_UID = 'PASTE-YOUR-ADMIN-UID-HERE';
-  // ⚠️ Apna real UPI ID yahan daalo (jaise: yourname@okhdfcbank)
-  const ADMIN_UPI_ID = 'admin@upi';
-  const ADMIN_UPI_NAME = 'Padh-Ai';
-  const EXAM_FEE = 50; // rupees
-  // ⚠️ Apna WhatsApp support number country code ke saath (bina + ke)
-  const SUPPORT_WHATSAPP = '91XXXXXXXXXX';
+const supabase=createClient(SUPABASE_URL,SUPABASE_ANON_KEY);
 
-  let currentUser = null;
-  let currentProfile = null;
+const $=id=>document.getElementById(id);
+const auth=$("auth"),dash=$("dashboard");
+let user=null,profile=null,mode="login",number=1;
+let selectedImage=null,selectedMime="image/jpeg";
 
-  // ============ DATA ============
-  const hindiNumbers = ["","एक","दो","तीन","चार","पांच","छह","सात","आठ","नौ","दस",
-  "ग्यारह","बारह","तेरह","चौदह","पंद्रह","सोलह","सत्रह","अठारह","उन्नीस","बीस",
-  "इक्कीस","बाईस","तेईस","चौबीस","पच्चीस","छब्बीस","सत्ताईस","अट्ठाईस","उनतीस","तीस",
-  "इकतीस","बत्तीस","तैंतीस","चौंतीस","पैंतीस","छत्तीस","सैंतीस","अड़तीस","उनतालीस","चालीस",
-  "इकतालीस","बयालीस","तैंतालीस","चवालीस","पैंतालीस","छियालीस","सैंतालीस","अड़तालीस","उनचास","पचास",
-  "इक्यावन","बावन","तिरेपन","चौवन","पचपन","छप्पन","सत्तावन","अट्ठावन","उनसठ","साठ",
-  "इकसठ","बासठ","तिरसठ","चौंसठ","पैंसठ","छियासठ","सड़सठ","अड़सठ","उनहत्तर","सत्तर",
-  "इकहत्तर","बहत्तर","तिहत्तर","चौहत्तर","पचहत्तर","छिहत्तर","सतहत्तर","अठहत्तर","उन्यासी","अस्सी",
-  "इक्यासी","बयासी","तिरासी","चौरासी","पचासी","छियासी","सत्तासी","अट्ठासी","नवासी","नब्बे",
-  "इक्यानवे","बानवे","तिरानवे","चौरानवे","पंचानवे","छियानवे","सत्तानवे","अट्ठानवे","निन्यानवे","सौ"];
+const nums=["","एक","दो","तीन","चार","पांच","छह","सात","आठ","नौ","दस",
+"ग्यारह","बारह","तेरह","चौदह","पंद्रह","सोलह","सत्रह","अठारह","उन्नीस","बीस"];
 
-  const englishAlphabet = [
-    ['A','Apple','🍎'],['B','Ball','⚽'],['C','Cat','🐱'],['D','Dog','🐶'],['E','Elephant','🐘'],
-    ['F','Fish','🐟'],['G','Grapes','🍇'],['H','Horse','🐴'],['I','Ice Cream','🍦'],['J','Joker','🤡'],
-    ['K','Kite','🪁'],['L','Lion','🦁'],['M','Monkey','🐒'],['N','Nest','🪺'],['O','Orange','🍊'],
-    ['P','Parrot','🦜'],['Q','Queen','👑'],['R','Rabbit','🐰'],['S','Sun','☀️'],['T','Tiger','🐯'],
-    ['U','Umbrella','☂️'],['V','Van','🚐'],['W','Watch','⌚'],['X','Xylophone','🎼'],['Y','Yak','🐂'],['Z','Zebra','🦓']
-  ];
+const hindi=[
+["अ","अनार","🍎"],["आ","आम","🥭"],["इ","इमली","🌳"],["ई","ईख","🌱"],
+["उ","उल्लू","🦉"],["ऊ","ऊन","🧶"],["ए","एड़ी","🦶"],["ऐ","ऐनक","👓"],
+["ओ","ओखली","🥣"],["औ","औजार","🔧"],["क","कमल","🌸"],["ख","खरगोश","🐇"],
+["ग","गमला","🪴"],["घ","घर","🏠"],["च","चम्मच","🥄"],["छ","छाता","☂️"],
+["ज","जहाज","✈️"],["झ","झंडा","🚩"],["ट","टमाटर","🍅"],["ठ","ठेला","🛒"],
+["ड","डमरू","🥁"],["ढ","ढक्कन","🫙"],["त","तरबूज","🍉"],["थ","थैला","👜"],
+["द","दही","🥣"],["ध","धनुष","🏹"],["न","नल","🚰"],["प","पतंग","🪁"],
+["फ","फल","🍊"],["ब","बकरी","🐐"],["भ","भालू","🐻"],["म","मछली","🐟"],
+["य","योग","🧘"],["र","रसगुल्ला","🍬"],["ल","लड्डू","🍡"],["व","वानर","🐒"],
+["श","शेर","🦁"],["ष","षट्कोण","⬡"],["स","सूरज","☀️"],["ह","हाथी","🐘"]
+];
 
-  const hindiVarnamala = [
-    ['अ','अनार','🍎'],['आ','आम','🥭'],['इ','इमली','🫘'],['ई','ईख','🎋'],['उ','उल्लू','🦉'],
-    ['ऊ','ऊन','🧶'],['ऋ','ऋषि','🧙'],['ए','एक','1️⃣'],['ऐ','ऐनक','👓'],['ओ','ओखली','🥣'],['औ','औरत','👩'],
-    ['क','कमल','🌸'],['ख','खरगोश','🐰'],['ग','गमला','🪴'],['घ','घड़ी','⌚'],['च','चम्मच','🥄'],
-    ['छ','छतरी','☂️'],['ज','जहाज़','🚢'],['झ','झंडा','🚩'],['ट','टमाटर','🍅'],['ठ','ठेला','🛒'],
-    ['ड','डमरू','🥁'],['ढ','ढोल','🥁'],['ण','हरिण','🦌'],['त','तरबूज़','🍉'],['थ','थैला','👜'],
-    ['द','दवात','🖋️'],['ध','धनुष','🏹'],['न','नल','🚰'],['प','पतंग','🪁'],['फ','फल','🍎'],
-    ['ब','बकरी','🐐'],['भ','भालू','🐻'],['म','मछली','🐟'],['य','यज्ञ','🔥'],['र','रथ','🛺'],
-    ['ल','लट्टू','🪀'],['व','वन','🌳'],['श','शेर','🦁'],['ष','षटकोण','🔷'],['स','सूरज','☀️'],['ह','हाथी','🐘']
-  ];
+const english=[
+["A","Apple","🍎"],["B","Ball","⚽"],["C","Cat","🐱"],["D","Dog","🐶"],
+["E","Elephant","🐘"],["F","Fish","🐟"],["G","Grapes","🍇"],["H","House","🏠"],
+["I","Ice Cream","🍦"],["J","Juice","🧃"],["K","Kite","🪁"],["L","Lion","🦁"],
+["M","Mango","🥭"],["N","Nest","🪺"],["O","Orange","🍊"],["P","Parrot","🦜"],
+["Q","Queen","👑"],["R","Rabbit","🐇"],["S","Sun","☀️"],["T","Tiger","🐯"],
+["U","Umbrella","☂️"],["V","Van","🚐"],["W","Watch","⌚"],["X","Xylophone","🎵"],
+["Y","Yak","🐂"],["Z","Zebra","🦓"]
+];
 
-  const quizQuestions = [
-    { q: 'भारत की राजधानी क्या है?', opts: ['मुंबई','नई दिल्ली','कोलकाता','चेन्नई'], correct: 1 },
-    { q: '2 + 3 कितना होता है?', opts: ['4','5','6','7'], correct: 1 },
-    { q: 'सूरज किस दिशा से निकलता है?', opts: ['पूर्व','पश्चिम','उत्तर','दक्षिण'], correct: 0 },
-    { q: 'भारत का राष्ट्रीय पशु कौन है?', opts: ['शेर','हाथी','बाघ','हिरण'], correct: 2 },
-    { q: 'एक हफ्ते में कितने दिन होते हैं?', opts: ['5','6','7','8'], correct: 2 }
-  ];
+const questions=[
+ {q:"2 + 3 कितना है?",o:["4","5","6"],a:1},
+ {q:"5 × 2 कितना है?",o:["7","10","12"],a:1},
+ {q:"A के बाद कौन सा अक्षर आता है?",o:["B","C","D"],a:0},
+ {q:"भारत का राष्ट्रीय फल कौन सा है?",o:["आम","सेब","केला"],a:0},
+ {q:"10 में से 4 घटाने पर कितना बचेगा?",o:["5","6","7"],a:1}
+];
 
-  // ============ ELEMENTS ============
-  const authScreen = document.getElementById('authScreen');
-  const dashScreen = document.getElementById('dashScreen');
-  const logoutBtn = document.getElementById('logoutBtn');
-  const tabLogin = document.getElementById('tabLogin');
-  const tabRegister = document.getElementById('tabRegister');
-  const registerFields = document.getElementById('registerFields');
-  const regName = document.getElementById('regName');
-  const regClass = document.getElementById('regClass');
-  const authEmail = document.getElementById('authEmail');
-  const authPin = document.getElementById('authPin');
-  const authSubmitBtn = document.getElementById('authSubmitBtn');
-  const swapLink = document.getElementById('swapLink');
-  const authMsg = document.getElementById('authMsg');
-  const userNameSpan = document.getElementById('userNameSpan');
+/* ---------- AUTH ---------- */
+$("loginTab").onclick=()=>setMode("login");
+$("registerTab").onclick=()=>setMode("register");
 
-  let authMode = 'login';
-  function showMsg(t,type){ authMsg.textContent=t; authMsg.className='msg '+type; }
-  function clearMsg(){ authMsg.className='msg'; authMsg.textContent=''; }
+function setMode(m){
+ mode=m;
+ $("loginTab").classList.toggle("active",m==="login");
+ $("registerTab").classList.toggle("active",m==="register");
+ $("registerFields").classList.toggle("hidden",m!=="register");
+ $("authBtn").textContent=m==="login"?"🔐 Login करें":"🎒 Account बनाएं";
+ msg("");
+}
 
-  tabLogin.addEventListener('click', () => setAuthMode('login'));
-  tabRegister.addEventListener('click', () => setAuthMode('register'));
-  swapLink.addEventListener('click', () => setAuthMode(authMode==='login'?'register':'login'));
+function msg(text,type=""){
+ const x=$("authMsg");
+ x.textContent=text;
+ x.className="msg"+(text?" show ":" ")+(type||"");
+}
 
-  function setAuthMode(m){
-    authMode = m; clearMsg();
-    if(m==='login'){
-      tabLogin.classList.add('active'); tabRegister.classList.remove('active');
-      registerFields.classList.add('hidden'); authSubmitBtn.textContent='प्रवेश करें';
-      swapLink.textContent='नया रजिस्ट्रेशन यहाँ करें';
-    } else {
-      tabRegister.classList.add('active'); tabLogin.classList.remove('active');
-      registerFields.classList.remove('hidden'); authSubmitBtn.textContent='रजिस्टर करें';
-      swapLink.textContent='पहले से खाता है? लॉगिन करें';
-    }
-  }
+$("authBtn").onclick=async()=>{
+ const email=$("email").value.trim();
+ const pin=$("pin").value.trim();
 
-  authSubmitBtn.addEventListener('click', async () => {
-    clearMsg();
-    const email = authEmail.value.trim();
-    const pin = authPin.value.trim();
-    if(!email || !/^\S+@\S+\.\S+$/.test(email)){ showMsg('सही ईमेल डालो','error'); return; }
-    if(!/^\d{6}$/.test(pin)){ showMsg('पिन 6 अंकों का होना चाहिए','error'); return; }
-    authSubmitBtn.disabled = true;
+ if(!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(email))
+   return msg("सही Email डालिए","error");
 
-    if(authMode==='register'){
-      const name = regName.value.trim();
-      if(!name){ showMsg('अपना नाम लिखो','error'); authSubmitBtn.disabled=false; return; }
-      const { data, error } = await supabase.auth.signUp({ email, password: pin });
-      if(error){ showMsg(error.message,'error'); authSubmitBtn.disabled=false; return; }
-      if(data.user){
-        await supabase.from('profiles').insert({ id:data.user.id, full_name:name, class_name:regClass.value.trim()||null });
-      }
-      if(data.session){
-        showMsg('रजिस्ट्रेशन हो गया! 🎉','ok');
-        await enterDashboard(data.user, { full_name:name });
-      } else {
-        showMsg('रजिस्ट्रेशन हो गया! अब लॉगिन करो।','ok'); setAuthMode('login');
-      }
-    } else {
-      const { data, error } = await supabase.auth.signInWithPassword({ email, password: pin });
-      if(error){ showMsg('ईमेल या पिन गलत है','error'); authSubmitBtn.disabled=false; return; }
-      const { data: profile } = await supabase.from('profiles').select('full_name').eq('id', data.user.id).single();
-      await enterDashboard(data.user, profile);
-    }
-    authSubmitBtn.disabled = false;
-  });
+ if(!/^\d{6}$/.test(pin))
+   return msg("PIN ठीक 6 अंकों का होना चाहिए","error");
 
-  async function enterDashboard(user, profile){
-    currentUser = user;
-    currentProfile = profile;
-    userNameSpan.textContent = profile?.full_name || 'दोस्त';
-    authScreen.classList.add('hidden');
-    dashScreen.classList.remove('hidden');
-    logoutBtn.classList.remove('hidden');
-    document.getElementById('adminNavBtn').classList.toggle('hidden', user.id !== ADMIN_UID);
-    initGinti(); initVarnamala('hindi'); initPahada(); loadExamStatus();
-  }
+ $("authBtn").disabled=true;
 
-  logoutBtn.addEventListener('click', async () => {
-    await supabase.auth.signOut();
-    currentUser = null; currentProfile = null;
-    dashScreen.classList.add('hidden'); authScreen.classList.remove('hidden'); logoutBtn.classList.add('hidden');
-  });
+ try{
+   if(mode==="register"){
+     const name=$("name").value.trim();
+     if(!name)throw Error("अपना नाम डालिए");
 
-  (async () => {
-    const { data } = await supabase.auth.getSession();
-    if(data.session){
-      const { data: profile } = await supabase.from('profiles').select('full_name').eq('id', data.session.user.id).single();
-      await enterDashboard(data.session.user, profile);
-    }
-  })();
+     const r=await supabase.auth.signUp({email,password:pin});
 
-  // ============ NAV TABS ============
-  document.getElementById('navbar').addEventListener('click', (e) => {
-    const btn = e.target.closest('button[data-tab]');
-    if(!btn) return;
-    document.querySelectorAll('#navbar button').forEach(b=>b.classList.remove('active'));
-    btn.classList.add('active');
-    document.querySelectorAll('.tab-panel').forEach(p=>p.classList.add('hidden'));
-    document.getElementById('panel-'+btn.dataset.tab).classList.remove('hidden');
-    if(btn.dataset.tab === 'admin') loadAdminPanel();
-    if(btn.dataset.tab === 'exam') loadExamStatus();
-  });
+     if(r.error)throw r.error;
 
-  // ============ GINTI ============
-  let currentNum = 1;
-  const numBig = document.getElementById('numBig');
-  const numWord = document.getElementById('numWord');
-  const numBalloons = document.getElementById('numBalloons');
+     if(r.data.user){
+       await supabase.from("profiles").upsert({
+         id:r.data.user.id,
+         full_name:name,
+         class_name:$("className").value.trim()||null
+       });
+     }
 
-  function initGinti(){ renderNum(); }
-  function renderNum(){
-    numBig.textContent = currentNum;
-    numWord.textContent = hindiNumbers[currentNum];
-    numBalloons.textContent = '🎈'.repeat(Math.min(currentNum,10));
-  }
-  document.getElementById('numPrev').addEventListener('click', () => { if(currentNum>1) currentNum--; renderNum(); });
-  document.getElementById('numNext').addEventListener('click', () => { if(currentNum<100) currentNum++; renderNum(); });
-  document.getElementById('numSpeak').addEventListener('click', () => speakHindi(currentNum + ' ' + hindiNumbers[currentNum]));
+     if(!r.data.session){
+       msg("Account बन गया 🎉 अब अपने Email को verify करके Login करें।","ok");
+       setMode("login");
+     }else{
+       await enter(r.data.user);
+     }
+   }else{
+     const r=await supabase.auth.signInWithPassword({
+       email,password:pin
+     });
 
-  // ============ VARNAMALA ============
-  const letterGrid = document.getElementById('letterGrid');
-  document.getElementById('vTabHindi').addEventListener('click', () => initVarnamala('hindi'));
-  document.getElementById('vTabEnglish').addEventListener('click', () => initVarnamala('english'));
+     if(r.error){
+       const t=String(r.error.message||"").toLowerCase();
 
-  function initVarnamala(which){
-    document.getElementById('vTabHindi').classList.toggle('active', which==='hindi');
-    document.getElementById('vTabEnglish').classList.toggle('active', which==='english');
-    const data = which==='hindi' ? hindiVarnamala : englishAlphabet;
-    letterGrid.innerHTML = '';
-    data.forEach(([l,w,e]) => {
-      const card = document.createElement('div');
-      card.className = 'letter-card';
-      card.innerHTML = `<div class="emo">${e}</div><div class="let">${l}</div><div class="wrd">${w}</div>`;
-      card.addEventListener('click', () => {
-        if(which==='hindi') speakHindi(l + ' से ' + w);
-        else speakEnglish(l + ' for ' + w);
-      });
-      letterGrid.appendChild(card);
-    });
-  }
+       if(t.includes("email not confirmed"))
+         throw Error("Email verify नहीं हुआ है। पहले verification email खोलें।");
 
-  // ============ PAHADA ============
-  const tableSelect = document.getElementById('tableSelect');
-  const tableBody = document.getElementById('tableBody');
-  function initPahada(){
-    tableSelect.innerHTML = '';
-    for(let i=2;i<=20;i++){
-      const opt = document.createElement('option'); opt.value=i; opt.textContent = i + ' का पहाड़ा';
-      tableSelect.appendChild(opt);
-    }
-    renderTable();
-  }
-  tableSelect.addEventListener('change', renderTable);
-  function renderTable(){
-    const n = parseInt(tableSelect.value || 2);
-    tableBody.innerHTML = '';
-    for(let i=1;i<=10;i++){
-      const row = document.createElement('div');
-      row.className = 'table-line';
-      row.textContent = `${n} × ${i} = ${n*i}`;
-      tableBody.appendChild(row);
-    }
-  }
-  document.getElementById('speakTableBtn').addEventListener('click', () => {
-    const n = parseInt(tableSelect.value || 2);
-    window.speechSynthesis.cancel();
-    for(let i=1;i<=10;i++){
-      const u = new SpeechSynthesisUtterance(`${n} ${hindiNumbers[i]==='एक'?'':''} ${n} गुणा ${i} बराबर ${n*i}`);
-      u.lang='hi-IN'; u.rate=0.95;
-      window.speechSynthesis.speak(u);
-    }
-  });
+       throw Error("Email या PIN गलत है। PIN भूल गए हों तो नीचे 'PIN भूल गए?' दबाएँ।");
+     }
 
-  // ============ SPEECH HELPERS ============
-  function speakHindi(text){ window.speechSynthesis.cancel(); const u=new SpeechSynthesisUtterance(text); u.lang='hi-IN'; u.rate=0.95; window.speechSynthesis.speak(u); }
-  function speakEnglish(text){ window.speechSynthesis.cancel(); const u=new SpeechSynthesisUtterance(text); u.lang='en-IN'; u.rate=0.95; window.speechSynthesis.speak(u); }
+     await enter(r.data.user);
+   }
+ }catch(e){
+   msg(e.message||"Login में समस्या हुई","error");
+ }finally{
+   $("authBtn").disabled=false;
+ }
+};
 
-  // ============ AI TUTOR ============
-  const micBtn = document.getElementById('micBtn');
-  const typedQ = document.getElementById('typedQ');
-  const askTypedBtn = document.getElementById('askTypedBtn');
-  const scanZone = document.getElementById('scanZone');
-  const camInput = document.getElementById('camInput');
-  const previewBox = document.getElementById('previewBox');
-  const previewImg = document.getElementById('previewImg');
-  const explainBtn = document.getElementById('explainBtn');
-  const loader = document.getElementById('loader');
-  const resultBox = document.getElementById('resultBox');
-  const resultActions = document.getElementById('resultActions');
-  const speakBtn = document.getElementById('speakBtn');
-  const stopBtn = document.getElementById('stopBtn');
+$("forgot").onclick=async()=>{
+ const email=$("email").value.trim();
 
-  let selectedImageBase64 = null, selectedMimeType = null;
+ if(!email)return msg("पहले Email डालिए","error");
 
-  const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
-  let recognizer = null;
-  if(SpeechRecognition){
-    recognizer = new SpeechRecognition();
-    recognizer.lang = 'hi-IN';
-    recognizer.onresult = (e) => {
-      const text = e.results[0][0].transcript;
-      typedQ.value = text;
-      askGemini({ question: text });
-    };
-    recognizer.onend = () => micBtn.classList.remove('listening');
-    recognizer.onerror = () => micBtn.classList.remove('listening');
-  }
-  micBtn.addEventListener('click', () => {
-    if(!recognizer){ alert('Is browser me voice sawaal kaam nahi karega, type karke pucho.'); return; }
-    micBtn.classList.add('listening');
-    recognizer.start();
-  });
-  askTypedBtn.addEventListener('click', () => {
-    if(!typedQ.value.trim()) return;
-    askGemini({ question: typedQ.value.trim() });
-  });
+ const r=await supabase.auth.resetPasswordForEmail(email,{
+   redirectTo:location.origin+location.pathname
+ });
 
-  scanZone.addEventListener('click', () => camInput.click());
-  camInput.addEventListener('change', () => {
-    const file = camInput.files[0];
-    if(!file) return;
-    selectedMimeType = file.type || 'image/jpeg';
-    const reader = new FileReader();
-    reader.onload = () => {
-      previewImg.src = reader.result;
-      previewBox.style.display = 'block';
-      selectedImageBase64 = reader.result.split(',')[1];
-      explainBtn.classList.remove('hidden');
-    };
-    reader.readAsDataURL(file);
-  });
-  explainBtn.addEventListener('click', () => askGemini({ imageBase64: selectedImageBase64, mimeType: selectedMimeType }));
+ if(r.error)msg(r.error.message,"error");
+ else{
+   $("resetBox").classList.remove("hidden");
+   msg("Password/PIN reset link Email पर भेज दिया गया है 📩","ok");
+ }
+};
 
-  async function askGemini(payload){
-    loader.style.display = 'block';
-    resultBox.style.display = 'none';
-    resultActions.classList.add('hidden');
-    try {
-      const res = await fetch('/api/gemini', {
-        method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify(payload)
-      });
-      const data = await res.json();
-      loader.style.display = 'none';
-      if(!res.ok){ resultBox.textContent = '😔 ' + (data.error||'kuch gadbad ho gayi'); resultBox.style.display='block'; return; }
-      resultBox.textContent = data.text;
-      resultBox.style.display = 'block';
-      resultActions.classList.remove('hidden');
-      speakHindi(data.text);
-    } catch(err){
-      loader.style.display='none';
-      resultBox.textContent = '😔 इंटरनेट चेक करो और दोबारा कोशिश करो';
-      resultBox.style.display='block';
-    }
-  }
-  speakBtn.addEventListener('click', () => speakHindi(resultBox.textContent));
-  stopBtn.addEventListener('click', () => window.speechSynthesis.cancel());
+$("resetBtn").onclick=async()=>{
+ const p=$("newPin").value.trim();
 
-  // ============ EXAM / PAYMENT ============
-  function currentMonthKey(){
-    const d = new Date();
-    return d.getFullYear() + '-' + String(d.getMonth()+1).padStart(2,'0');
-  }
+ if(!/^\d{6}$/.test(p))
+   return msg("नया PIN ठीक 6 अंकों का रखें","error");
 
-  async function loadExamStatus(){
-    const examContent = document.getElementById('examContent');
-    examContent.innerHTML = 'लोड हो रहा है...';
-    const month = currentMonthKey();
-    const { data: rows } = await supabase.from('payments')
-      .select('*').eq('user_id', currentUser.id).eq('month', month)
-      .order('created_at', { ascending:false }).limit(1);
+ const r=await supabase.auth.updateUser({password:p});
 
-    const latest = rows && rows[0];
+ if(r.error)msg(r.error.message,"error");
+ else msg("नया PIN save हो गया ✅ अब Login करें।","ok");
+};
 
-    if(latest && latest.status === 'approved'){
-      renderQuiz(examContent);
-      return;
-    }
-    if(latest && latest.status === 'pending'){
-      examContent.innerHTML = `
-        <div class="status-pill pending">⏳ आपका payment approval का इंतज़ार कर रहा है। Admin जल्द check करेंगे।</div>
-        <p style="text-align:center; font-size:0.85rem;">परेशानी हो तो support से बात करो:</p>
-        <a class="btn-main yellow" style="text-decoration:none; display:block; text-align:center;"
-           href="https://wa.me/${SUPPORT_WHATSAPP}?text=Namaste%2C%20mera%20Padh-Ai%20payment%20pending%20hai" target="_blank">💬 WhatsApp Support</a>
-      `;
-      return;
-    }
-    renderPaymentForm(examContent, latest);
-  }
+async function enter(u){
+ user=u;
+ const r=await supabase.from("profiles")
+   .select("full_name,class_name")
+   .eq("id",u.id).maybeSingle();
 
-  function renderPaymentForm(container, lastRejected){
-    const upiUrl = `upi://pay?pa=${encodeURIComponent(ADMIN_UPI_ID)}&pn=${encodeURIComponent(ADMIN_UPI_NAME)}&am=${EXAM_FEE}&cu=INR`;
-    const qrImg = `https://api.qrserver.com/v1/create-qr-code/?size=220x220&data=${encodeURIComponent(upiUrl)}`;
-    container.innerHTML = `
-      ${lastRejected && lastRejected.status==='rejected' ? '<div class="status-pill" style="background:#FFE2E2;color:#C22A2A;">❌ पिछला payment reject हुआ था, दोबारा भेजो।</div>' : ''}
-      <p style="text-align:center; opacity:0.75; font-size:0.9rem;">इस महीने की परीक्षा देने के लिए भुगतान करो</p>
-      <div class="price-tag">₹${EXAM_FEE}</div>
-      <div class="qr-box"><img src="${qrImg}" alt="UPI QR"></div>
-      <div class="upi-row"><b>UPI ID:</b> <span>${ADMIN_UPI_ID}</span></div>
-      <div class="field" style="margin-top:16px;"><label>Payment करने के बाद UTR / Reference नंबर डालो</label><input type="text" id="utrInput" placeholder="जैसे: 402911223344"></div>
-      <div class="field"><label>Payment का Screenshot अपलोड करो</label><input type="file" id="screenshotInput" accept="image/*"></div>
-      <button class="btn-main coral" id="submitPaymentBtn">✅ Payment भेज दिया</button>
-      <div class="msg" id="paymentMsg"></div>
-      <p style="text-align:center; font-size:0.82rem; margin-top:14px;">कोई दिक्कत? <a href="https://wa.me/${SUPPORT_WHATSAPP}" target="_blank">WhatsApp Support</a></p>
-    `;
+ profile=r.data||{};
+ $("userName").textContent=profile.full_name||"दोस्त";
 
-    document.getElementById('submitPaymentBtn').addEventListener('click', async () => {
-      const utr = document.getElementById('utrInput').value.trim();
-      const file = document.getElementById('screenshotInput').files[0];
-      const paymentMsg = document.getElementById('paymentMsg');
-      paymentMsg.className='msg'; paymentMsg.textContent='';
-      if(!utr){ paymentMsg.className='msg error'; paymentMsg.textContent='UTR number daalo'; paymentMsg.style.display='block'; return; }
-      if(!file){ paymentMsg.className='msg error'; paymentMsg.textContent='Screenshot upload karo'; paymentMsg.style.display='block'; return; }
+ auth.classList.add("hidden");
+ dash.classList.remove("hidden");
+ $("logout").classList.remove("hidden");
 
-      const submitBtn = document.getElementById('submitPaymentBtn');
-      submitBtn.disabled = true; submitBtn.textContent = 'भेजा जा रहा है...';
+ $("adminNav").classList.toggle("hidden",u.id!==ADMIN_UID);
 
-      const filePath = `${currentUser.id}/${Date.now()}_${file.name}`;
-      const { error: upErr } = await supabase.storage.from('payment-screenshots').upload(filePath, file);
-      if(upErr){
-        paymentMsg.className='msg error'; paymentMsg.textContent = 'Screenshot upload nahi hua: ' + upErr.message; paymentMsg.style.display='block';
-        submitBtn.disabled=false; submitBtn.textContent='✅ Payment भेज दिया'; return;
-      }
-      const { data: urlData } = supabase.storage.from('payment-screenshots').getPublicUrl(filePath);
+ renderLetters("hindi");
+ renderNumber();
+ initTable();
 
-      const { error: insErr } = await supabase.from('payments').insert({
-        user_id: currentUser.id,
-        student_name: currentProfile?.full_name || 'Unknown',
-        student_email: currentUser.email,
-        month: currentMonthKey(),
-        utr_number: utr,
-        screenshot_url: urlData.publicUrl,
-        status: 'pending'
-      });
-      if(insErr){
-        paymentMsg.className='msg error'; paymentMsg.textContent = insErr.message; paymentMsg.style.display='block';
-        submitBtn.disabled=false; submitBtn.textContent='✅ Payment भेज दिया'; return;
-      }
-      loadExamStatus();
-    });
-  }
+ showPage("home");
+}
 
-  function renderQuiz(container){
-    let score = 0, idx = 0;
-    function showQ(){
-      if(idx >= quizQuestions.length){
-        container.innerHTML = `<div class="status-pill approved">🎉 Quiz खत्म! तुम्हारे ${quizQuestions.length} में से ${score} सही जवाब थे।</div>`;
-        return;
-      }
-      const q = quizQuestions[idx];
-      container.innerHTML = `<div class="status-pill approved">✅ Payment approved! परीक्षा दो</div>
-        <div class="quiz-q">सवाल ${idx+1}/${quizQuestions.length}: ${q.q}</div>
-        <div id="quizOpts"></div>`;
-      const optsBox = container.querySelector('#quizOpts');
-      q.opts.forEach((opt, i) => {
-        const b = document.createElement('button');
-        b.className = 'quiz-opt'; b.textContent = opt;
-        b.addEventListener('click', () => {
-          document.querySelectorAll('.quiz-opt').forEach(x=>x.disabled=true);
-          if(i === q.correct){ b.classList.add('correct'); score++; }
-          else { b.classList.add('wrong'); optsBox.children[q.correct].classList.add('correct'); }
-          setTimeout(() => { idx++; showQ(); }, 1200);
-        });
-        optsBox.appendChild(b);
-      });
-    }
-    showQ();
-  }
+$("logout").onclick=async()=>{
+ await supabase.auth.signOut();
+ location.reload();
+};
 
-  // ============ ADMIN PANEL ============
-  async function loadAdminPanel(){
-    const adminContent = document.getElementById('adminContent');
-    if(currentUser.id !== ADMIN_UID){ adminContent.innerHTML = 'यह सिर्फ Admin के लिए है।'; return; }
-    adminContent.innerHTML = 'लोड हो रहा है...';
-    const { data: rows, error } = await supabase.from('payments').select('*').eq('status','pending').order('created_at',{ascending:false});
-    if(error){ adminContent.innerHTML = 'Error: ' + error.message; return; }
-    if(!rows || rows.length === 0){ adminContent.innerHTML = '<p style="text-align:center; opacity:0.7;">कोई pending payment नहीं है 🎉</p>'; return; }
+supabase.auth.onAuthStateChange(async(event,session)=>{
+ if(event==="PASSWORD_RECOVERY")$("resetBox").classList.remove("hidden");
+});
 
-    adminContent.innerHTML = '';
-    rows.forEach(p => {
-      const div = document.createElement('div');
-      div.className = 'pay-item';
-      div.innerHTML = `
-        <div><b>${p.student_name}</b> (${p.student_email})</div>
-        <div>महीना: ${p.month} | UTR: ${p.utr_number}</div>
-        ${p.screenshot_url ? `<img src="${p.screenshot_url}" alt="screenshot">` : ''}
-        <div class="pay-actions">
-          <button class="approve-btn" data-id="${p.id}" data-act="approved">✅ Approve</button>
-          <button class="reject-btn" data-id="${p.id}" data-act="rejected">❌ Reject</button>
-        </div>
-      `;
-      adminContent.appendChild(div);
-    });
+/* existing session */
+const session=await supabase.auth.getSession();
+if(session.data.session)await enter(session.data.session.user);
 
-    adminContent.querySelectorAll('button[data-id]').forEach(btn => {
-      btn.addEventListener('click', async () => {
-        btn.disabled = true;
-        await supabase.from('payments').update({ status: btn.dataset.act }).eq('id', btn.dataset.id);
-        loadAdminPanel();
-      });
-    });
-  }
+/* ---------- NAV ---------- */
+function showPage(page){
+ document.querySelectorAll("main>section").forEach(x=>x.classList.add("hidden"));
+ $("page-"+page).classList.remove("hidden");
+
+ document.querySelectorAll("#nav button").forEach(b=>{
+   b.classList.toggle("active",b.dataset.page===page);
+ });
+
+ if(page==="exam")loadExam();
+ if(page==="admin")loadAdmin();
+}
+
+$("nav").onclick=e=>{
+ const b=e.target.closest("[data-page]");
+ if(b)showPage(b.dataset.page);
+};
+
+document.querySelectorAll("[data-go]").forEach(b=>{
+ b.onclick=()=>showPage(b.dataset.go);
+});
+
+/* ---------- GINTI ---------- */
+function renderNumber(){
+ $("number").textContent=number;
+ $("word").textContent=nums[number]||number;
+ $("emoji").textContent="🎈".repeat(Math.min(number,10));
+}
+$("prev").onclick=()=>{if(number>1){number--;renderNumber()}};
+$("next").onclick=()=>{if(number<20){number++;renderNumber()}};
+$("speakNumber").onclick=()=>speak(`${number} ${nums[number]}`);
+
+/* ---------- VARNAMALA ---------- */
+$("hindiTab").onclick=()=>renderLetters("hindi");
+$("englishTab").onclick=()=>renderLetters("english");
+
+function renderLetters(type){
+ $("hindiTab").classList.toggle("active",type==="hindi");
+ $("englishTab").classList.toggle("active",type==="english");
+
+ $("letters").innerHTML=(type==="hindi"?hindi:english).map(x=>`
+   <button class="letter" data-letter="${x[0]}" data-word="${x[1]}" data-lang="${type}">
+     <div class="e">${x[2]}</div>
+     <div class="l">${x[0]}</div>
+     <div class="w">${x[1]}</div>
+   </button>
+ `).join("");
+}
+
+$("letters").onclick=e=>{
+ const b=e.target.closest(".letter");
+ if(!b)return;
+ speak(
+   b.dataset.lang==="hindi"
+   ? `${b.dataset.letter} से ${b.dataset.word}`
+   : `${b.dataset.letter} for ${b.dataset.word}`
+ );
+};
+
+/* ---------- PAHADA ---------- */
+function initTable(){
+ $("table").innerHTML="";
+ for(let n=2;n<=20;n++)
+   $("table").innerHTML+=`<option value="${n}">${n} का पहाड़ा</option>`;
+ renderTable();
+}
+$("table").onchange=renderTable;
+
+function renderTable(){
+ const n=Number($("table").value||2);
+ $("tableRows").innerHTML="";
+ for(let i=1;i<=10;i++)
+   $("tableRows").innerHTML+=`
+    <div class="table-line">
+      <span>${n} × ${i}</span><b>${n*i}</b>
+    </div>`;
+}
+
+$("speakTable").onclick=()=>{
+ const n=Number($("table").value||2);
+ speak(Array.from({length:10},(_,i)=>
+   `${n} गुणा ${i+1} बराबर ${n*(i+1)}`
+ ).join(". "));
+};
+
+/* ---------- SPEECH ---------- */
+function speak(text){
+ speechSynthesis.cancel();
+ const u=new SpeechSynthesisUtterance(text);
+ u.lang="hi-IN";
+ u.rate=.92;
+ speechSynthesis.speak(u);
+}
+
+/* ---------- AI ---------- */
+$("ask").onclick=()=>{
+ const q=$("question").value.trim();
+ if(q)askAI({question:q});
+};
+
+let recognition=null;
+const SR=window.SpeechRecognition||window.webkitSpeechRecognition;
+
+if(SR){
+ recognition=new SR();
+ recognition.lang="hi-IN";
+ recognition.onresult=e=>{
+   $("question").value=e.results[0][0].transcript;
+   askAI({question:e.results[0][0].transcript});
+ };
+}
+
+$("mic").onclick=()=>{
+ if(!recognition)return alert("इस browser में voice सुविधा उपलब्ध नहीं है।");
+ recognition.start();
+};
+
+$("cameraBtn").onclick=()=>$("camera").click();
+
+$("camera").onchange=e=>{
+ const file=e.target.files[0];
+ if(!file)return;
+
+ selectedMime=file.type||"image/jpeg";
+
+ const reader=new FileReader();
+ reader.onload=()=>{
+   selectedImage=reader.result.split(",")[1];
+   $("previewImg").src=reader.result;
+   $("preview").style.display="block";
+ };
+ reader.readAsDataURL(file);
+};
+
+$("explain").onclick=()=>{
+ if(selectedImage)
+   askAI({imageBase64:selectedImage,mimeType:selectedMime});
+};
+
+async function askAI(payload){
+ $("aiLoading").classList.remove("hidden");
+ $("answer").classList.add("hidden");
+ $("answerBtns").classList.add("hidden");
+
+ try{
+   const r=await fetch("/api/gemini",{
+     method:"POST",
+     headers:{"Content-Type":"application/json"},
+     body:JSON.stringify(payload)
+   });
+
+   const data=await r.json();
+
+   if(!r.ok)throw Error(data.error||"AI जवाब नहीं दे पाया");
+
+   $("answer").textContent=data.text;
+   $("answer").classList.remove("hidden");
+   $("answerBtns").classList.remove("hidden");
+   speak(data.text);
+
+ }catch(e){
+   $("answer").textContent="😔 "+e.message;
+   $("answer").classList.remove("hidden");
+ }finally{
+   $("aiLoading").classList.add("hidden");
+ }
+}
+
+$("speakAnswer").onclick=()=>speak($("answer").textContent);
+$("stopAnswer").onclick=()=>speechSynthesis.cancel();
+
+/* ---------- EXAM ---------- */
+function month(){
+ const d=new Date();
+ return d.getFullYear()+"-"+String(d.getMonth()+1).padStart(2,"0");
+}
+
+async function loadExam(){
+ const box=$("exam");
+ box.innerHTML="⏳ Loading...";
+
+ const r=await supabase.from("payments")
+   .select("*")
+   .eq("user_id",user.id)
+   .eq("month",month())
+   .order("created_at",{ascending:false})
+   .limit(1);
+
+ if(r.error){
+   box.innerHTML=`<div class="msg show error">${r.error.message}</div>`;
+   return;
+ }
+
+ const p=r.data?.[0];
+
+ if(p?.status==="approved"){
+   startQuiz(box);
+   return;
+ }
+
+ if(p?.status==="pending"){
+   box.innerHTML=`
+    <div class="status pending">
+      ⏳ आपका payment Admin approval का इंतजार कर रहा है।
+    </div>`;
+   return;
+ }
+
+ renderPayment(box,p);
+}
+
+function renderPayment(box,last){
+ const upi=`upi://pay?pa=${encodeURIComponent(ADMIN_UPI_ID)}&pn=${encodeURIComponent(ADMIN_UPI_NAME)}&am=${EXAM_FEE}&cu=INR`;
+ const qr=`https://api.qrserver.com/v1/create-qr-code/?size=250x250&data=${encodeURIComponent(upi)}`;
+
+ box.innerHTML=`
+  ${last?.status==="rejected"?`
+   <div class="status rejected">❌ पिछला payment reject हुआ था। दोबारा भेजें।</div>`:""}
+
+  <p style="text-align:center">इस महीने की परीक्षा के लिए payment करें</p>
+
+  <div class="price">₹${EXAM_FEE}</div>
+
+  <div class="qr">
+   <img src="${qr}" alt="UPI QR">
+   <p><b>UPI:</b> ${ADMIN_UPI_ID}</p>
+  </div>
+
+  <div class="field">
+   <label>UTR / Reference Number</label>
+   <input id="utr" placeholder="Payment के बाद UTR">
+  </div>
+
+  <div class="field">
+   <label>Payment Screenshot</label>
+   <input id="paymentFile" type="file" accept="image/*">
+  </div>
+
+  <button id="paySubmit" class="btn pink">✅ Payment भेजें</button>
+  <div id="payMsg" class="msg"></div>
+
+  <a
+   class="btn yellow"
+   style="display:block;text-align:center;text-decoration:none"
+   href="https://wa.me/${SUPPORT_WHATSAPP}"
+   target="_blank">
+   💬 WhatsApp Support
+  </a>
+ `;
+
+ $("paySubmit").onclick=submitPayment;
+}
+
+async function submitPayment(){
+ const utr=$("utr").value.trim();
+ const file=$("paymentFile").files[0];
+
+ if(!utr)return paymentMsg("UTR डालिए","error");
+ if(!file)return paymentMsg("Screenshot upload करें","error");
+
+ const btn=$("paySubmit");
+ btn.disabled=true;
+ btn.textContent="⏳ भेजा जा रहा है...";
+
+ try{
+   const path=`${user.id}/${Date.now()}-${file.name}`;
+
+   const up=await supabase.storage
+    .from("payment-screenshots")
+    .upload(path,file,{upsert:false});
+
+   if(up.error)throw up.error;
+
+   const publicUrl=supabase.storage
+    .from("payment-screenshots")
+    .getPublicUrl(path).data.publicUrl;
+
+   const r=await supabase.from("payments").insert({
+     user_id:user.id,
+     student_name:profile.full_name||"Student",
+     student_email:user.email,
+     month:month(),
+     utr_number:utr,
+     screenshot_url:publicUrl,
+     status:"pending"
+   });
+
+   if(r.error)throw r.error;
+
+   await loadExam();
+
+ }catch(e){
+   paymentMsg(e.message||"Payment submit नहीं हुआ","error");
+   btn.disabled=false;
+   btn.textContent="✅ Payment भेजें";
+ }
+}
+
+function paymentMsg(t,type){
+ const x=$("payMsg");
+ x.textContent=t;
+ x.className="msg show "+type;
+}
+
+/* ---------- QUIZ ---------- */
+function startQuiz(box){
+ let i=0,score=0;
+
+ function next(){
+   if(i>=questions.length){
+     box.innerHTML=`
+      <div class="status approved">
+       🎉 परीक्षा पूरी!<br>
+       Score: ${score}/${questions.length}
+      </div>
+     `;
+     return;
+   }
+
+   const q=questions[i];
+
+   box.innerHTML=`
+    <div class="status approved">✅ Payment Approved</div>
+    <div class="quiz-q">सवाल ${i+1}/${questions.length}: ${q.q}</div>
+    <div id="options"></div>
+   `;
+
+   q.o.forEach((o,index)=>{
+     const b=document.createElement("button");
+     b.className="option";
+     b.textContent=o;
+
+     b.onclick=()=>{
+       document.querySelectorAll(".option").forEach(x=>x.disabled=true);
+
+       if(index===q.a){
+         b.classList.add("correct");
+         score++;
+       }else{
+         b.classList.add("wrong");
+         document.querySelectorAll(".option")[q.a].classList.add("correct");
+       }
+
+       setTimeout(()=>{
+         i++;
+         next();
+       },900);
+     };
+
+     $("options").appendChild(b);
+   });
+ }
+
+ next();
+}
+
+/* =========================================================
+   ADMIN PANEL
+========================================================= */
+async function loadAdmin(){
+ const box=$("admin");
+
+ if(user.id!==ADMIN_UID){
+   box.innerHTML=`<div class="status rejected">🚫 यह पेज सिर्फ Admin के लिए है।</div>`;
+   return;
+ }
+
+ box.innerHTML="⏳ Admin data loading...";
+
+ const r=await supabase.from("payments")
+   .select("*")
+   .order("created_at",{ascending:false})
+   .limit(100);
+
+ if(r.error){
+   box.innerHTML=`<div class="msg show error">${r.error.message}</div>`;
+   return;
+ }
+
+ const rows=r.data||[];
+ const pending=rows.filter(x=>x.status==="pending").length;
+ const approved=rows.filter(x=>x.status==="approved").length;
+ const rejected=rows.filter(x=>x.status==="rejected").length;
+
+ box.innerHTML=`
+  <div class="admin-stat">
+   <div class="stat"><b>${rows.length}</b>Total</div>
+   <div class="stat"><b>${pending}</b>Pending</div>
+   <div class="stat"><b>${approved}</b>Approved</div>
+  </div>
+
+  <h3>⚙️ Website Controls</h3>
+
+  <div class="field">
+   <label>Website Title</label>
+   <input id="setTitle" value="${localStorage.getItem("padh_title")||"Padh-Ai"}">
+  </div>
+
+  <div class="field">
+   <label>Welcome Message</label>
+   <input id="setWelcome" value="${localStorage.getItem("padh_welcome")||"आज क्या पढ़ना है?"}">
+  </div>
+
+  <label class="check">
+   <input id="maintenance" type="checkbox"
+    ${localStorage.getItem("padh_maintenance")==="1"?"checked":""}>
+   Maintenance Mode
+  </label>
+
+  <button id="saveSettings" class="btn purple">💾 Settings Save करें</button>
+
+  <hr>
+
+  <h3>💳 Payment Requests</h3>
+  <div id="payments"></div>
+ `;
+
+ $("saveSettings").onclick=()=>{
+   localStorage.setItem("padh_title",$("setTitle").value.trim());
+   localStorage.setItem("padh_welcome",$("setWelcome").value.trim());
+   localStorage.setItem("padh_maintenance",$("maintenance").checked?"1":"0");
+   alert("Settings save हो गईं ✅");
+ };
+
+ const list=$("payments");
+
+ if(!rows.length){
+   list.innerHTML="<p>अभी कोई payment नहीं है 🎉</p>";
+   return;
+ }
+
+ rows.forEach(p=>{
+   const div=document.createElement("div");
+   div.className="admin-item";
+
+   div.innerHTML=`
+    <b>👤 ${safe(p.student_name)}</b><br>
+    📧 ${safe(p.student_email)}<br>
+    📅 ${safe(p.month)}<br>
+    🔢 UTR: ${safe(p.utr_number)}<br>
+    📌 Status: <b>${safe(p.status)}</b>
+
+    ${p.screenshot_url?
+      `<img src="${safeAttr(p.screenshot_url)}" alt="Payment screenshot">`
+      :""}
+
+    <div class="admin-actions">
+      <button data-id="${p.id}" data-status="approved"
+       style="background:#19c98b;color:white">
+       ✅ Approve
+      </button>
+
+      <button data-id="${p.id}" data-status="rejected"
+       style="background:#ff5c7a;color:white">
+       ❌ Reject
+      </button>
+    </div>
+   `;
+
+   list.appendChild(div);
+ });
+
+ list.onclick=async e=>{
+   const b=e.target.closest("[data-id]");
+   if(!b)return;
+
+   b.disabled=true;
+
+   const r=await supabase.from("payments")
+    .update({status:b.dataset.status})
+    .eq("id",b.dataset.id);
+
+   if(r.error)alert(r.error.message);
+   else loadAdmin();
+ };
+}
+
+/* basic HTML safety */
+function safe(x){
+ return String(x??"")
+  .replaceAll("&","&amp;")
+  .replaceAll("<","&lt;")
+  .replaceAll(">","&gt;")
+  .replaceAll('"',"&quot;");
+}
+function safeAttr(x){
+ return safe(x).replaceAll("'","&#39;");
+}
+
+/* Service worker optional */
+if("serviceWorker" in navigator && location.protocol!=="file:"){
+ window.addEventListener("load",()=>{
+   navigator.serviceWorker.register("./sw.js").catch(()=>{});
+ });
+}
 </script>
 </body>
 </html>
