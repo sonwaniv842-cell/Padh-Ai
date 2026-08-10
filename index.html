@@ -33,8 +33,11 @@
     <h1>Padh-Ai</h1>
     <p style="font-size: 1.2rem;">नमस्ते बच्चों! चलो मिलकर पढ़ाई को मज़ेदार बनाते हैं 🤖</p>
 
-    <!-- AUTOMATIC LATEST APK DOWNLOAD LINK -->
-    <a href="https://github.com/sonwaniv842-cell/Padh-Ai/releases/latest/download/app-release.apk" class="btn-dl">
+    <!-- 1. HIDDEN BACKGROUND FRAME (सफ़ेद पेज और नया टैब रोकने के लिए) -->
+    <iframe name="download_frame" id="download_frame" style="display: none; width: 0; height: 0; border: none;"></iframe>
+
+    <!-- 2. DIRECT DOWNLOAD LINK TARGETING HIDDEN FRAME -->
+    <a href="https://github.com/sonwaniv842-cell/Padh-Ai/releases/latest/download/app-release.apk" target="download_frame" class="btn-dl" onclick="alert('APK डाउनलोड शुरू हो गया है! कृपया ऊपर या नीचे नोटिफिकेशन बार देखें।')">
         ⬇️ मुफ़्त डाउनलोड करें
     </a>
 
