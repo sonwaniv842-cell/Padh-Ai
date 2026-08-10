@@ -7,7 +7,9 @@ import 'dart:async';
 // --- CONFIG ---
 const supabaseUrl = 'https://tyonurrbwdjqfrmqrgpk.supabase.co';
 const supabaseAnonKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InR5b251cnJid2RqcWZybXFyZ3BrIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODYxNzMzODMsImV4cCI6MjEwMTc0OTM4M30.95tDST7gwxemb2w2SS71arWh77omlFf0ezPwkTun2cM';
-const geminiKey = 'YOUR_GEMINI_KEY'; // यहाँ अपनी Key डालें
+
+// यहाँ आपकी Gemini API Key जोड़ दी गई है
+const geminiKey = 'AQ.Ab8RN6Jncjc5ohHgdhh4-0hKsT21_SXalluvdSsQArNjy90xOQ';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -26,7 +28,10 @@ class PadhAIApp extends StatelessWidget {
       theme: ThemeData.dark().copyWith(
         primaryColor: const Color(0xFF00E5FF),
         scaffoldBackgroundColor: const Color(0xFF0A0E21),
-        cardTheme: CardTheme(color: const Color(0xFF1D1B2E), shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20))),
+        cardTheme: CardTheme(
+          color: const Color(0xFF1D1B2E), 
+          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20))
+        ),
       ),
       home: supabase.auth.currentSession == null ? const AuthGate() : const MainLMS(),
     );
@@ -59,7 +64,7 @@ class _AuthGateState extends State<AuthGate> {
       } else {
         final res = await supabase.auth.signUp(email: emailC.text, password: pinC.text);
         if (res.user != null) {
-          // यहाँ हम पक्का कर रहे हैं कि 'role' और 'full_name' डेटाबेस में जाए
+          // 'role' और 'full_name' डेटाबेस में जाएगा
           await supabase.from('profiles').upsert({
             'id': res.user!.id,
             'full_name': nameC.text.isEmpty ? "Student" : nameC.text,
@@ -95,8 +100,17 @@ class _AuthGateState extends State<AuthGate> {
               const SizedBox(height: 10),
               TextField(controller: pinC, obscureText: true, decoration: const InputDecoration(labelText: "6-अंकों का पिन", border: OutlineInputBorder())),
               const SizedBox(height: 30),
-              isLoading ? const CircularProgressIndicator() : ElevatedButton(onPressed: _handleAuth, style: ElevatedButton.styleFrom(minimumSize: const Size(double.infinity, 55)), child: Text(isLogin ? "प्रवेश करें" : "रजिस्टर करें")),
-              TextButton(onPressed: () => setState(() => isLogin = !isLogin), child: Text(isLogin ? "नया अकाउंट बनायें" : "पुराना अकाउंट लॉगिन करें")),
+              isLoading 
+                ? const CircularProgressIndicator() 
+                : ElevatedButton(
+                    onPressed: _handleAuth, 
+                    style: ElevatedButton.styleFrom(minimumSize: const Size(double.infinity, 55)), 
+                    child: Text(isLogin ? "प्रवेश करें" : "रजिस्टर करें")
+                  ),
+              TextButton(
+                onPressed: () => setState(() => isLogin = !isLogin), 
+                child: Text(isLogin ? "नया अकाउंट बनायें" : "पुराना अकाउंट लॉगिन करें")
+              ),
             ],
           ),
         ),
@@ -117,7 +131,11 @@ class _MainLMSState extends State<MainLMS> {
   Map<String, dynamic>? profile;
 
   @override
-  void initState() { super.initState(); _load(); }
+  void initState() { 
+    super.initState(); 
+    _load(); 
+  }
+
   _load() async {
     try {
       final u = await supabase.from('profiles').select().eq('id', supabase.auth.currentUser!.id).single();
@@ -142,7 +160,10 @@ class _MainLMSState extends State<MainLMS> {
       appBar: AppBar(title: Text("नमस्ते ${profile!['full_name']}!")),
       body: screens[_idx],
       bottomNavigationBar: BottomNavigationBar(
-        currentIndex: _idx, onTap: (i) => setState(() => _idx = i), selectedItemColor: const Color(0xFF00E5FF), type: BottomNavigationBarType.fixed,
+        currentIndex: _idx, 
+        onTap: (i) => setState(() => _idx = i), 
+        selectedItemColor: const Color(0xFF00E5FF), 
+        type: BottomNavigationBarType.fixed,
         items: [
           const BottomNavigationBarItem(icon: Icon(Icons.school), label: "Learn"),
           const BottomNavigationBarItem(icon: Icon(Icons.chat), label: "Teacher"),
@@ -163,18 +184,28 @@ class _MainLMSState extends State<MainLMS> {
       ],
     );
   }
-  Widget _btn(String t, VoidCallback tap) => Card(child: ListTile(title: Text(t), trailing: const Icon(Icons.play_circle_fill, color: Colors.greenAccent), onTap: tap));
+
+  Widget _btn(String t, VoidCallback tap) => Card(
+    child: ListTile(
+      title: Text(t), 
+      trailing: const Icon(Icons.play_circle_fill, color: Colors.greenAccent), 
+      onTap: tap
+    )
+  );
 }
 
 // --- 3. SLOW AUTO STUDY MODULE ---
 class AutoStudy extends StatefulWidget {
-  final String type; const AutoStudy({super.key, required this.type});
+  final String type; 
+  const AutoStudy({super.key, required this.type});
   @override
   State<AutoStudy> createState() => _AutoStudyState();
 }
 
 class _AutoStudyState extends State<AutoStudy> {
-  int cur = 1; bool isP = false; final _tts = FlutterTts();
+  int cur = 1; 
+  bool isP = false; 
+  final _tts = FlutterTts();
 
   _play() async {
     await _tts.setLanguage("hi-IN");
@@ -190,28 +221,44 @@ class _AutoStudyState extends State<AutoStudy> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(title: Text(widget.type)),
-      body: Center(child: Column(mainAxisAlignment: MainAxisAlignment.center, children: [
-        Text("$cur", style: const TextStyle(fontSize: 150, fontWeight: FontWeight.bold, color: Color(0xFF00E5FF))),
-        const SizedBox(height: 50),
-        ElevatedButton(onPressed: () { setState(() => isP = !isP); if(isP) _play(); }, child: Text(isP ? "रोकें (STOP)" : "पढ़ना शुरू करें")),
-      ])),
+      body: Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center, 
+          children: [
+            Text("$cur", style: const TextStyle(fontSize: 150, fontWeight: FontWeight.bold, color: Color(0xFF00E5FF))),
+            const SizedBox(height: 50),
+            ElevatedButton(
+              onPressed: () { 
+                setState(() => isP = !isP); 
+                if(isP) _play(); 
+              }, 
+              child: Text(isP ? "रोकें (STOP)" : "पढ़ना शुरू करें")
+            ),
+          ]
+        )
+      ),
     );
   }
 }
 
 // --- 4. PERSONALIZED AI TEACHER (GEMINI) ---
 class AIChat extends StatefulWidget {
-  final String studentName; const AIChat({super.key, required this.studentName});
+  final String studentName; 
+  const AIChat({super.key, required this.studentName});
   @override
   State<AIChat> createState() => _AIChatState();
 }
 
 class _AIChatState extends State<AIChat> {
-  final _msgC = TextEditingController(); final List<Map<String, String>> _chats = []; final _tts = FlutterTts();
+  final _msgC = TextEditingController(); 
+  final List<Map<String, String>> _chats = []; 
+  final _tts = FlutterTts();
 
   _send() async {
-    String q = _msgC.text; if (q.isEmpty) return;
-    setState(() => _chats.add({"r": "u", "m": q})); _msgC.clear();
+    String q = _msgC.text; 
+    if (q.isEmpty) return;
+    setState(() => _chats.add({"r": "u", "m": q})); 
+    _msgC.clear();
     
     try {
       final model = GenerativeModel(model: 'gemini-1.5-flash', apiKey: geminiKey);
@@ -227,12 +274,28 @@ class _AIChatState extends State<AIChat> {
 
   @override
   Widget build(BuildContext context) {
-    return Column(children: [
-      Expanded(child: ListView.builder(itemCount: _chats.length, itemBuilder: (c, i) => ListTile(
-        title: Text(_chats[i]['m']!), leading: Text(_chats[i]['r'] == 'u' ? "🧒" : "🤖"),
-      ))),
-      Padding(padding: const EdgeInsets.all(12), child: Row(children: [Expanded(child: TextField(controller: _msgC)), IconButton(icon: const Icon(Icons.send), onPressed: _send)]))
-    ]);
+    return Column(
+      children: [
+        Expanded(
+          child: ListView.builder(
+            itemCount: _chats.length, 
+            itemBuilder: (c, i) => ListTile(
+              title: Text(_chats[i]['m']!), 
+              leading: Text(_chats[i]['r'] == 'u' ? "🧒" : "🤖"),
+            )
+          )
+        ),
+        Padding(
+          padding: const EdgeInsets.all(12), 
+          child: Row(
+            children: [
+              Expanded(child: TextField(controller: _msgC)), 
+              IconButton(icon: const Icon(Icons.send), onPressed: _send)
+            ]
+          )
+        )
+      ]
+    );
   }
 }
 
@@ -241,11 +304,14 @@ class MasterAdmin extends StatelessWidget {
   const MasterAdmin({super.key});
   @override
   Widget build(BuildContext context) {
-    return ListView(padding: const EdgeInsets.all(20), children: [
-      const Text("मास्टर एडमिन कंट्रोल", style: TextStyle(fontSize: 22, color: Color(0xFF00E5FF))),
-      const Divider(),
-      ListTile(title: const Text("एग्जाम फीस बदलें"), trailing: const Icon(Icons.edit)),
-      ListTile(title: const Text("छात्रों की लिस्ट (Payment Approve)"), trailing: const Icon(Icons.check_circle_outline)),
-    ]);
+    return ListView(
+      padding: const EdgeInsets.all(20), 
+      children: [
+        const Text("मास्टर एडमिन कंट्रोल", style: TextStyle(fontSize: 22, color: Color(0xFF00E5FF))),
+        const Divider(),
+        ListTile(title: const Text("एग्जाम फीस बदलें"), trailing: const Icon(Icons.edit)),
+        ListTile(title: const Text("छात्रों की लिस्ट (Payment Approve)"), trailing: const Icon(Icons.check_circle_outline)),
+      ]
+    );
   }
 }
