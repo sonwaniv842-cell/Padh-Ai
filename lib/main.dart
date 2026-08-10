@@ -220,8 +220,8 @@ class _LMSWrapperState extends State<LMSWrapper> {
       if (isAdmin) const AdminDashboardTab(),
     ];
 
-    return PopScope(
-      canPop: !_studyLockActive,
+    return WillPopScope(
+      onWillPop: () async => !_studyLockActive,
       child: Scaffold(
         appBar: AppBar(
           title: Text("PADH-AI (${_profile!['grade'] ?? 'KG1-KG4'})", style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: Color(0xFF00E5FF))),
