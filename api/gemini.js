@@ -1,4 +1,10 @@
+import { GoogleGenAI } from "@google/genai";
+
 export default async function handler(req, res) {
+
+  // =====================================================
+  // ONLY POST
+  // =====================================================
 
   if (req.method !== "POST") {
     return res.status(405).json({
@@ -6,15 +12,24 @@ export default async function handler(req, res) {
     });
   }
 
+  // =====================================================
+  // GEMINI API KEY
+  // =====================================================
+
   const API_KEY = process.env.GEMINI_API_KEY;
 
   if (!API_KEY) {
     return res.status(500).json({
-      error: "GEMINI_API_KEY Vercel में सेट नहीं है।"
+      error:
+        "GEMINI_API_KEY Vercel Environment Variables में सेट नहीं है।"
     });
   }
 
   try {
+
+    // ===================================================
+    // REQUEST DATA
+    // ===================================================
 
     const {
       question = "",
@@ -32,216 +47,193 @@ export default async function handler(req, res) {
       });
     }
 
+    // ===================================================
+    // PADH-AI TEACHER
+    // ===================================================
+
     const teacherPrompt = `
 तुम "Padh-Ai" के प्यारे, धैर्यवान और बच्चों के लिए
 बनाए गए AI Teacher हो।
 
-बच्चों से हमेशा प्यार और सम्मान से बात करो।
+तुम्हारा काम बच्चों को पढ़ाई समझाना है।
 
 मुख्य नियम:
 
-1. आसान हिंदी में समझाओ।
-2. जरूरत पर English शब्द का आसान अर्थ बताओ।
-3. गणित में step-by-step समाधान दो।
-4. अंत में साफ final answer दो।
-5. पहाड़ा पूछने पर पूरा पहाड़ा दो।
-6. गिनती पूछने पर उदाहरण देकर समझाओ।
-7. हिंदी वर्णमाला बच्चों के स्तर पर समझाओ।
-8. Science और सामान्य ज्ञान में तथ्य सही रखो।
-9. फोटो भेजी गई हो तो उसे ध्यान से पढ़ो।
-10. फोटो में maths, Hindi, English, worksheet या diagram हो
-    तो पहले प्रश्न समझो और फिर उत्तर दो।
-11. सिर्फ answer नहीं, जहाँ संभव हो तरीका भी समझाओ।
-12. छोटे sections और bullets इस्तेमाल करो।
-13. जरूरत पर 😊 📚 ✏️ ⭐ 🧠 🎉 जैसे emoji इस्तेमाल कर सकते हो।
-14. अस्पष्ट सवाल हो तो छोटा clarification पूछो।
-15. खतरनाक या असुरक्षित चीजों में मदद मत करो।
-16. अपने आपको Google Assistant मत बताओ।
+1. बच्चों से हमेशा प्यार और सम्मान से बात करो।
+
+2. भाषा बहुत आसान हिंदी रखो।
+
+3. जरूरत पड़ने पर English शब्द का आसान अर्थ भी बताओ।
+
+4. गणित के सवाल में:
+   - पहले सवाल समझाओ
+   - फिर step-by-step हल करो
+   - अंत में साफ final answer दो
+
+5. अगर बच्चा पहाड़ा पूछे तो पूरा पहाड़ा दो।
+
+6. अगर बच्चा गिनती पूछे तो उदाहरण देकर समझाओ।
+
+7. अगर बच्चा हिंदी वर्णमाला पूछे तो बच्चों के स्तर पर समझाओ।
+
+8. Science या सामान्य ज्ञान में गलत तथ्य मत बनाओ।
+
+9. अगर प्रश्न की फोटो भेजी गई है तो फोटो को ध्यान से पढ़ो।
+
+10. फोटो में किताब, worksheet, maths question,
+    Hindi question, English question या diagram हो
+    तो पहले उसे समझो और फिर आसान भाषा में उत्तर दो।
+
+11. बच्चे को सिर्फ answer मत दो।
+    जहाँ संभव हो यह भी समझाओ कि answer कैसे आया।
+
+12. बहुत बड़े paragraph मत लिखो।
+
+13. छोटे sections और bullets इस्तेमाल करो।
+
+14. जरूरत के अनुसार emoji इस्तेमाल कर सकते हो:
+    😊 📚 ✏️ 🤖 ⭐ 🔢 🎯 🧠 🎉
+
+15. यदि सवाल अस्पष्ट है तो छोटा clarification पूछो।
+
+16. खतरनाक या बच्चों के लिए असुरक्षित चीजों में मदद मत करो।
+
 17. तुम Padh-Ai के AI Teacher हो।
-18. बच्चे की गलती पर डाँटो मत, प्यार से सही तरीका समझाओ।
-19. उत्तर दोस्ताना और encouraging रखो।
+
+18. उत्तर दोस्ताना और encouraging होना चाहिए।
+
+19. यदि बच्चा गलती करे तो उसे डाँटो मत।
+    प्यार से सही तरीका समझाओ।
+
+20. जरूरत हो तो अंत में छोटा encouragement दो।
 `;
 
-    /* =========================================
-       INPUT
-    ========================================= */
+    // ===================================================
+    // GOOGLE GENAI CLIENT
+    // ===================================================
 
-    const input = [];
+    const ai = new GoogleGenAI({
+      apiKey: API_KEY
+    });
 
-    /* Previous history */
+    // ===================================================
+    // BUILD CONTENTS
+    // ===================================================
+
+    const contents = [];
+
+    // ===================================================
+    // PREVIOUS HISTORY
+    // ===================================================
+
     if (Array.isArray(history)) {
 
       for (const item of history.slice(-12)) {
 
-        if (!item || !item.text) {
+        if (
+          !item ||
+          !item.role ||
+          !item.text
+        ) {
           continue;
         }
 
-        input.push({
-          type: "text",
-          text:
-            `${item.role === "assistant"
-              ? "Teacher"
-              : "Student"}: ${String(item.text)}`
+        contents.push({
+          role:
+            item.role === "assistant"
+              ? "model"
+              : "user",
+
+          parts: [
+            {
+              text: String(item.text)
+            }
+          ]
         });
-
       }
-
     }
 
-    /* Image */
+    // ===================================================
+    // CURRENT MESSAGE
+    // ===================================================
+
+    const currentParts = [];
+
+    // IMAGE
     if (imageBase64) {
 
-      input.push({
-        type: "image",
-        mime_type: mimeType || "image/jpeg",
-        data: imageBase64
+      currentParts.push({
+        text:
+          "यह बच्चे द्वारा भेजी गई प्रश्न की फोटो है। " +
+          "फोटो को ध्यान से पढ़ो और प्रश्न को समझाकर " +
+          "आसान भाषा में step-by-step उत्तर दो।"
       });
 
+      currentParts.push({
+        inlineData: {
+          mimeType:
+            mimeType || "image/jpeg",
+
+          data:
+            imageBase64
+        }
+      });
     }
 
-    /* Question */
+    // TEXT
     if (cleanQuestion) {
 
-      input.push({
-        type: "text",
+      currentParts.push({
         text:
           `बच्चे का सवाल:\n${cleanQuestion}`
       });
-
-    } else if (imageBase64) {
-
-      input.push({
-        type: "text",
-        text:
-          "इस फोटो में दिए गए प्रश्न को पढ़कर आसान भाषा में step-by-step समझाओ और उत्तर दो।"
-      });
-
     }
 
-    /* =========================================
-       GEMINI INTERACTIONS API
-    ========================================= */
+    contents.push({
+      role: "user",
+      parts: currentParts
+    });
 
-    const url =
-      "https://generativelanguage.googleapis.com/v1beta/interactions";
+    // ===================================================
+    // GEMINI
+    // ===================================================
 
-    const response = await fetch(url, {
-
-      method: "POST",
-
-      headers: {
-        "Content-Type": "application/json",
-        "x-goog-api-key": API_KEY
-      },
-
-      body: JSON.stringify({
+    const response =
+      await ai.models.generateContent({
 
         model: "gemini-3.6-flash",
 
-        input,
+        contents: contents,
 
-        system_instruction:
-          teacherPrompt,
+        config: {
+          systemInstruction: teacherPrompt,
 
-        generation_config: {
-          max_output_tokens: 1800
-        },
-
-        store: false
-
-      })
-
-    });
-
-    const data = await response.json();
-
-    /* =========================================
-       GEMINI ERROR
-    ========================================= */
-
-    if (!response.ok) {
-
-      console.error(
-        "Gemini API error:",
-        data
-      );
-
-      return res.status(response.status).json({
-
-        error:
-          data?.error?.message ||
-          "Gemini AI Teacher से जवाब नहीं मिला।",
-
-        status:
-          data?.error?.status || "UNKNOWN"
+          maxOutputTokens: 1800
+        }
 
       });
 
-    }
+    // ===================================================
+    // GET TEXT
+    // ===================================================
 
-    /* =========================================
-       FIND MODEL TEXT
-    ========================================= */
+    const text =
+      response?.text
+        ? String(response.text).trim()
+        : "";
 
-    let text = "";
-
-    if (Array.isArray(data?.steps)) {
-
-      for (const step of data.steps) {
-
-        if (
-          step?.type === "model_output" &&
-          Array.isArray(step.content)
-        ) {
-
-          for (const item of step.content) {
-
-            if (
-              item?.type === "text" &&
-              item?.text
-            ) {
-
-              text +=
-                String(item.text) + "\n";
-
-            }
-
-          }
-
-        }
-
-      }
-
-    }
-
-    text = text.trim();
-
-    /* =========================================
-       FALLBACK
-    ========================================= */
-
-    if (!text && data?.output_text) {
-
-      text =
-        String(data.output_text).trim();
-
-    }
+    // ===================================================
+    // FINAL RESPONSE
+    // ===================================================
 
     if (!text) {
 
       return res.status(502).json({
-
         error:
-          "AI Teacher ने कोई text response नहीं दिया।"
-
+          "Gemini AI Teacher से जवाब नहीं मिला।"
       });
 
     }
-
-    /* =========================================
-       SUCCESS
-    ========================================= */
 
     return res.status(200).json({
       text
@@ -250,17 +242,35 @@ export default async function handler(req, res) {
   } catch (error) {
 
     console.error(
-      "Padh-Ai server error:",
+      "Padh-Ai Gemini error:",
       error
     );
 
+    // ===================================================
+    // FRIENDLY ERROR
+    // ===================================================
+
+    const message =
+      error?.message ||
+      String(error);
+
+    if (
+      message.includes("401") ||
+      message.includes("UNAUTHENTICATED") ||
+      message.includes("authentication") ||
+      message.includes("ACCESS_TOKEN")
+    ) {
+
+      return res.status(401).json({
+        error:
+          "Gemini Authentication में समस्या है। " +
+          "Vercel में GEMINI_API_KEY को नई AQ. Authorization Key से अपडेट करें।"
+      });
+    }
+
     return res.status(500).json({
-
       error:
-        "AI Teacher server में समस्या हुई। थोड़ी देर बाद फिर कोशिश करें।"
-
+        "Gemini AI Teacher से जवाब नहीं मिला।"
     });
-
   }
-
 }
