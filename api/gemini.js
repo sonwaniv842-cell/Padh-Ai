@@ -1,36 +1,21 @@
 import { GoogleGenAI } from "@google/genai";
 
 export default async function handler(req, res) {
-
-  // =====================================================
-  // ONLY POST
-  // =====================================================
-
   if (req.method !== "POST") {
     return res.status(405).json({
       error: "सिर्फ POST request allowed है।"
     });
   }
 
-  // =====================================================
-  // GEMINI API KEY
-  // =====================================================
-
   const API_KEY = process.env.GEMINI_API_KEY;
 
   if (!API_KEY) {
     return res.status(500).json({
-      error:
-        "GEMINI_API_KEY Vercel Environment Variables में सेट नहीं है।"
+      error: "GEMINI_API_KEY Vercel में सेट नहीं है।"
     });
   }
 
   try {
-
-    // ===================================================
-    // REQUEST DATA
-    // ===================================================
-
     const {
       question = "",
       imageBase64 = "",
@@ -38,8 +23,7 @@ export default async function handler(req, res) {
       history = []
     } = req.body || {};
 
-    const cleanQuestion =
-      String(question || "").trim();
+    const cleanQuestion = String(question).trim();
 
     if (!cleanQuestion && !imageBase64) {
       return res.status(400).json({
@@ -47,103 +31,42 @@ export default async function handler(req, res) {
       });
     }
 
-    // ===================================================
-    // PADH-AI TEACHER
-    // ===================================================
-
-    const teacherPrompt = `
-तुम "Padh-Ai" के प्यारे, धैर्यवान और बच्चों के लिए
-बनाए गए AI Teacher हो।
-
-तुम्हारा काम बच्चों को पढ़ाई समझाना है।
-
-मुख्य नियम:
-
-1. बच्चों से हमेशा प्यार और सम्मान से बात करो।
-
-2. भाषा बहुत आसान हिंदी रखो।
-
-3. जरूरत पड़ने पर English शब्द का आसान अर्थ भी बताओ।
-
-4. गणित के सवाल में:
-   - पहले सवाल समझाओ
-   - फिर step-by-step हल करो
-   - अंत में साफ final answer दो
-
-5. अगर बच्चा पहाड़ा पूछे तो पूरा पहाड़ा दो।
-
-6. अगर बच्चा गिनती पूछे तो उदाहरण देकर समझाओ।
-
-7. अगर बच्चा हिंदी वर्णमाला पूछे तो बच्चों के स्तर पर समझाओ।
-
-8. Science या सामान्य ज्ञान में गलत तथ्य मत बनाओ।
-
-9. अगर प्रश्न की फोटो भेजी गई है तो फोटो को ध्यान से पढ़ो।
-
-10. फोटो में किताब, worksheet, maths question,
-    Hindi question, English question या diagram हो
-    तो पहले उसे समझो और फिर आसान भाषा में उत्तर दो।
-
-11. बच्चे को सिर्फ answer मत दो।
-    जहाँ संभव हो यह भी समझाओ कि answer कैसे आया।
-
-12. बहुत बड़े paragraph मत लिखो।
-
-13. छोटे sections और bullets इस्तेमाल करो।
-
-14. जरूरत के अनुसार emoji इस्तेमाल कर सकते हो:
-    😊 📚 ✏️ 🤖 ⭐ 🔢 🎯 🧠 🎉
-
-15. यदि सवाल अस्पष्ट है तो छोटा clarification पूछो।
-
-16. खतरनाक या बच्चों के लिए असुरक्षित चीजों में मदद मत करो।
-
-17. तुम Padh-Ai के AI Teacher हो।
-
-18. उत्तर दोस्ताना और encouraging होना चाहिए।
-
-19. यदि बच्चा गलती करे तो उसे डाँटो मत।
-    प्यार से सही तरीका समझाओ।
-
-20. जरूरत हो तो अंत में छोटा encouragement दो।
-`;
-
-    // ===================================================
-    // GOOGLE GENAI CLIENT
-    // ===================================================
-
+    // GoogleGenAI Initialization
     const ai = new GoogleGenAI({
       apiKey: API_KEY
     });
 
-    // ===================================================
-    // BUILD CONTENTS
-    // ===================================================
+    const parts = [];
+
+    if (imageBase64) {
+      parts.push({
+        text:
+          "यह बच्चे द्वारा भेजी गई पढ़ाई के सवाल की फोटो है। " +
+          "फोटो को ध्यान से पढ़कर आसान हिंदी में step-by-step समझाओ।"
+      });
+
+      parts.push({
+        inlineData: {
+          mimeType: mimeType || "image/jpeg",
+          data: imageBase64
+        }
+      });
+    }
+
+    if (cleanQuestion) {
+      parts.push({
+        text: `बच्चे का सवाल:\n${cleanQuestion}`
+      });
+    }
 
     const contents = [];
 
-    // ===================================================
-    // PREVIOUS HISTORY
-    // ===================================================
-
     if (Array.isArray(history)) {
-
       for (const item of history.slice(-12)) {
-
-        if (
-          !item ||
-          !item.role ||
-          !item.text
-        ) {
-          continue;
-        }
+        if (!item?.text) continue;
 
         contents.push({
-          role:
-            item.role === "assistant"
-              ? "model"
-              : "user",
-
+          role: item.role === "assistant" ? "model" : "user",
           parts: [
             {
               text: String(item.text)
@@ -153,86 +76,37 @@ export default async function handler(req, res) {
       }
     }
 
-    // ===================================================
-    // CURRENT MESSAGE
-    // ===================================================
-
-    const currentParts = [];
-
-    // IMAGE
-    if (imageBase64) {
-
-      currentParts.push({
-        text:
-          "यह बच्चे द्वारा भेजी गई प्रश्न की फोटो है। " +
-          "फोटो को ध्यान से पढ़ो और प्रश्न को समझाकर " +
-          "आसान भाषा में step-by-step उत्तर दो।"
-      });
-
-      currentParts.push({
-        inlineData: {
-          mimeType:
-            mimeType || "image/jpeg",
-
-          data:
-            imageBase64
-        }
-      });
-    }
-
-    // TEXT
-    if (cleanQuestion) {
-
-      currentParts.push({
-        text:
-          `बच्चे का सवाल:\n${cleanQuestion}`
-      });
-    }
-
     contents.push({
       role: "user",
-      parts: currentParts
+      parts
     });
 
-    // ===================================================
-    // GEMINI
-    // ===================================================
+    // Correct model name: gemini-1.5-flash or gemini-2.0-flash
+    const result = await ai.models.generateContent({
+      model: "gemini-1.5-flash",
+      contents,
+      config: {
+        systemInstruction: `
+तुम Padh-Ai के प्यारे और धैर्यवान AI Teacher हो।
 
-    const response =
-      await ai.models.generateContent({
+बच्चों को आसान हिंदी में पढ़ाई समझाओ।
+गणित में step-by-step समाधान दो।
+जरूरत पर English शब्द का आसान अर्थ बताओ।
+फोटो में दिए सवाल को ध्यान से पढ़ो।
+बच्चे को डाँटो मत।
+छोटे paragraphs और bullets इस्तेमाल करो।
+उत्तर दोस्ताना और encouraging रखो।
+        `,
+        maxOutputTokens: 1800
+      }
+    });
 
-        model: "gemini-3.6-flash",
-
-        contents: contents,
-
-        config: {
-          systemInstruction: teacherPrompt,
-
-          maxOutputTokens: 1800
-        }
-
-      });
-
-    // ===================================================
-    // GET TEXT
-    // ===================================================
-
-    const text =
-      response?.text
-        ? String(response.text).trim()
-        : "";
-
-    // ===================================================
-    // FINAL RESPONSE
-    // ===================================================
+    const text = result?.text?.trim();
 
     if (!text) {
-
       return res.status(502).json({
-        error:
-          "Gemini AI Teacher से जवाब नहीं मिला।"
+        error: "Gemini से कोई उत्तर नहीं मिला।"
       });
-
     }
 
     return res.status(200).json({
@@ -240,37 +114,10 @@ export default async function handler(req, res) {
     });
 
   } catch (error) {
-
-    console.error(
-      "Padh-Ai Gemini error:",
-      error
-    );
-
-    // ===================================================
-    // FRIENDLY ERROR
-    // ===================================================
-
-    const message =
-      error?.message ||
-      String(error);
-
-    if (
-      message.includes("401") ||
-      message.includes("UNAUTHENTICATED") ||
-      message.includes("authentication") ||
-      message.includes("ACCESS_TOKEN")
-    ) {
-
-      return res.status(401).json({
-        error:
-          "Gemini Authentication में समस्या है। " +
-          "Vercel में GEMINI_API_KEY को नई AQ. Authorization Key से अपडेट करें।"
-      });
-    }
+    console.error("Gemini Error:", error);
 
     return res.status(500).json({
-      error:
-        "Gemini AI Teacher से जवाब नहीं मिला।"
+      error: "Gemini AI Teacher से जवाब नहीं मिला: " + (error?.message || error)
     });
   }
 }
