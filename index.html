@@ -3,7 +3,8 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0,user-scalable=no">
-<meta name="theme-color" content="#6d35df">
+
+<meta name="theme-color" content="#6734df">
 
 <title>Padh-Ai 🤖 | बच्चों का AI Teacher</title>
 
@@ -33,8 +34,8 @@ body{
 
   background:
     radial-gradient(circle at 5% 5%,#d8f7ff 0,transparent 28%),
-    radial-gradient(circle at 95% 10%,#ffe9ff 0,transparent 30%),
-    radial-gradient(circle at 50% 100%,#fff4c9 0,transparent 28%),
+    radial-gradient(circle at 95% 10%,#ffe6fa 0,transparent 30%),
+    radial-gradient(circle at 50% 100%,#fff3c7 0,transparent 28%),
     linear-gradient(135deg,#f5f1ff,#eefaff);
 }
 
@@ -49,8 +50,9 @@ button{
 }
 
 .hidden{
-  display:none !important;
+  display:none!important;
 }
+
 
 /* =====================================================
    APP
@@ -60,33 +62,35 @@ button{
   width:100%;
   max-width:1250px;
   margin:auto;
-  padding:12px;
+  padding:10px;
 }
 
+
 /* =====================================================
-   TOP HEADER
+   TOP BAR
 ===================================================== */
 
 .topbar{
-  background:rgba(255,255,255,.94);
+  background:rgba(255,255,255,.96);
 
   border:3px solid #30265b;
-  border-radius:25px;
+  border-radius:24px;
 
-  padding:10px 14px;
+  padding:9px 12px;
 
   display:flex;
   align-items:center;
   justify-content:space-between;
-  gap:12px;
+
+  gap:10px;
 
   box-shadow:0 7px 0 #30265b;
 
   margin-bottom:15px;
 
   position:sticky;
-  top:8px;
-  z-index:50;
+  top:7px;
+  z-index:100;
 
   backdrop-filter:blur(12px);
 }
@@ -98,25 +102,115 @@ button{
   min-width:0;
 }
 
-.brand-robot{
-  width:50px;
-  height:50px;
 
-  border-radius:16px;
+/* =====================================================
+   3D CARTOON AI LOGO
+===================================================== */
+
+.brand-ai{
+  width:55px;
+  height:55px;
+
+  position:relative;
+
+  border-radius:19px;
 
   display:flex;
   align-items:center;
   justify-content:center;
 
-  font-size:31px;
-
   background:
-    linear-gradient(145deg,#d9c7ff,#72e8ff);
+    linear-gradient(145deg,#ffffff,#d9d0ff 45%,#8f75e9);
 
   border:3px solid #30265b;
 
   box-shadow:
-    inset 0 -5px 0 rgba(0,0,0,.08);
+    0 6px 0 #30265b,
+    inset -7px -7px 12px rgba(72,39,160,.16);
+
+  overflow:visible;
+}
+
+.brand-ai .face{
+  width:36px;
+  height:30px;
+
+  border-radius:13px;
+
+  background:#fff;
+
+  border:3px solid #5d3cc5;
+
+  position:relative;
+
+  box-shadow:inset 0 -4px 0 #eee8ff;
+}
+
+.brand-ai .eye{
+  position:absolute;
+
+  width:6px;
+  height:8px;
+
+  border-radius:50%;
+
+  background:#30265b;
+
+  top:8px;
+}
+
+.brand-ai .eye.left{
+  left:7px;
+}
+
+.brand-ai .eye.right{
+  right:7px;
+}
+
+.brand-ai .mouth{
+  position:absolute;
+
+  width:12px;
+  height:6px;
+
+  border-bottom:3px solid #30265b;
+
+  border-radius:50%;
+
+  left:9px;
+  bottom:4px;
+}
+
+.brand-ai .antenna{
+  position:absolute;
+
+  width:5px;
+  height:11px;
+
+  background:#5d3cc5;
+
+  left:25px;
+  top:-10px;
+
+  border-radius:5px;
+}
+
+.brand-ai .antenna:after{
+  content:"";
+
+  position:absolute;
+
+  width:9px;
+  height:9px;
+
+  border-radius:50%;
+
+  background:#16d7a6;
+
+  border:2px solid #30265b;
+
+  left:-2px;
+  top:-7px;
 }
 
 .brand-text{
@@ -124,26 +218,27 @@ button{
 }
 
 .brand-name{
-  font-size:25px;
+  font-size:24px;
   font-weight:1000;
 
   background:
-    linear-gradient(90deg,#6830df,#08bfe8);
+    linear-gradient(90deg,#6732dc,#08bfe8);
 
   -webkit-background-clip:text;
   background-clip:text;
+
   color:transparent;
 }
 
 .brand-sub{
-  font-size:11px;
+  font-size:10px;
   font-weight:900;
   color:#766e92;
 }
 
 .nav{
   display:flex;
-  gap:5px;
+  gap:4px;
   overflow:auto;
 }
 
@@ -151,9 +246,9 @@ button{
   border:0;
   background:transparent;
 
-  padding:11px 12px;
+  padding:10px 11px;
 
-  border-radius:15px;
+  border-radius:14px;
 
   font-weight:1000;
   color:#443b68;
@@ -173,12 +268,13 @@ button{
   gap:7px;
 
   font-weight:1000;
+
   white-space:nowrap;
 }
 
 .profile-avatar{
-  width:42px;
-  height:42px;
+  width:41px;
+  height:41px;
 
   border-radius:50%;
 
@@ -190,21 +286,22 @@ button{
 
   border:3px solid #30265b;
 
-  font-size:25px;
+  font-size:24px;
 }
 
+
 /* =====================================================
-   LOGO / HERO
+   BIG HERO
 ===================================================== */
 
 .logo-stage{
   border:5px solid #30265b;
-  border-radius:34px;
+  border-radius:32px;
 
   overflow:hidden;
 
   background:
-    radial-gradient(circle at 50% 20%,#4c9dff,#15105e 50%,#220b63);
+    radial-gradient(circle at 50% 15%,#56a7ff,#17115e 48%,#24096b);
 
   box-shadow:0 11px 0 #30265b;
 
@@ -220,9 +317,9 @@ button{
   inset:0;
 
   background:
-    radial-gradient(circle,#ffffff 1px,transparent 2px);
+    radial-gradient(circle,#fff 1px,transparent 2px);
 
-  background-size:42px 42px;
+  background-size:43px 43px;
 
   opacity:.35;
 }
@@ -235,103 +332,330 @@ button{
 
 .stars span{
   position:absolute;
-  font-size:25px;
-  animation:twinkle 2.5s infinite alternate;
+  font-size:23px;
+
+  animation:twinkle 2.4s infinite alternate;
 }
 
-.stars span:nth-child(1){left:5%;top:8%}
-.stars span:nth-child(2){left:20%;top:16%;animation-delay:.5s}
-.stars span:nth-child(3){right:8%;top:10%;animation-delay:1s}
-.stars span:nth-child(4){right:20%;top:30%;animation-delay:1.4s}
-.stars span:nth-child(5){left:10%;bottom:25%;animation-delay:.7s}
-.stars span:nth-child(6){right:7%;bottom:22%;animation-delay:1.2s}
+.stars span:nth-child(1){
+  left:5%;
+  top:8%;
+}
+
+.stars span:nth-child(2){
+  left:20%;
+  top:17%;
+  animation-delay:.4s;
+}
+
+.stars span:nth-child(3){
+  right:8%;
+  top:10%;
+  animation-delay:.8s;
+}
+
+.stars span:nth-child(4){
+  right:20%;
+  top:30%;
+  animation-delay:1.2s;
+}
+
+.stars span:nth-child(5){
+  left:10%;
+  bottom:25%;
+  animation-delay:.7s;
+}
+
+.stars span:nth-child(6){
+  right:7%;
+  bottom:22%;
+  animation-delay:1.1s;
+}
 
 @keyframes twinkle{
   from{
-    transform:scale(.8) rotate(-10deg);
+    transform:scale(.8) rotate(-8deg);
     opacity:.5;
   }
+
   to{
-    transform:scale(1.2) rotate(10deg);
+    transform:scale(1.2) rotate(8deg);
     opacity:1;
   }
 }
+
+
+/* =====================================================
+   LARGE 3D CARTOON
+===================================================== */
 
 .logo-content{
   position:relative;
   z-index:2;
 
-  padding:35px 20px 22px;
+  padding:35px 15px 25px;
 
   text-align:center;
 }
 
-.ai-character{
-  width:180px;
-  height:180px;
+.cartoon-ai{
+  width:190px;
+  height:205px;
 
-  margin:0 auto 10px;
-
-  border-radius:48%;
-
-  background:
-    linear-gradient(145deg,#dcd8ff,#9a8cff);
-
-  border:6px solid #4b20a4;
-
-  box-shadow:
-    0 15px 0 #2d1769,
-    inset 0 -15px 20px rgba(53,22,126,.15);
-
-  display:flex;
-  align-items:center;
-  justify-content:center;
-
-  font-size:105px;
+  margin:0 auto 15px;
 
   position:relative;
 
-  animation:robotFloat 3s ease-in-out infinite;
+  animation:floatAI 3s ease-in-out infinite;
+
+  filter:
+    drop-shadow(0 13px 0 rgba(0,0,0,.25));
 }
 
-@keyframes robotFloat{
+@keyframes floatAI{
   0%,100%{
     transform:translateY(0);
   }
+
   50%{
     transform:translateY(-9px);
   }
 }
 
-.ai-character:before{
+.ai-head{
+  width:150px;
+  height:125px;
+
+  position:absolute;
+
+  left:20px;
+  top:20px;
+
+  border-radius:48% 48% 43% 43%;
+
+  background:
+    linear-gradient(145deg,#ffffff 5%,#ddd6ff 52%,#9881e8 100%);
+
+  border:6px solid #4a279e;
+
+  box-shadow:
+    inset -13px -14px 20px rgba(69,39,150,.16),
+    0 8px 0 #28145f;
+}
+
+.ai-ear{
+  position:absolute;
+
+  width:23px;
+  height:45px;
+
+  top:61px;
+
+  background:#a990f1;
+
+  border:5px solid #4a279e;
+
+  z-index:-1;
+}
+
+.ai-ear.left{
+  left:7px;
+  border-radius:15px 4px 4px 15px;
+}
+
+.ai-ear.right{
+  right:7px;
+  border-radius:4px 15px 15px 4px;
+}
+
+.ai-eye{
+  position:absolute;
+
+  width:23px;
+  height:29px;
+
+  top:47px;
+
+  border-radius:50%;
+
+  background:#30265b;
+
+  box-shadow:
+    inset 5px 4px 0 #fff;
+}
+
+.ai-eye.left{
+  left:37px;
+}
+
+.ai-eye.right{
+  right:37px;
+}
+
+.ai-cheek{
+  position:absolute;
+
+  width:15px;
+  height:8px;
+
+  border-radius:50%;
+
+  background:#ff9db0;
+
+  top:82px;
+}
+
+.ai-cheek.left{
+  left:22px;
+}
+
+.ai-cheek.right{
+  right:22px;
+}
+
+.ai-mouth{
+  position:absolute;
+
+  width:34px;
+  height:17px;
+
+  left:52px;
+  top:82px;
+
+  border-bottom:5px solid #30265b;
+
+  border-radius:0 0 50% 50%;
+}
+
+.ai-antenna{
+  position:absolute;
+
+  width:7px;
+  height:28px;
+
+  background:#4a279e;
+
+  left:71px;
+  top:-21px;
+
+  border-radius:8px;
+}
+
+.ai-antenna:after{
+  content:"";
+
+  position:absolute;
+
+  width:18px;
+  height:18px;
+
+  left:-5px;
+  top:-14px;
+
+  border-radius:50%;
+
+  background:#16d8a4;
+
+  border:4px solid #30265b;
+
+  box-shadow:0 0 15px rgba(22,216,164,.8);
+}
+
+.ai-body{
+  position:absolute;
+
+  width:108px;
+  height:65px;
+
+  left:41px;
+  top:137px;
+
+  border-radius:28px;
+
+  background:
+    linear-gradient(145deg,#ffffff,#c8beff,#8069df);
+
+  border:5px solid #4a279e;
+
+  box-shadow:
+    inset -8px -9px 15px rgba(63,38,145,.15),
+    0 7px 0 #28145f;
+}
+
+.ai-body:before{
   content:"AI";
 
   position:absolute;
 
-  top:-18px;
-  left:50%;
-
-  transform:translateX(-50%);
-
-  background:#13d7a2;
-
-  color:#fff;
-
-  border:4px solid #30265b;
-
-  border-radius:15px;
-
-  padding:6px 16px;
+  left:37px;
+  top:12px;
 
   font-weight:1000;
+  font-size:24px;
 
-  font-size:19px;
+  color:#6732dc;
+
+  background:#fff;
+
+  border-radius:12px;
+
+  padding:2px 8px;
+
+  border:3px solid #6732dc;
+}
+
+.ai-arm{
+  position:absolute;
+
+  width:30px;
+  height:49px;
+
+  background:#a890f0;
+
+  border:5px solid #4a279e;
+
+  border-radius:18px;
+
+  top:142px;
+}
+
+.ai-arm.left{
+  left:18px;
+  transform:rotate(25deg);
+}
+
+.ai-arm.right{
+  right:18px;
+  transform:rotate(-25deg);
+}
+
+.ai-hand{
+  position:absolute;
+
+  width:22px;
+  height:22px;
+
+  border-radius:50%;
+
+  background:#ffd3bb;
+
+  border:4px solid #4a279e;
+
+  top:176px;
+}
+
+.ai-hand.left{
+  left:7px;
+}
+
+.ai-hand.right{
+  right:7px;
 }
 
 .logo-title{
-  margin:8px 0 0;
+  margin:7px 0 0;
 
-  font-size:clamp(52px,9vw,105px);
+  font-size:clamp(50px,9vw,100px);
 
   line-height:.95;
 
@@ -351,9 +675,9 @@ button{
 .logo-ribbon{
   display:inline-block;
 
-  margin-top:18px;
+  margin-top:17px;
 
-  padding:10px 28px;
+  padding:10px 25px;
 
   border-radius:20px;
 
@@ -364,7 +688,7 @@ button{
 
   color:#472071;
 
-  font-size:clamp(16px,3vw,25px);
+  font-size:clamp(15px,3vw,24px);
 
   font-weight:1000;
 
@@ -375,12 +699,14 @@ button{
   display:flex;
   justify-content:center;
   flex-wrap:wrap;
+
   gap:8px;
 
-  margin-top:25px;
+  margin-top:22px;
 
-  font-size:35px;
+  font-size:34px;
 }
+
 
 /* =====================================================
    AUTH
@@ -397,6 +723,7 @@ button{
   box-shadow:0 9px 0 #30265b;
 
   max-width:650px;
+
   margin:0 auto 30px;
 }
 
@@ -415,11 +742,13 @@ button{
 
 .tab{
   border:0;
+
   border-radius:16px;
 
   padding:14px;
 
   font-weight:1000;
+
   color:#40375e;
 
   background:transparent;
@@ -427,6 +756,7 @@ button{
 
 .tab.active{
   background:#ffd23f;
+
   box-shadow:0 5px 0 #c39500;
 }
 
@@ -436,6 +766,7 @@ label{
   margin:17px 0 7px;
 
   font-size:16px;
+
   font-weight:1000;
 }
 
@@ -444,6 +775,7 @@ textarea{
   width:100%;
 
   border:3px solid #ddd8ed;
+
   border-radius:17px;
 
   padding:15px;
@@ -471,6 +803,7 @@ textarea:focus{
   padding:16px;
 
   border:4px solid #30265b;
+
   border-radius:19px;
 
   color:#fff;
@@ -481,12 +814,11 @@ textarea:focus{
     linear-gradient(135deg,#13d29d,#0eb5e9);
 
   box-shadow:0 6px 0 #30265b;
-
-  transition:.12s;
 }
 
 .primary:active{
   transform:translateY(5px);
+
   box-shadow:0 1px 0 #30265b;
 }
 
@@ -498,6 +830,7 @@ textarea:focus{
   padding:14px;
 
   border:3px solid #7042df;
+
   border-radius:17px;
 
   background:#f4efff;
@@ -523,21 +856,28 @@ textarea:focus{
 
 .message.success{
   display:block;
+
   background:#ddffed;
+
   color:#087447;
 }
 
 .message.error{
   display:block;
+
   background:#ffe1e8;
+
   color:#a52042;
 }
 
 .message.info{
   display:block;
+
   background:#e3f5ff;
+
   color:#14658a;
 }
+
 
 /* =====================================================
    DASHBOARD
@@ -558,13 +898,15 @@ textarea:focus{
 }
 
 .panel{
-  background:rgba(255,255,255,.94);
+  background:rgba(255,255,255,.95);
 
   border:3px solid #d8d0f2;
+
   border-radius:24px;
 
   box-shadow:0 6px 0 rgba(48,38,91,.18);
 }
+
 
 /* =====================================================
    SIDEBAR
@@ -574,6 +916,7 @@ textarea:focus{
   padding:13px;
 
   position:sticky;
+
   top:92px;
 }
 
@@ -590,7 +933,9 @@ textarea:focus{
 
 .student-top{
   display:flex;
+
   gap:10px;
+
   align-items:center;
 }
 
@@ -603,6 +948,7 @@ textarea:focus{
   background:#ffdca8;
 
   display:flex;
+
   align-items:center;
   justify-content:center;
 
@@ -635,6 +981,7 @@ textarea:focus{
 
 .side-menu{
   display:grid;
+
   gap:5px;
 }
 
@@ -657,6 +1004,7 @@ textarea:focus{
 .side-menu button:hover,
 .side-menu button.active{
   background:#eee7ff;
+
   color:#6030d4;
 }
 
@@ -678,8 +1026,9 @@ textarea:focus{
   font-weight:1000;
 }
 
+
 /* =====================================================
-   MAIN CONTENT
+   MAIN
 ===================================================== */
 
 .main-content{
@@ -715,17 +1064,8 @@ textarea:focus{
 
 .hero-card p{
   font-weight:900;
-}
 
-.hero-robot{
-  position:absolute;
-
-  right:25px;
-  bottom:10px;
-
-  font-size:95px;
-
-  filter:drop-shadow(0 8px 0 rgba(0,0,0,.2));
+  max-width:70%;
 }
 
 .hero-start{
@@ -746,8 +1086,20 @@ textarea:focus{
   box-shadow:0 5px 0 #30265b;
 }
 
+.hero-mini-ai{
+  position:absolute;
+
+  right:24px;
+  bottom:9px;
+
+  transform:scale(.7);
+
+  transform-origin:bottom right;
+}
+
+
 /* =====================================================
-   LESSON CARDS
+   SECTION
 ===================================================== */
 
 .section-title{
@@ -760,6 +1112,26 @@ textarea:focus{
   color:#4d328d;
 }
 
+.class-info{
+  margin-bottom:12px;
+
+  padding:12px 15px;
+
+  border-radius:17px;
+
+  background:
+    linear-gradient(135deg,#fff8d9,#e8faff);
+
+  border:2px solid #ded2f4;
+
+  font-weight:900;
+}
+
+
+/* =====================================================
+   LEARNING CARDS
+===================================================== */
+
 .lesson-grid{
   display:grid;
 
@@ -769,7 +1141,7 @@ textarea:focus{
 }
 
 .lesson{
-  min-height:145px;
+  min-height:155px;
 
   padding:16px;
 
@@ -780,6 +1152,14 @@ textarea:focus{
   position:relative;
 
   overflow:hidden;
+
+  transition:.15s;
+}
+
+.lesson:hover{
+  transform:translateY(-3px);
+
+  box-shadow:0 7px 0 rgba(48,38,91,.12);
 }
 
 .lesson:nth-child(1){
@@ -808,24 +1188,18 @@ textarea:focus{
 
 .lesson h3{
   margin:0 0 7px;
+
   font-size:18px;
 }
 
 .lesson p{
   font-size:13px;
+
   font-weight:700;
+
   opacity:.8;
-}
 
-.lesson-icon{
-  position:absolute;
-
-  right:8px;
-  bottom:3px;
-
-  font-size:55px;
-
-  opacity:.9;
+  max-width:80%;
 }
 
 .lesson button{
@@ -840,7 +1214,125 @@ textarea:focus{
   color:#5b31cb;
 
   font-weight:1000;
+
+  position:relative;
+
+  z-index:2;
 }
+
+.lesson-icon{
+  position:absolute;
+
+  right:8px;
+  bottom:3px;
+
+  font-size:55px;
+
+  opacity:.9;
+}
+
+
+/* =====================================================
+   CURRICULUM AREA
+===================================================== */
+
+.curriculum-panel{
+  margin-top:15px;
+
+  background:#fff;
+
+  border:3px solid #d8d0f2;
+
+  border-radius:23px;
+
+  padding:16px;
+
+  box-shadow:0 5px 0 rgba(48,38,91,.12);
+}
+
+.curriculum-panel h2{
+  margin:0 0 5px;
+
+  color:#6030d3;
+}
+
+.curriculum-sub{
+  color:#777;
+
+  font-weight:800;
+
+  margin-bottom:12px;
+}
+
+.topic-list{
+  display:grid;
+
+  grid-template-columns:repeat(2,1fr);
+
+  gap:8px;
+}
+
+.topic-btn{
+  border:2px solid #ddd5f0;
+
+  background:#faf8ff;
+
+  border-radius:15px;
+
+  padding:12px;
+
+  text-align:left;
+
+  font-weight:1000;
+
+  color:#443b68;
+}
+
+.topic-btn:hover{
+  background:#eee7ff;
+
+  color:#6030d3;
+}
+
+
+/* =====================================================
+   FEATURES
+===================================================== */
+
+.features{
+  margin-top:20px;
+
+  display:grid;
+
+  grid-template-columns:repeat(5,1fr);
+
+  gap:8px;
+
+  background:#fff;
+
+  border:3px solid #ddd4f2;
+
+  border-radius:22px;
+
+  padding:14px;
+}
+
+.feature{
+  text-align:center;
+
+  font-weight:1000;
+
+  font-size:13px;
+}
+
+.feature-icon{
+  font-size:35px;
+
+  display:block;
+
+  margin-bottom:4px;
+}
+
 
 /* =====================================================
    CHAT
@@ -852,11 +1344,13 @@ textarea:focus{
   min-height:600px;
 
   display:flex;
+
   flex-direction:column;
 
   overflow:hidden;
 
   position:sticky;
+
   top:92px;
 }
 
@@ -871,12 +1365,15 @@ textarea:focus{
   display:flex;
 
   align-items:center;
+
   justify-content:space-between;
 }
 
 .chat-title{
   display:flex;
+
   align-items:center;
+
   gap:10px;
 }
 
@@ -885,16 +1382,56 @@ textarea:focus{
   height:45px;
 
   display:flex;
+
   align-items:center;
   justify-content:center;
 
   border-radius:15px;
 
-  background:#dcd4ff;
-
-  font-size:28px;
+  background:#e8e2ff;
 
   border:2px solid #fff;
+
+  position:relative;
+
+  overflow:hidden;
+}
+
+.chat-avatar .mini-face{
+  width:27px;
+  height:23px;
+
+  border-radius:9px;
+
+  background:#fff;
+
+  border:2px solid #5d3cc5;
+
+  position:relative;
+}
+
+.chat-avatar .mini-face:before,
+.chat-avatar .mini-face:after{
+  content:"";
+
+  position:absolute;
+
+  width:4px;
+  height:6px;
+
+  border-radius:50%;
+
+  background:#30265b;
+
+  top:5px;
+}
+
+.chat-avatar .mini-face:before{
+  left:5px;
+}
+
+.chat-avatar .mini-face:after{
+  right:5px;
 }
 
 .chat-title strong{
@@ -903,7 +1440,9 @@ textarea:focus{
 
 .online{
   font-size:11px;
+
   color:#bfffe9;
+
   font-weight:900;
 }
 
@@ -974,6 +1513,7 @@ textarea:focus{
   padding:8px 10px 4px;
 
   display:flex;
+
   gap:6px;
 }
 
@@ -992,6 +1532,7 @@ textarea:focus{
 
 .tool-button.recording{
   background:#ff5c76;
+
   color:#fff;
 
   animation:pulse 1s infinite;
@@ -1044,8 +1585,9 @@ textarea:focus{
   font-weight:1000;
 }
 
+
 /* =====================================================
-   PREVIEW IMAGE
+   IMAGE
 ===================================================== */
 
 .image-preview{
@@ -1058,6 +1600,7 @@ textarea:focus{
 
 .image-preview img{
   max-width:100%;
+
   max-height:120px;
 
   border-radius:14px;
@@ -1069,6 +1612,7 @@ textarea:focus{
   border:0;
 
   background:#ff5d77;
+
   color:#fff;
 
   padding:6px 10px;
@@ -1080,41 +1624,6 @@ textarea:focus{
   margin-left:5px;
 }
 
-/* =====================================================
-   FEATURE STRIP
-===================================================== */
-
-.features{
-  margin-top:20px;
-
-  display:grid;
-
-  grid-template-columns:repeat(5,1fr);
-
-  gap:8px;
-
-  background:#fff;
-
-  border:3px solid #ddd4f2;
-
-  border-radius:22px;
-
-  padding:14px;
-}
-
-.feature{
-  text-align:center;
-
-  font-weight:1000;
-
-  font-size:13px;
-}
-
-.feature-icon{
-  font-size:35px;
-  display:block;
-  margin-bottom:4px;
-}
 
 /* =====================================================
    ADMIN
@@ -1154,6 +1663,7 @@ textarea:focus{
 
 .admin-box h3{
   margin-top:0;
+
   color:#6030d3;
 }
 
@@ -1173,8 +1683,121 @@ textarea:focus{
 
 .admin-action.danger{
   background:#ff6079;
+
   color:#fff;
 }
+
+
+/* =====================================================
+   MODAL / LESSON POPUP
+===================================================== */
+
+.modal{
+  position:fixed;
+
+  inset:0;
+
+  z-index:500;
+
+  display:none;
+
+  align-items:center;
+
+  justify-content:center;
+
+  padding:15px;
+
+  background:rgba(24,15,58,.65);
+
+  backdrop-filter:blur(5px);
+}
+
+.modal.show{
+  display:flex;
+}
+
+.modal-card{
+  width:100%;
+
+  max-width:650px;
+
+  max-height:88vh;
+
+  overflow:auto;
+
+  background:#fff;
+
+  border:4px solid #30265b;
+
+  border-radius:28px;
+
+  padding:20px;
+
+  box-shadow:0 10px 0 #30265b;
+}
+
+.modal-head{
+  display:flex;
+
+  align-items:center;
+
+  justify-content:space-between;
+
+  gap:10px;
+}
+
+.modal-head h2{
+  margin:0;
+
+  color:#6030d3;
+}
+
+.close-modal{
+  width:40px;
+  height:40px;
+
+  border:0;
+
+  border-radius:13px;
+
+  background:#ffe0e7;
+
+  color:#b3224d;
+
+  font-weight:1000;
+
+  font-size:20px;
+}
+
+.modal-content{
+  margin-top:15px;
+
+  line-height:1.7;
+
+  font-weight:700;
+
+  white-space:pre-wrap;
+}
+
+.modal-ai-btn{
+  width:100%;
+
+  margin-top:15px;
+
+  padding:13px;
+
+  border:3px solid #30265b;
+
+  border-radius:15px;
+
+  background:
+    linear-gradient(135deg,#13d29d,#0eb5e9);
+
+  color:#fff;
+
+  font-weight:1000;
+}
+
 
 /* =====================================================
    FOOTER
@@ -1189,6 +1812,7 @@ footer{
 
   font-weight:800;
 }
+
 
 /* =====================================================
    RESPONSIVE
@@ -1206,13 +1830,13 @@ footer{
     height:650px;
 
     position:relative;
+
     top:auto;
   }
 
   .features{
     grid-template-columns:repeat(3,1fr);
   }
-
 }
 
 @media(max-width:700px){
@@ -1223,6 +1847,7 @@ footer{
 
   .topbar{
     position:relative;
+
     top:auto;
 
     flex-wrap:wrap;
@@ -1230,6 +1855,7 @@ footer{
 
   .nav{
     width:100%;
+
     order:3;
   }
 
@@ -1238,22 +1864,22 @@ footer{
   }
 
   .logo-content{
-    padding:25px 12px 18px;
+    padding:25px 10px 18px;
   }
 
-  .ai-character{
-    width:130px;
-    height:130px;
-    font-size:75px;
+  .cartoon-ai{
+    transform:scale(.78);
+    margin-bottom:-20px;
   }
 
   .logo-title{
-    font-size:55px;
+    font-size:54px;
   }
 
   .logo-ribbon{
     padding:8px 14px;
-    font-size:15px;
+
+    font-size:14px;
   }
 
   .dashboard-grid{
@@ -1262,7 +1888,9 @@ footer{
 
   .sidebar{
     position:relative;
+
     top:auto;
+
     margin-bottom:12px;
   }
 
@@ -1274,8 +1902,13 @@ footer{
     grid-template-columns:1fr;
   }
 
+  .topic-list{
+    grid-template-columns:1fr;
+  }
+
   .chat-panel{
     height:620px;
+
     min-height:620px;
 
     margin-top:15px;
@@ -1297,11 +1930,15 @@ footer{
     font-size:23px;
   }
 
-  .hero-robot{
-    font-size:65px;
-    right:10px;
+  .hero-card p{
+    max-width:65%;
   }
 
+  .hero-mini-ai{
+    transform:scale(.48);
+
+    right:-8px;
+  }
 }
 
 </style>
@@ -1311,16 +1948,28 @@ footer{
 
 <div class="app">
 
+
 <!-- =====================================================
-     TOP BAR
+     HEADER
 ===================================================== -->
 
 <header class="topbar">
 
   <div class="brand">
 
-    <div class="brand-robot">
-      🤖
+    <div class="brand-ai">
+
+      <div class="antenna"></div>
+
+      <div class="face">
+
+        <div class="eye left"></div>
+        <div class="eye right"></div>
+
+        <div class="mouth"></div>
+
+      </div>
+
     </div>
 
     <div class="brand-text">
@@ -1337,9 +1986,13 @@ footer{
 
   </div>
 
+
   <nav class="nav">
 
-    <button class="active" onclick="scrollHome()">
+    <button
+      class="active"
+      onclick="scrollHome()"
+    >
       🏠 होम
     </button>
 
@@ -1347,15 +2000,15 @@ footer{
       🤖 AI Teacher
     </button>
 
-    <button onclick="showLesson('books')">
+    <button onclick="openCurriculum()">
       📚 किताबें
     </button>
 
-    <button onclick="showLesson('games')">
+    <button onclick="openLearning('games')">
       🎮 गेम्स
     </button>
 
-    <button onclick="showLesson('progress')">
+    <button onclick="openLearning('progress')">
       📊 प्रगति
     </button>
 
@@ -1364,6 +2017,7 @@ footer{
     </button>
 
   </nav>
+
 
   <div class="profile-mini">
 
@@ -1381,33 +2035,71 @@ footer{
 
 
 <!-- =====================================================
-     BIG 3D LOGO
+     HERO LOGO
 ===================================================== -->
 
-<section class="logo-stage" id="home">
+<section
+  class="logo-stage"
+  id="home"
+>
 
   <div class="stars">
+
     <span>⭐</span>
     <span>✨</span>
     <span>🌟</span>
     <span>⭐</span>
     <span>✨</span>
     <span>🌟</span>
+
   </div>
+
 
   <div class="logo-content">
 
-    <div class="ai-character">
-      🤖
+
+    <!-- 3D CARTOON AI -->
+
+    <div class="cartoon-ai">
+
+      <div class="ai-ear left"></div>
+      <div class="ai-ear right"></div>
+
+      <div class="ai-head">
+
+        <div class="ai-antenna"></div>
+
+        <div class="ai-eye left"></div>
+        <div class="ai-eye right"></div>
+
+        <div class="ai-cheek left"></div>
+        <div class="ai-cheek right"></div>
+
+        <div class="ai-mouth"></div>
+
+      </div>
+
+
+      <div class="ai-arm left"></div>
+      <div class="ai-arm right"></div>
+
+      <div class="ai-hand left"></div>
+      <div class="ai-hand right"></div>
+
+      <div class="ai-body"></div>
+
     </div>
+
 
     <div class="logo-title">
       Padh-<span>AI</span>
     </div>
 
+
     <div class="logo-ribbon">
-      गिनती • वर्णमाला • पहाड़ा • AI Teacher
+      गिनती • वर्णमाला • पहाड़ा • किताबें • AI Teacher
     </div>
+
 
     <div class="books-decoration">
       📚 📖 ✏️ 🔢 🧮 🎒 🧠 🎮
@@ -1422,7 +2114,10 @@ footer{
      AUTH
 ===================================================== -->
 
-<section class="auth-card" id="authCard">
+<section
+  class="auth-card"
+  id="authCard"
+>
 
   <div class="tabs">
 
@@ -1449,7 +2144,9 @@ footer{
 
   <div id="loginBox">
 
-    <label>📧 Email</label>
+    <label>
+      📧 Email
+    </label>
 
     <input
       id="loginEmail"
@@ -1458,7 +2155,10 @@ footer{
       autocomplete="email"
     >
 
-    <label>🔢 6 अंकों का PIN</label>
+
+    <label>
+      🔢 6 अंकों का PIN
+    </label>
 
     <input
       id="loginPin"
@@ -1468,6 +2168,7 @@ footer{
       placeholder="6 अंकों का PIN"
     >
 
+
     <button
       class="primary"
       onclick="loginUser()"
@@ -1475,12 +2176,14 @@ footer{
       🚀 Login करके पढ़ाई शुरू करें
     </button>
 
+
     <button
       class="secondary"
       onclick="forgotPin()"
     >
       🔑 PIN भूल गए?
     </button>
+
 
     <button
       class="secondary"
@@ -1494,23 +2197,50 @@ footer{
 
   <!-- SIGNUP -->
 
-  <div id="signupBox" class="hidden">
+  <div
+    id="signupBox"
+    class="hidden"
+  >
 
-    <label>👦 बच्चे का नाम</label>
+    <label>
+      👦 बच्चे का नाम
+    </label>
 
     <input
       id="signupName"
       placeholder="बच्चे का नाम"
     >
 
-    <label>📚 कक्षा</label>
+
+    <label>
+      📚 कक्षा
+    </label>
 
     <input
       id="signupClass"
-      placeholder="जैसे KG1, KG2, Class 1"
+      placeholder="जैसे KG1, KG2, Class 1, Class 8, Class 12"
     >
 
-    <label>📧 Email</label>
+
+    <div
+      style="
+        margin-top:8px;
+        padding:10px;
+        border-radius:13px;
+        background:#f2edff;
+        color:#6030d3;
+        font-size:13px;
+        font-weight:900;
+      "
+    >
+      💡 कक्षा सही लिखें। उसी के अनुसार
+      Padh-Ai की किताब और पढ़ाई बदलेगी।
+    </div>
+
+
+    <label>
+      📧 Email
+    </label>
 
     <input
       id="signupEmail"
@@ -1518,7 +2248,10 @@ footer{
       placeholder="Email"
     >
 
-    <label>🔢 6 अंकों का PIN</label>
+
+    <label>
+      🔢 6 अंकों का PIN
+    </label>
 
     <input
       id="signupPin"
@@ -1527,6 +2260,7 @@ footer{
       maxlength="6"
       placeholder="6 अंकों का PIN"
     >
+
 
     <button
       class="primary"
@@ -1540,18 +2274,30 @@ footer{
 
   <!-- ADMIN SETUP -->
 
-  <div id="adminSetupBox" class="hidden">
+  <div
+    id="adminSetupBox"
+    class="hidden"
+  >
 
-    <h2 style="text-align:center;color:#6030d3">
+    <h2
+      style="
+        text-align:center;
+        color:#6030d3
+      "
+    >
       🛡️ Admin Setup
     </h2>
+
 
     <p>
       पहली बार Admin account बनाने के लिए अपना
       6 अंकों का PIN डालें।
     </p>
 
-    <label>👑 Admin Email</label>
+
+    <label>
+      👑 Admin Email
+    </label>
 
     <input
       id="adminEmail"
@@ -1559,7 +2305,10 @@ footer{
       readonly
     >
 
-    <label>🔢 Admin PIN</label>
+
+    <label>
+      🔢 Admin PIN
+    </label>
 
     <input
       id="adminPin"
@@ -1569,12 +2318,14 @@ footer{
       placeholder="6 अंकों का PIN"
     >
 
+
     <button
       class="primary"
       onclick="setupAdmin()"
     >
       👑 Admin Account बनाएं
     </button>
+
 
     <button
       class="secondary"
@@ -1608,6 +2359,7 @@ footer{
 ===================================================== -->
 
 <aside class="sidebar panel">
+
 
   <div class="student-card">
 
@@ -1653,27 +2405,27 @@ footer{
       🤖 AI Teacher से बात करें
     </button>
 
-    <button onclick="showLesson('books')">
-      📚 किताबें पढ़ें
+    <button onclick="openCurriculum()">
+      📚 मेरी किताबें
     </button>
 
-    <button onclick="showLesson('tables')">
-      ✖️ पहाड़ा सीखें
+    <button onclick="openLearning('tables')">
+      ✖️ पहाड़ा
     </button>
 
-    <button onclick="showLesson('counting')">
-      🔢 गिनती सीखें
+    <button onclick="openLearning('counting')">
+      🔢 गिनती
     </button>
 
-    <button onclick="showLesson('alphabet')">
-      🔤 वर्णमाला सीखें
+    <button onclick="openLearning('alphabet')">
+      🔤 वर्णमाला
     </button>
 
-    <button onclick="showLesson('games')">
+    <button onclick="openLearning('games')">
       🎮 शैक्षिक गेम
     </button>
 
-    <button onclick="showLesson('progress')">
+    <button onclick="openLearning('progress')">
       📊 मेरी प्रगति
     </button>
 
@@ -1691,7 +2443,7 @@ footer{
 
 
 <!-- =====================================================
-     MAIN
+     MAIN CONTENT
 ===================================================== -->
 
 <main class="main-content">
@@ -1699,7 +2451,12 @@ footer{
 
   <div class="hero-card">
 
-    <div style="position:relative;z-index:2">
+    <div
+      style="
+        position:relative;
+        z-index:2
+      "
+    >
 
       <h2>
         🤖 AI Teacher से कुछ भी पूछो!
@@ -1714,139 +2471,89 @@ footer{
         class="hero-start"
         onclick="focusChat()"
       >
-        🚀 चलो शुरू करें
+        🚀 AI Teacher खोलें
       </button>
 
     </div>
 
-    <div class="hero-robot">
-      🤖
+
+    <!-- mini cartoon -->
+
+    <div class="hero-mini-ai">
+
+      <div class="cartoon-ai">
+
+        <div class="ai-ear left"></div>
+        <div class="ai-ear right"></div>
+
+        <div class="ai-head">
+
+          <div class="ai-antenna"></div>
+
+          <div class="ai-eye left"></div>
+          <div class="ai-eye right"></div>
+
+          <div class="ai-cheek left"></div>
+          <div class="ai-cheek right"></div>
+
+          <div class="ai-mouth"></div>
+
+        </div>
+
+        <div class="ai-arm left"></div>
+        <div class="ai-arm right"></div>
+
+        <div class="ai-hand left"></div>
+        <div class="ai-hand right"></div>
+
+        <div class="ai-body"></div>
+
+      </div>
+
     </div>
 
   </div>
 
 
   <div class="section-title">
-    📚 आज क्या सीखना है?
+    📚 आपकी कक्षा के अनुसार पढ़ाई
   </div>
 
 
-  <div class="lesson-grid">
+  <div
+    class="class-info"
+    id="classInfo"
+  >
+    📚 आपकी कक्षा की किताबें यहाँ दिखाई जाएँगी।
+  </div>
 
 
-    <div class="lesson">
+  <div
+    class="lesson-grid"
+    id="lessonGrid"
+  ></div>
 
-      <h3>📖 किताबें पढ़ें</h3>
 
-      <p>
-        कहानी, पाठ और ज्ञानवर्धक किताबें।
-      </p>
+  <div
+    class="curriculum-panel"
+    id="curriculumPanel"
+  >
 
-      <button onclick="askPreset('मुझे बच्चों के लिए एक छोटी और मजेदार कहानी सुनाओ।')">
-        पढ़ें →
-      </button>
+    <h2 id="curriculumTitle">
+      📚 आपकी किताबें
+    </h2>
 
-      <div class="lesson-icon">
-        📖
-      </div>
-
+    <div
+      class="curriculum-sub"
+      id="curriculumSub"
+    >
+      आपकी कक्षा के अनुसार विषय।
     </div>
 
-
-    <div class="lesson">
-
-      <h3>✖️ पहाड़ा सीखें</h3>
-
-      <p>
-        2 से 20 तक पहाड़ा आसानी से सीखें।
-      </p>
-
-      <button onclick="askPreset('मुझे 2 का पहाड़ा आसान तरीके से समझाओ।')">
-        सीखें →
-      </button>
-
-      <div class="lesson-icon">
-        🧮
-      </div>
-
-    </div>
-
-
-    <div class="lesson">
-
-      <h3>🎮 शैक्षिक गेम</h3>
-
-      <p>
-        खेल-खेल में मजेदार पढ़ाई।
-      </p>
-
-      <button onclick="askPreset('मेरे लिए एक आसान गणित का educational quiz बनाओ।')">
-        खेलें →
-      </button>
-
-      <div class="lesson-icon">
-        🎮
-      </div>
-
-    </div>
-
-
-    <div class="lesson">
-
-      <h3>🔢 गिनती सीखें</h3>
-
-      <p>
-        1 से 100 तक गिनती सीखो।
-      </p>
-
-      <button onclick="askPreset('मुझे 1 से 20 तक गिनती मजेदार तरीके से सिखाओ।')">
-        सीखें →
-      </button>
-
-      <div class="lesson-icon">
-        🔢
-      </div>
-
-    </div>
-
-
-    <div class="lesson">
-
-      <h3>🔤 वर्णमाला सीखें</h3>
-
-      <p>
-        अ से ज्ञ और A से Z तक।
-      </p>
-
-      <button onclick="askPreset('मुझे हिंदी वर्णमाला बच्चों को बहुत आसान तरीके से सिखाओ।')">
-        सीखें →
-      </button>
-
-      <div class="lesson-icon">
-        🔤
-      </div>
-
-    </div>
-
-
-    <div class="lesson">
-
-      <h3>📊 मेरी प्रगति</h3>
-
-      <p>
-        अपनी पढ़ाई और सीखने की प्रगति देखें।
-      </p>
-
-      <button onclick="showProgress()">
-        देखें →
-      </button>
-
-      <div class="lesson-icon">
-        🏆
-      </div>
-
-    </div>
-
+    <div
+      class="topic-list"
+      id="topicList"
+    ></div>
 
   </div>
 
@@ -1860,22 +2567,22 @@ footer{
 
     <div class="feature">
       <span class="feature-icon">📚</span>
-      सभी विषय
+      Class Wise Books
     </div>
 
     <div class="feature">
       <span class="feature-icon">🎮</span>
-      मजेदार गेम
+      Educational Games
     </div>
 
     <div class="feature">
       <span class="feature-icon">🏆</span>
-      सीखो और इनाम
+      Learn & Grow
     </div>
 
     <div class="feature">
       <span class="feature-icon">🛡️</span>
-      सुरक्षित पढ़ाई
+      Safe Learning
     </div>
 
   </div>
@@ -1884,7 +2591,7 @@ footer{
 
 
 <!-- =====================================================
-     AI CHAT
+     CHAT
 ===================================================== -->
 
 <section
@@ -1897,7 +2604,9 @@ footer{
     <div class="chat-title">
 
       <div class="chat-avatar">
-        🤖
+
+        <div class="mini-face"></div>
+
       </div>
 
       <div>
@@ -1913,6 +2622,7 @@ footer{
       </div>
 
     </div>
+
 
     <button
       onclick="clearChat()"
@@ -1938,10 +2648,10 @@ footer{
     <div class="msg ai">
       नमस्ते! 👋 मैं Padh-Ai का AI Teacher हूँ।
 
-आप मुझसे गणित, हिंदी, English, Science, पहाड़ा, गिनती या किसी भी पढ़ाई के सवाल पूछ सकते हो। 😊
+आप मुझसे अपनी कक्षा के हिसाब से गणित, हिंदी, English, Science, पहाड़ा या किसी भी पढ़ाई का सवाल पूछ सकते हो। 😊
 
-🎤 Mic दबाकर बोल भी सकते हो।
-📷 किताब या सवाल की फोटो भी भेज सकते हो।
+🎤 Mic दबाकर बोल सकते हो।
+📷 सवाल की फोटो भी भेज सकते हो।
     </div>
 
   </div>
@@ -1985,6 +2695,7 @@ footer{
       📷
     </button>
 
+
     <button
       class="tool-button"
       id="micButton"
@@ -1993,6 +2704,7 @@ footer{
     >
       🎤
     </button>
+
 
     <input
       id="imageInput"
@@ -2015,6 +2727,7 @@ footer{
       onkeydown="handleChatKey(event)"
     ></textarea>
 
+
     <button
       class="send-button"
       onclick="sendMessage()"
@@ -2034,7 +2747,7 @@ footer{
 
 
 <!-- =====================================================
-     ADMIN PANEL
+     ADMIN
 ===================================================== -->
 
 <section
@@ -2042,16 +2755,24 @@ footer{
   id="adminPanel"
 >
 
-  <h2 style="text-align:center;color:#6030d3">
+  <h2
+    style="
+      text-align:center;
+      color:#6030d3
+    "
+  >
     🛡️ Padh-Ai Admin Panel
   </h2>
+
 
   <div class="admin-grid">
 
 
     <div class="admin-box">
 
-      <h3>👑 Admin Information</h3>
+      <h3>
+        👑 Admin Information
+      </h3>
 
       <p>
         <b>Email:</b>
@@ -2065,7 +2786,9 @@ footer{
 
     <div class="admin-box">
 
-      <h3>📲 Android App</h3>
+      <h3>
+        📲 Android App
+      </h3>
 
       <p>
         Padh-Ai APK
@@ -2073,7 +2796,11 @@ footer{
 
       <a
         class="primary"
-        style="display:block;text-align:center;text-decoration:none"
+        style="
+          display:block;
+          text-align:center;
+          text-decoration:none
+        "
         href="https://github.com/sonwaniv842-cell/Padh-Ai/releases/download/v1.0.5/app-release.apk"
         target="_blank"
         rel="noopener"
@@ -2086,7 +2813,9 @@ footer{
 
     <div class="admin-box">
 
-      <h3>💳 Payment / UPI</h3>
+      <h3>
+        💳 Payment / UPI
+      </h3>
 
       <input
         id="upiInput"
@@ -2106,7 +2835,9 @@ footer{
 
     <div class="admin-box">
 
-      <h3>📞 Support</h3>
+      <h3>
+        📞 Support
+      </h3>
 
       <p>
         WhatsApp: +91 7067132801
@@ -2114,7 +2845,11 @@ footer{
 
       <a
         class="primary"
-        style="display:block;text-align:center;text-decoration:none"
+        style="
+          display:block;
+          text-align:center;
+          text-decoration:none
+        "
         href="https://wa.me/917067132801"
         target="_blank"
         rel="noopener"
@@ -2127,7 +2862,9 @@ footer{
 
     <div class="admin-box">
 
-      <h3>🎨 Website Title</h3>
+      <h3>
+        🎨 Website Title
+      </h3>
 
       <input
         id="siteTitleInput"
@@ -2146,7 +2883,9 @@ footer{
 
     <div class="admin-box">
 
-      <h3>🔐 Session</h3>
+      <h3>
+        🔐 Session
+      </h3>
 
       <button
         class="admin-action danger"
@@ -2162,18 +2901,65 @@ footer{
 </section>
 
 
+<!-- =====================================================
+     LEARNING MODAL
+===================================================== -->
+
+<div
+  class="modal"
+  id="learningModal"
+  onclick="closeModalOutside(event)"
+>
+
+  <div class="modal-card">
+
+    <div class="modal-head">
+
+      <h2 id="modalTitle">
+        📚 पढ़ाई
+      </h2>
+
+      <button
+        class="close-modal"
+        onclick="closeLearningModal()"
+      >
+        ✕
+      </button>
+
+    </div>
+
+
+    <div
+      class="modal-content"
+      id="modalContent"
+    ></div>
+
+
+    <button
+      class="modal-ai-btn"
+      onclick="askModalToAI()"
+    >
+      🤖 इस विषय को AI Teacher से समझें
+    </button>
+
+  </div>
+
+</div>
+
+
 <footer>
   © Padh-Ai • बच्चों की मजेदार AI पढ़ाई 🤖📚
 </footer>
+
 
 </div>
 
 
 <script>
 
-/* =========================================================
+/* =====================================================
    CONFIG
-========================================================= */
+===================================================== */
 
 const SUPABASE_URL =
   "https://tyonurrbwdjqfrmqrgpk.supabase.co";
@@ -2188,9 +2974,9 @@ const ADMIN_UPI_ID =
   "7067132801@ptyes";
 
 
-/* =========================================================
+/* =====================================================
    SUPABASE
-========================================================= */
+===================================================== */
 
 const supabaseClient =
   window.supabase.createClient(
@@ -2199,9 +2985,9 @@ const supabaseClient =
   );
 
 
-/* =========================================================
+/* =====================================================
    STATE
-========================================================= */
+===================================================== */
 
 let currentUser = null;
 
@@ -2214,10 +3000,14 @@ let recognition = null;
 
 let isRecording = false;
 
+let currentClass = "";
 
-/* =========================================================
-   HELPERS
-========================================================= */
+let currentModalText = "";
+
+
+/* =====================================================
+   HELPER
+===================================================== */
 
 function $(id){
   return document.getElementById(id);
@@ -2227,7 +3017,6 @@ function $(id){
 function escapeHTML(value){
 
   return String(value)
-
     .replaceAll("&","&amp;")
     .replaceAll("<","&lt;")
     .replaceAll(">","&gt;")
@@ -2267,9 +3056,824 @@ function hideMessage(){
 }
 
 
-/* =========================================================
+/* =====================================================
+   CLASS NORMALIZER
+===================================================== */
+
+function normalizeClass(value){
+
+  let c =
+    String(value || "")
+      .toLowerCase()
+      .trim()
+      .replace(/\s+/g,"");
+
+
+  c =
+    c
+      .replace("कक्षा","")
+      .replace("class","")
+      .replace("standard","")
+      .replace("std","");
+
+
+  const kgMatch =
+    c.match(/kg[-_]?([1-4])/);
+
+
+  if(kgMatch){
+
+    return "KG" + kgMatch[1];
+
+  }
+
+
+  const num =
+    parseInt(
+      c.replace(/[^0-9]/g,""),
+      10
+    );
+
+
+  if(
+    !isNaN(num) &&
+    num >= 1 &&
+    num <= 12
+  ){
+
+    return String(num);
+
+  }
+
+
+  return "1";
+}
+
+
+/* =====================================================
+   CLASS GROUP
+===================================================== */
+
+function getClassGroup(classValue){
+
+  const c =
+    normalizeClass(classValue);
+
+
+  if(
+    c === "KG1" ||
+    c === "KG2" ||
+    c === "KG3" ||
+    c === "KG4"
+  ){
+
+    return "KG";
+
+  }
+
+
+  const n =
+    parseInt(c,10);
+
+
+  if(n >= 1 && n <= 5){
+    return "PRIMARY";
+  }
+
+
+  if(n >= 6 && n <= 8){
+    return "MIDDLE";
+  }
+
+
+  if(n >= 9 && n <= 12){
+    return "SECONDARY";
+  }
+
+
+  return "PRIMARY";
+}
+
+
+/* =====================================================
+   CLASS DISPLAY
+===================================================== */
+
+function classDisplay(classValue){
+
+  const c =
+    normalizeClass(classValue);
+
+
+  if(c.startsWith("KG")){
+    return c.replace("KG","KG-");
+  }
+
+
+  return "Class " + c;
+}
+
+
+/* =====================================================
+   CLASS-WISE CURRICULUM
+===================================================== */
+
+const CURRICULUM = {
+
+  KG:{
+
+    title:"🌈 KG-1 से KG-4 की बाल शिक्षा",
+
+    sub:
+      "अक्षर, अनार, गिनती, रंग, आकार, कविता और खेल-खेल में सीखना।",
+
+    lessons:[
+
+      {
+        title:"🔤 अ से अनार",
+        text:
+          "अ — अनार 🍎\nआ — आम 🥭\nइ — इमली\nई — ईख\nउ — उल्लू 🦉\nऊ — ऊन\n\nपहले अक्षर पहचानें, फिर चित्र देखकर बोलें।"
+      },
+
+      {
+        title:"🔢 गिनती 1–20",
+        text:
+          "1 — एक ☝️\n2 — दो ✌️\n3 — तीन\n4 — चार\n5 — पाँच\n6 — छह\n7 — सात\n8 — आठ\n9 — नौ\n10 — दस\n\nफिर 11 से 20 तक गिनती सीखें।"
+      },
+
+      {
+        title:"🎨 रंग और आकार",
+        text:
+          "🔴 लाल\n🔵 नीला\n🟢 हरा\n🟡 पीला\n\n⭕ गोल\n⬜ चौकोर\n🔺 त्रिकोण\n\nचित्र देखकर रंग और आकार पहचानें।"
+      },
+
+      {
+        title:"🎵 कविता और कहानी",
+        text:
+          "छोटी-छोटी कविताएँ, बाल गीत और मजेदार कहानियाँ।\n\nAI Teacher बच्चे की उम्र के अनुसार कहानी सुना सकता है।"
+      },
+
+      {
+        title:"✏️ लिखना सीखें",
+        text:
+          "पहले लाइन, गोला और आकृति बनाना सीखें।\nफिर स्वर और सरल अक्षर लिखना सीखें।"
+      },
+
+      {
+        title:"🎮 सीखो और खेलो",
+        text:
+          "चित्र पहचानो, रंग पहचानो, अक्षर पहचानो और आसान गिनती के गेम खेलो।"
+      }
+
+    ],
+
+    topics:[
+      "अ से अनार",
+      "आ से आम",
+      "1 से 20 गिनती",
+      "रंग पहचानो",
+      "आकार पहचानो",
+      "बाल कविता",
+      "चित्र पहचानो",
+      "सरल English A-Z"
+    ]
+
+  },
+
+
+  PRIMARY:{
+
+    title:"📘 Class 1–5 की किताबें",
+
+    sub:
+      "हिंदी, English, गणित, EVS/Science, सामान्य ज्ञान और अभ्यास।",
+
+    lessons:[
+
+      {
+        title:"📖 हिंदी",
+        text:
+          "वर्णमाला, मात्राएँ, शब्द, वाक्य, कहानी, कविता और पढ़ने का अभ्यास।"
+      },
+
+      {
+        title:"➗ गणित",
+        text:
+          "गिनती, जोड़, घटाव, गुणा, भाग, भिन्न, माप, समय और सरल ज्यामिति।"
+      },
+
+      {
+        title:"🔤 English",
+        text:
+          "Alphabet, words, sentences, grammar, reading और vocabulary।"
+      },
+
+      {
+        title:"🌱 EVS / Science",
+        text:
+          "पौधे, जानवर, हमारा शरीर, पानी, हवा, पृथ्वी और आसपास की दुनिया।"
+      },
+
+      {
+        title:"✖️ पहाड़ा",
+        text:
+          "2 से 20 तक पहाड़े।\n\nउदाहरण:\n2 × 1 = 2\n2 × 2 = 4\n2 × 3 = 6"
+      },
+
+      {
+        title:"🧠 सामान्य ज्ञान",
+        text:
+          "भारत, राज्य, प्रकृति, खेल, विज्ञान और बच्चों के लिए उपयोगी सामान्य ज्ञान।"
+      }
+
+    ],
+
+    topics:[
+      "हिंदी व्याकरण",
+      "मात्राएँ",
+      "गणित जोड़",
+      "गुणा और भाग",
+      "2–20 पहाड़ा",
+      "English Grammar",
+      "EVS",
+      "Science Basics",
+      "General Knowledge"
+    ]
+
+  },
+
+
+  MIDDLE:{
+
+    title:"📗 Class 6–8 की किताबें",
+
+    sub:
+      "मिडिल स्कूल स्तर के अनुसार गणित, विज्ञान, सामाजिक विज्ञान, हिंदी और English।",
+
+    lessons:[
+
+      {
+        title:"📐 Mathematics",
+        text:
+          "पूर्णांक, भिन्न, दशमलव, अनुपात, प्रतिशत, बीजगणित, ज्यामिति और डेटा।"
+      },
+
+      {
+        title:"🔬 Science",
+        text:
+          "पदार्थ, बल, गति, प्रकाश, ध्वनि, कोशिका, पौधे, जीव-जंतु और पर्यावरण।"
+      },
+
+      {
+        title:"🌍 Social Science",
+        text:
+          "इतिहास, भूगोल, नागरिक शास्त्र और समाज से जुड़े विषय।"
+      },
+
+      {
+        title:"📚 हिंदी",
+        text:
+          "गद्य, पद्य, व्याकरण, लेखन, निबंध और पाठ की समझ।"
+      },
+
+      {
+        title:"🇬🇧 English",
+        text:
+          "Grammar, comprehension, writing, vocabulary और literature।"
+      },
+
+      {
+        title:"🧠 अभ्यास",
+        text:
+          "अध्याय के अनुसार प्रश्न, MCQ, short answer और revision quiz।"
+      }
+
+    ],
+
+    topics:[
+      "Integers",
+      "Fractions",
+      "Percentage",
+      "Algebra",
+      "Geometry",
+      "Physics Basics",
+      "Biology",
+      "History",
+      "Geography",
+      "Civics",
+      "English Grammar"
+    ]
+
+  },
+
+
+  SECONDARY:{
+
+    title:"📕 Class 9–12 की किताबें",
+
+    sub:
+      "Secondary और Senior Secondary स्तर के अनुसार विषय और exam preparation।",
+
+    lessons:[
+
+      {
+        title:"📐 Mathematics",
+        text:
+          "Algebra, quadratic equations, trigonometry, coordinate geometry, calculus basics और statistics।"
+      },
+
+      {
+        title:"⚛️ Physics",
+        text:
+          "Motion, laws of motion, work-energy, electricity, magnetism, optics और modern physics।"
+      },
+
+      {
+        title:"🧪 Chemistry",
+        text:
+          "Atoms, periodic table, chemical bonding, reactions, organic और physical chemistry।"
+      },
+
+      {
+        title:"🧬 Biology",
+        text:
+          "Cell, genetics, human biology, reproduction, ecology और evolution।"
+      },
+
+      {
+        title:"🌍 Social Science",
+        text:
+          "History, Geography, Political Science और Economics।"
+      },
+
+      {
+        title:"🎯 Exam Preparation",
+        text:
+          "Chapter revision, important questions, MCQ, short answers और practice tests।"
+      }
+
+    ],
+
+    topics:[
+      "Algebra",
+      "Trigonometry",
+      "Coordinate Geometry",
+      "Calculus",
+      "Physics",
+      "Chemistry",
+      "Biology",
+      "History",
+      "Geography",
+      "Political Science",
+      "Economics",
+      "Exam Revision"
+    ]
+
+  }
+
+};
+
+
+/* =====================================================
+   RENDER CLASS CONTENT
+===================================================== */
+
+function renderClassContent(classValue){
+
+  currentClass =
+    normalizeClass(classValue);
+
+
+  const group =
+    getClassGroup(currentClass);
+
+
+  const data =
+    CURRICULUM[group];
+
+
+  $("studentClass")
+    .textContent =
+    classDisplay(currentClass);
+
+
+  $("classInfo")
+    .innerHTML =
+    "🎓 आपकी कक्षा: <b>" +
+    escapeHTML(
+      classDisplay(currentClass)
+    ) +
+    "</b><br>" +
+    data.sub;
+
+
+  $("curriculumTitle")
+    .textContent =
+    data.title;
+
+
+  $("curriculumSub")
+    .textContent =
+    data.sub;
+
+
+  const grid =
+    $("lessonGrid");
+
+
+  grid.innerHTML = "";
+
+
+  data.lessons.forEach(
+    (lesson,index)=>{
+
+      const card =
+        document.createElement("div");
+
+
+      card.className =
+        "lesson";
+
+
+      const icons =
+        ["📚","🧮","🔬","🌍","✏️","🎯"];
+
+
+      card.innerHTML = `
+
+        <h3>
+          ${escapeHTML(lesson.title)}
+        </h3>
+
+        <p>
+          ${escapeHTML(
+            lesson.text.slice(0,95)
+          )}
+          ${lesson.text.length > 95 ? "..." : ""}
+        </p>
+
+        <button>
+          खोलें →
+        </button>
+
+        <div class="lesson-icon">
+          ${icons[index] || "📚"}
+        </div>
+
+      `;
+
+
+      card
+        .querySelector("button")
+        .onclick = ()=>{
+          openLesson(
+            lesson.title,
+            lesson.text
+          );
+        };
+
+
+      grid.appendChild(card);
+
+    }
+  );
+
+
+  const topicList =
+    $("topicList");
+
+
+  topicList.innerHTML = "";
+
+
+  data.topics.forEach(topic=>{
+
+    const btn =
+      document.createElement("button");
+
+
+    btn.className =
+      "topic-btn";
+
+
+    btn.textContent =
+      "📘 " + topic;
+
+
+    btn.onclick = ()=>{
+
+      openLesson(
+        topic,
+        getTopicText(topic)
+      );
+
+    };
+
+
+    topicList.appendChild(btn);
+
+  });
+
+}
+
+
+/* =====================================================
+   TOPIC TEXT
+===================================================== */
+
+function getTopicText(topic){
+
+  return `
+${topic}
+
+यह विषय आपकी ${classDisplay(currentClass)} की पढ़ाई के अनुसार चुना गया है।
+
+आप चाहें तो AI Teacher से इस विषय को आसान भाषा में step-by-step समझ सकते हैं।
+
+पहले basic concept समझें।
+फिर उदाहरण देखें।
+फिर practice questions हल करें।
+  `.trim();
+
+}
+
+
+/* =====================================================
+   OPEN LESSON
+===================================================== */
+
+function openLesson(title,text){
+
+  currentModalText =
+    text;
+
+
+  $("modalTitle")
+    .textContent =
+    title;
+
+
+  $("modalContent")
+    .textContent =
+    text;
+
+
+  $("learningModal")
+    .classList.add("show");
+
+}
+
+
+/* =====================================================
+   CURRICULUM
+===================================================== */
+
+function openCurriculum(){
+
+  if(!currentUser){
+
+    $("authCard")
+      .scrollIntoView({
+        behavior:"smooth"
+      });
+
+    return;
+
+  }
+
+
+  $("curriculumPanel")
+    .scrollIntoView({
+      behavior:"smooth",
+      block:"center"
+    });
+
+}
+
+
+/* =====================================================
+   LEARNING
+===================================================== */
+
+function openLearning(type){
+
+  if(!currentUser){
+
+    $("authCard")
+      .scrollIntoView({
+        behavior:"smooth"
+      });
+
+    return;
+
+  }
+
+
+  const group =
+    getClassGroup(currentClass);
+
+
+  if(type === "tables"){
+
+    let text =
+      "";
+
+
+    if(group === "KG"){
+
+      text =
+        "KG में पहले 1 से 20 तक गिनती और वस्तुओं की गिनती सीखें।";
+
+    }else if(group === "PRIMARY"){
+
+      text =
+        "2 से 20 तक पहाड़े सीखें।\n\n" +
+        "2 × 1 = 2\n" +
+        "2 × 2 = 4\n" +
+        "2 × 3 = 6\n" +
+        "2 × 4 = 8\n" +
+        "2 × 5 = 10";
+
+    }else{
+
+      text =
+        "इस कक्षा में multiplication, algebra और numerical practice पर ध्यान दें।";
+
+    }
+
+
+    openLesson(
+      "✖️ पहाड़ा / Multiplication",
+      text
+    );
+
+    return;
+
+  }
+
+
+  if(type === "counting"){
+
+    let text =
+      "";
+
+
+    if(group === "KG"){
+
+      text =
+        "1 से 20 तक गिनती:\n\n" +
+        "1, 2, 3, 4, 5, 6, 7, 8, 9, 10,\n" +
+        "11, 12, 13, 14, 15, 16, 17, 18, 19, 20";
+
+    }else if(group === "PRIMARY"){
+
+      text =
+        "1 से 1000 तक numbers, place value, addition और subtraction का अभ्यास करें।";
+
+    }else{
+
+      text =
+        "इस स्तर पर number system, integers, rational numbers और algebraic calculations सीखें।";
+
+    }
+
+
+    openLesson(
+      "🔢 गिनती और Numbers",
+      text
+    );
+
+    return;
+
+  }
+
+
+  if(type === "alphabet"){
+
+    let text =
+      "";
+
+
+    if(group === "KG"){
+
+      text =
+        "अ से अनार 🍎\n" +
+        "आ से आम 🥭\n" +
+        "इ से इमली\n" +
+        "ई से ईख\n" +
+        "उ से उल्लू 🦉\n\n" +
+        "A से Z तक English alphabet भी सीखें।";
+
+    }else if(group === "PRIMARY"){
+
+      text =
+        "हिंदी वर्णमाला, मात्राएँ, शब्द निर्माण और वाक्य बनाना सीखें।";
+
+    }else{
+
+      text =
+        "इस स्तर पर Hindi/English grammar, vocabulary, comprehension और writing skills पर ध्यान दें।";
+
+    }
+
+
+    openLesson(
+      "🔤 भाषा और वर्णमाला",
+      text
+    );
+
+    return;
+
+  }
+
+
+  if(type === "games"){
+
+    openLesson(
+      "🎮 Educational Game",
+      "यहाँ कक्षा के अनुसार quiz खेलें।\n\n" +
+      "आपके लिए AI Teacher 5 सवालों का quiz बना सकता है।"
+    );
+
+    return;
+
+  }
+
+
+  if(type === "progress"){
+
+    openLesson(
+      "🏆 मेरी प्रगति",
+      "आज का लक्ष्य:\n\n" +
+      "📚 10 मिनट पढ़ाई\n" +
+      "✏️ 5 सवाल अभ्यास\n" +
+      "🧠 5 मिनट revision\n" +
+      "🏆 फिर छोटा quiz"
+    );
+
+  }
+
+}
+
+
+/* =====================================================
+   MODAL
+===================================================== */
+
+function closeLearningModal(){
+
+  $("learningModal")
+    .classList.remove("show");
+
+}
+
+
+function closeModalOutside(event){
+
+  if(
+    event.target ===
+    $("learningModal")
+  ){
+
+    closeLearningModal();
+
+  }
+
+}
+
+
+function askModalToAI(){
+
+  const question =
+    "मैं " +
+    classDisplay(currentClass) +
+    " में हूँ। मुझे इस विषय को आसान हिंदी में step-by-step समझाओ:\n\n" +
+    currentModalText;
+
+
+  closeLearningModal();
+
+
+  focusChat();
+
+
+  $("chatInput").value =
+    question;
+
+
+  setTimeout(
+    ()=>{
+      sendMessage();
+    },
+    350
+  );
+
+}
+
+
+/* =====================================================
    AUTH FORMS
-========================================================= */
+===================================================== */
 
 function hideForms(){
 
@@ -2287,6 +3891,7 @@ function hideForms(){
 function showLogin(){
 
   hideForms();
+
   hideMessage();
 
   $("loginBox")
@@ -2303,6 +3908,7 @@ function showLogin(){
 function showSignup(){
 
   hideForms();
+
   hideMessage();
 
   $("signupBox")
@@ -2319,18 +3925,20 @@ function showSignup(){
 function showAdminMode(){
 
   hideForms();
+
   hideMessage();
 
   $("adminSetupBox")
     .classList.remove("hidden");
 
   $("adminPin").focus();
+
 }
 
 
-/* =========================================================
+/* =====================================================
    FRIENDLY ERROR
-========================================================= */
+===================================================== */
 
 function friendlyError(error){
 
@@ -2346,8 +3954,8 @@ function friendlyError(error){
 
     return `
       ❌ Supabase API key गलत है।
-      Supabase Project URL और Publishable Key जाँचें।
     `;
+
   }
 
 
@@ -2356,6 +3964,7 @@ function friendlyError(error){
     return `
       ❌ Email या PIN गलत है।
     `;
+
   }
 
 
@@ -2364,6 +3973,7 @@ function friendlyError(error){
     return `
       📧 पहले Email confirm करें।
     `;
+
   }
 
 
@@ -2375,6 +3985,7 @@ function friendlyError(error){
     return `
       ⚠️ यह Email पहले से registered है।
     `;
+
   }
 
 
@@ -2384,52 +3995,69 @@ function friendlyError(error){
       "कुछ गलत हो गया।"
     )}
   `;
+
 }
 
 
-/* =========================================================
+/* =====================================================
    SIGNUP
-========================================================= */
+===================================================== */
 
 async function signupUser(){
 
   hideMessage();
 
+
   const name =
     $("signupName")
-    .value.trim();
+      .value.trim();
+
 
   const studentClass =
     $("signupClass")
-    .value.trim();
+      .value.trim();
+
 
   const email =
     $("signupEmail")
-    .value.trim();
+      .value.trim();
+
 
   const pin =
     $("signupPin")
-    .value.trim();
+      .value.trim();
 
 
   if(!name){
 
-    showMessage("👦 बच्चे का नाम डालें");
+    showMessage(
+      "👦 बच्चे का नाम डालें"
+    );
+
     return;
+
   }
 
 
   if(!studentClass){
 
-    showMessage("📚 कक्षा डालें");
+    showMessage(
+      "📚 कक्षा डालें"
+    );
+
     return;
+
   }
 
 
   if(!email){
 
-    showMessage("📧 Email डालें");
+    showMessage(
+      "📧 Email डालें"
+    );
+
     return;
+
   }
 
 
@@ -2440,55 +4068,56 @@ async function signupUser(){
     );
 
     return;
+
   }
 
 
   try{
 
     const result =
-      await supabaseClient.auth
+      await supabaseClient
+      .auth
       .signUp({
 
         email,
+
         password:pin,
 
         options:{
+
           data:{
+
             name,
+
             class:studentClass,
+
             account_type:"student"
+
           }
+
         }
 
       });
 
 
     if(result.error){
+
       throw result.error;
+
     }
 
 
     $("loginEmail").value =
       email;
 
+
     showLogin();
 
 
-    if(result.data?.session){
-
-      showMessage(
-        "🎉 Account बन गया! अब Login करें।",
-        "success"
-      );
-
-    }else{
-
-      showMessage(
-        "✅ Account बन गया। यदि Email confirmation चालू है तो पहले Email verify करें।",
-        "success"
-      );
-
-    }
+    showMessage(
+      "🎉 Account बन गया! अब Login करें।",
+      "success"
+    );
 
 
   }catch(error){
@@ -2498,22 +4127,24 @@ async function signupUser(){
     showMessage(
       friendlyError(error)
     );
+
   }
 
 }
 
 
-/* =========================================================
+/* =====================================================
    ADMIN SETUP
-========================================================= */
+===================================================== */
 
 async function setupAdmin(){
 
   hideMessage();
 
+
   const pin =
     $("adminPin")
-    .value.trim();
+      .value.trim();
 
 
   if(!validPIN(pin)){
@@ -2523,13 +4154,15 @@ async function setupAdmin(){
     );
 
     return;
+
   }
 
 
   try{
 
     const result =
-      await supabaseClient.auth
+      await supabaseClient
+      .auth
       .signUp({
 
         email:ADMIN_EMAIL,
@@ -2537,10 +4170,15 @@ async function setupAdmin(){
         password:pin,
 
         options:{
+
           data:{
+
             name:"Padh-Ai Administrator",
+
             account_type:"admin"
+
           }
+
         }
 
       });
@@ -2573,35 +4211,27 @@ async function setupAdmin(){
         );
 
         return;
+
       }
 
 
       throw result.error;
-    }
-
-
-    if(result.data?.session){
-
-      openAdmin(
-        result.data.user
-      );
-
-    }else{
-
-      $("loginEmail").value =
-        ADMIN_EMAIL;
-
-      $("loginPin").value =
-        pin;
-
-      showLogin();
-
-      showMessage(
-        "✅ Admin account बन गया। Email confirmation की जरूरत हो सकती है।",
-        "success"
-      );
 
     }
+
+
+    $("loginEmail").value =
+      ADMIN_EMAIL;
+
+    $("loginPin").value =
+      pin;
+
+    showLogin();
+
+    showMessage(
+      "✅ Admin account बन गया।",
+      "success"
+    );
 
 
   }catch(error){
@@ -2617,27 +4247,33 @@ async function setupAdmin(){
 }
 
 
-/* =========================================================
+/* =====================================================
    LOGIN
-========================================================= */
+===================================================== */
 
 async function loginUser(){
 
   hideMessage();
 
+
   const email =
     $("loginEmail")
-    .value.trim();
+      .value.trim();
+
 
   const pin =
     $("loginPin")
-    .value.trim();
+      .value.trim();
 
 
   if(!email){
 
-    showMessage("📧 Email डालें");
+    showMessage(
+      "📧 Email डालें"
+    );
+
     return;
+
   }
 
 
@@ -2648,23 +4284,28 @@ async function loginUser(){
     );
 
     return;
+
   }
 
 
   try{
 
     const result =
-      await supabaseClient.auth
+      await supabaseClient
+      .auth
       .signInWithPassword({
 
         email,
+
         password:pin
 
       });
 
 
     if(result.error){
+
       throw result.error;
+
     }
 
 
@@ -2679,6 +4320,7 @@ async function loginUser(){
       );
 
       return;
+
     }
 
 
@@ -2714,9 +4356,9 @@ async function loginUser(){
 }
 
 
-/* =========================================================
+/* =====================================================
    OPEN USER
-========================================================= */
+===================================================== */
 
 function openUser(user){
 
@@ -2729,11 +4371,13 @@ function openUser(user){
 
 
   $("adminPanel")
-    .style.display="none";
+    .style.display =
+    "none";
 
 
   $("dashboard")
-    .style.display="block";
+    .style.display =
+    "block";
 
 
   const name =
@@ -2743,7 +4387,7 @@ function openUser(user){
 
   const studentClass =
     user.user_metadata?.class ||
-    "विद्यार्थी";
+    "Class 1";
 
 
   $("studentName")
@@ -2751,14 +4395,14 @@ function openUser(user){
     name;
 
 
-  $("studentClass")
-    .textContent =
-    studentClass;
-
-
   $("profileName")
     .textContent =
     "नमस्ते, " + name;
+
+
+  renderClassContent(
+    studentClass
+  );
 
 
   scrollHome();
@@ -2766,9 +4410,9 @@ function openUser(user){
 }
 
 
-/* =========================================================
-   OPEN ADMIN
-========================================================= */
+/* =====================================================
+   ADMIN
+===================================================== */
 
 function openAdmin(user){
 
@@ -2781,11 +4425,13 @@ function openAdmin(user){
 
 
   $("dashboard")
-    .style.display="none";
+    .style.display =
+    "none";
 
 
   $("adminPanel")
-    .style.display="block";
+    .style.display =
+    "block";
 
 
   $("adminEmailView")
@@ -2802,9 +4448,9 @@ function openAdmin(user){
 }
 
 
-/* =========================================================
+/* =====================================================
    LOGOUT
-========================================================= */
+===================================================== */
 
 async function logoutUser(){
 
@@ -2830,14 +4476,17 @@ async function logoutUser(){
 
 
   $("dashboard")
-    .style.display="none";
+    .style.display =
+    "none";
 
 
   $("adminPanel")
-    .style.display="none";
+    .style.display =
+    "none";
 
 
-  $("loginPin").value="";
+  $("loginPin").value =
+    "";
 
 
   showLogin();
@@ -2851,17 +4500,18 @@ async function logoutUser(){
 }
 
 
-/* =========================================================
+/* =====================================================
    FORGOT PIN
-========================================================= */
+===================================================== */
 
 async function forgotPin(){
 
   hideMessage();
 
+
   const email =
     $("loginEmail")
-    .value.trim();
+      .value.trim();
 
 
   if(!email){
@@ -2871,13 +4521,15 @@ async function forgotPin(){
     );
 
     return;
+
   }
 
 
   try{
 
     const result =
-      await supabaseClient.auth
+      await supabaseClient
+      .auth
       .resetPasswordForEmail(
         email,
         {
@@ -2888,7 +4540,9 @@ async function forgotPin(){
 
 
     if(result.error){
+
       throw result.error;
+
     }
 
 
@@ -2909,9 +4563,9 @@ async function forgotPin(){
 }
 
 
-/* =========================================================
+/* =====================================================
    CHAT
-========================================================= */
+===================================================== */
 
 function addMessage(
   text,
@@ -2956,6 +4610,7 @@ function focusChat(){
       });
 
     return;
+
   }
 
 
@@ -2966,9 +4621,12 @@ function focusChat(){
     });
 
 
-  setTimeout(()=>{
-    $("chatInput").focus();
-  },500);
+  setTimeout(
+    ()=>{
+      $("chatInput").focus();
+    },
+    400
+  );
 
 }
 
@@ -2989,32 +4647,15 @@ function handleChatKey(event){
 }
 
 
-/* =========================================================
-   PRESET QUESTIONS
-========================================================= */
-
-function askPreset(text){
-
-  focusChat();
-
-  $("chatInput").value =
-    text;
-
-  setTimeout(()=>{
-    sendMessage();
-  },300);
-
-}
-
-
-/* =========================================================
-   SEND MESSAGE TO GEMINI
-========================================================= */
+/* =====================================================
+   SEND CHAT
+===================================================== */
 
 async function sendMessage(){
 
   const input =
     $("chatInput");
+
 
   const question =
     input.value.trim();
@@ -3028,6 +4669,7 @@ async function sendMessage(){
     input.focus();
 
     return;
+
   }
 
 
@@ -3038,7 +4680,7 @@ async function sendMessage(){
       "user"
     );
 
-  }else if(selectedImageBase64){
+  }else{
 
     addMessage(
       "📷 मैंने सवाल की फोटो भेजी है। इसे समझाकर बताओ।",
@@ -3062,6 +4704,7 @@ async function sendMessage(){
       await fetch(
         "/api/gemini",
         {
+
           method:"POST",
 
           headers:{
@@ -3077,7 +4720,10 @@ async function sendMessage(){
               selectedImageBase64,
 
             mimeType:
-              selectedImageMime
+              selectedImageMime,
+
+            class:
+              currentClass
 
           })
 
@@ -3120,11 +4766,13 @@ async function sendMessage(){
       "ai"
     );
 
+
   }finally{
 
     $("typing")
       .style.display =
       "none";
+
 
     removeImage();
 
@@ -3133,9 +4781,9 @@ async function sendMessage(){
 }
 
 
-/* =========================================================
-   IMAGE QUESTION
-========================================================= */
+/* =====================================================
+   IMAGE
+===================================================== */
 
 function handleImage(event){
 
@@ -3144,17 +4792,22 @@ function handleImage(event){
 
 
   if(!file){
+
     return;
+
   }
 
 
-  if(!file.type.startsWith("image/")){
+  if(
+    !file.type.startsWith("image/")
+  ){
 
     alert(
       "कृपया image file चुनें।"
     );
 
     return;
+
   }
 
 
@@ -3166,35 +4819,36 @@ function handleImage(event){
     new FileReader();
 
 
-  reader.onload = function(){
+  reader.onload =
+    function(){
 
-    const result =
-      String(reader.result);
-
-
-    const comma =
-      result.indexOf(",");
+      const result =
+        String(reader.result);
 
 
-    selectedImageBase64 =
-      comma >= 0
-        ? result.slice(comma + 1)
-        : result;
+      const comma =
+        result.indexOf(",");
 
 
-    $("previewImg")
-      .src =
-      result;
+      selectedImageBase64 =
+        comma >= 0
+          ? result.slice(comma + 1)
+          : result;
 
 
-    $("imagePreview")
-      .style.display =
-      "block";
+      $("previewImg")
+        .src =
+        result;
 
 
-    focusChat();
+      $("imagePreview")
+        .style.display =
+        "block";
 
-  };
+
+      focusChat();
+
+    };
 
 
   reader.readAsDataURL(file);
@@ -3228,9 +4882,9 @@ function removeImage(){
 }
 
 
-/* =========================================================
-   MICROPHONE
-========================================================= */
+/* =====================================================
+   MIC
+===================================================== */
 
 function setupSpeechRecognition(){
 
@@ -3245,6 +4899,7 @@ function setupSpeechRecognition(){
       null;
 
     return;
+
   }
 
 
@@ -3270,12 +4925,15 @@ function setupSpeechRecognition(){
       isRecording =
         true;
 
+
       $("micButton")
         .classList.add(
           "recording"
         );
 
-      $("micButton").textContent =
+
+      $("micButton")
+        .textContent =
         "⏹️";
 
     };
@@ -3284,7 +4942,8 @@ function setupSpeechRecognition(){
   recognition.onresult =
     function(event){
 
-      let transcript = "";
+      let transcript =
+        "";
 
 
       for(
@@ -3319,6 +4978,7 @@ function setupSpeechRecognition(){
         event.error
       );
 
+
       stopMic();
 
     };
@@ -3343,6 +5003,7 @@ function toggleMic(){
     );
 
     return;
+
   }
 
 
@@ -3351,6 +5012,7 @@ function toggleMic(){
     recognition.stop();
 
     return;
+
   }
 
 
@@ -3379,15 +5041,16 @@ function stopMic(){
     );
 
 
-  $("micButton").textContent =
+  $("micButton")
+    .textContent =
     "🎤";
 
 }
 
 
-/* =========================================================
+/* =====================================================
    CLEAR CHAT
-========================================================= */
+===================================================== */
 
 function clearChat(){
 
@@ -3404,64 +5067,14 @@ function clearChat(){
 
       </div>
 
-  `;
+    `;
 
 }
 
 
-/* =========================================================
-   LESSON
-========================================================= */
-
-function showLesson(type){
-
-  const prompts = {
-
-    books:
-      "मुझे बच्चों के लिए एक छोटी मजेदार educational कहानी सुनाओ।",
-
-    tables:
-      "मुझे 5 का पहाड़ा बहुत आसान तरीके से सिखाओ।",
-
-    counting:
-      "मुझे 1 से 20 तक गिनती मजेदार तरीके से सिखाओ।",
-
-    alphabet:
-      "मुझे हिंदी वर्णमाला अ से ज्ञ तक आसान तरीके से सिखाओ।",
-
-    games:
-      "मेरे लिए 5 सवालों का बच्चों वाला educational quiz बनाओ।",
-
-    progress:
-      "मेरी पढ़ाई सुधारने के लिए एक आसान daily study plan बनाओ।"
-
-  };
-
-
-  askPreset(
-    prompts[type] ||
-    "मुझे पढ़ाई में मदद करो।"
-  );
-
-}
-
-
-/* =========================================================
-   PROGRESS
-========================================================= */
-
-function showProgress(){
-
-  askPreset(
-    "मेरी कक्षा के बच्चे के लिए पढ़ाई की प्रगति सुधारने का आसान तरीका बताओ और आज का 20 मिनट का study plan बनाओ।"
-  );
-
-}
-
-
-/* =========================================================
+/* =====================================================
    HOME
-========================================================= */
+===================================================== */
 
 function scrollHome(){
 
@@ -3474,9 +5087,9 @@ function scrollHome(){
 }
 
 
-/* =========================================================
+/* =====================================================
    UPI
-========================================================= */
+===================================================== */
 
 async function copyUPI(){
 
@@ -3507,15 +5120,15 @@ async function copyUPI(){
 }
 
 
-/* =========================================================
+/* =====================================================
    TITLE
-========================================================= */
+===================================================== */
 
 function saveSiteTitle(){
 
   const title =
     $("siteTitleInput")
-    .value.trim();
+      .value.trim();
 
 
   if(!title){
@@ -3525,6 +5138,7 @@ function saveSiteTitle(){
     );
 
     return;
+
   }
 
 
@@ -3560,7 +5174,9 @@ function loadSiteTitle(){
       saved;
 
 
-    if($("siteTitleInput")){
+    if(
+      $("siteTitleInput")
+    ){
 
       $("siteTitleInput")
         .value =
@@ -3573,9 +5189,9 @@ function loadSiteTitle(){
 }
 
 
-/* =========================================================
+/* =====================================================
    SESSION
-========================================================= */
+===================================================== */
 
 async function checkCurrentSession(){
 
@@ -3594,6 +5210,7 @@ async function checkCurrentSession(){
       );
 
       return;
+
     }
 
 
@@ -3635,9 +5252,9 @@ async function checkCurrentSession(){
 }
 
 
-/* =========================================================
+/* =====================================================
    AUTH LISTENER
-========================================================= */
+===================================================== */
 
 supabaseClient
 .auth
@@ -3650,16 +5267,20 @@ supabaseClient
     );
 
 
-    if(event === "SIGNED_OUT"){
+    if(
+      event === "SIGNED_OUT"
+    ){
 
       $("authCard")
         .classList.remove(
           "hidden"
         );
 
+
       $("dashboard")
         .style.display =
         "none";
+
 
       $("adminPanel")
         .style.display =
@@ -3671,9 +5292,9 @@ supabaseClient
 );
 
 
-/* =========================================================
+/* =====================================================
    START
-========================================================= */
+===================================================== */
 
 loadSiteTitle();
 
