@@ -2,14 +2,15 @@
 <html lang="hi">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width,initial-scale=1.0">
-<meta name="theme-color" content="#7042df">
+<meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0,user-scalable=no">
+<meta name="theme-color" content="#6d35df">
 
-<title>Padh-Ai 🤖 | बच्चों की मजेदार पढ़ाई</title>
+<title>Padh-Ai 🤖 | बच्चों का AI Teacher</title>
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
 <style>
+
 *{
   box-sizing:border-box;
   -webkit-tap-highlight-color:transparent;
@@ -21,830 +22,2036 @@ html{
 
 body{
   margin:0;
-  font-family:Arial,"Noto Sans Devanagari",sans-serif;
-  color:#29244d;
+  font-family:
+    Arial,
+    "Noto Sans Devanagari",
+    sans-serif;
+
+  color:#29234d;
+
   min-height:100vh;
 
   background:
-    radial-gradient(circle at 5% 5%,#b9f5ff 0,transparent 30%),
-    radial-gradient(circle at 95% 15%,#fff0b5 0,transparent 30%),
-    linear-gradient(135deg,#eefcff,#f1eaff);
+    radial-gradient(circle at 5% 5%,#d8f7ff 0,transparent 28%),
+    radial-gradient(circle at 95% 10%,#ffe9ff 0,transparent 30%),
+    radial-gradient(circle at 50% 100%,#fff4c9 0,transparent 28%),
+    linear-gradient(135deg,#f5f1ff,#eefaff);
 }
 
 button,
-input{
+input,
+textarea{
   font:inherit;
 }
 
-a{
-  -webkit-tap-highlight-color:transparent;
-}
-
-.app{
-  width:100%;
-  max-width:920px;
-  margin:auto;
-  padding:14px;
-}
-
-/* ================= LOGO ================= */
-
-.logo{
-  background:#fff;
-  border:5px solid #29244d;
-  border-radius:32px;
-  padding:17px 20px;
-  text-align:center;
-  font-size:38px;
-  font-weight:1000;
-  color:#7042df;
-  box-shadow:0 9px 0 #29244d;
-  margin-bottom:12px;
-}
-
-.logo span{
-  color:#13b895;
-}
-
-.subtitle{
-  text-align:center;
-  font-weight:900;
-  font-size:20px;
-  margin:18px 0;
-}
-
-/* ================= HERO ================= */
-
-.hero{
-  position:relative;
-  overflow:hidden;
-
-  background:
-    linear-gradient(135deg,#ff4b9c,#6546ed,#13bde1);
-
-  color:white;
-
-  border:5px solid #29244d;
-  border-radius:30px;
-
-  padding:25px 18px;
-  text-align:center;
-
-  box-shadow:0 10px 0 #29244d;
-
-  margin-bottom:30px;
-}
-
-.hero:before,
-.hero:after{
-  content:"⭐";
-  position:absolute;
-  font-size:30px;
-  animation:float 3s ease-in-out infinite;
-}
-
-.hero:before{
-  left:18px;
-  top:15px;
-}
-
-.hero:after{
-  right:18px;
-  bottom:15px;
-  animation-delay:1s;
-}
-
-@keyframes float{
-  0%,100%{transform:translateY(0) rotate(0deg)}
-  50%{transform:translateY(-9px) rotate(10deg)}
-}
-
-.hero h1{
-  margin:0;
-  font-size:30px;
-  position:relative;
-  z-index:2;
-}
-
-.hero p{
-  font-weight:900;
-  position:relative;
-  z-index:2;
-}
-
-.download{
-  display:inline-block;
-  text-decoration:none;
-
-  color:white;
-
-  background:
-    linear-gradient(135deg,#12d092,#08aeea);
-
-  border:4px solid #29244d;
-  border-radius:22px;
-
-  padding:16px 22px;
-
-  font-weight:1000;
-
-  box-shadow:0 7px 0 #29244d;
-
-  margin-top:10px;
-
-  transition:.15s;
-}
-
-.download:active{
-  transform:translateY(6px);
-  box-shadow:0 2px 0 #29244d;
-}
-
-/* ================= CARD ================= */
-
-.card{
-  background:rgba(255,255,255,.97);
-
-  border:5px solid #29244d;
-  border-radius:32px;
-
-  padding:22px;
-
-  box-shadow:0 10px 0 #29244d;
-
-  margin-bottom:28px;
-}
-
-/* ================= TABS ================= */
-
-.tabs{
-  display:grid;
-  grid-template-columns:1fr 1fr;
-  gap:8px;
-
-  background:#eeebff;
-  padding:7px;
-
-  border-radius:24px;
-}
-
-.tab{
-  border:0;
-  border-radius:19px;
-
-  padding:16px 8px;
-
-  font-weight:1000;
-  font-size:18px;
-
-  background:transparent;
-  color:#29244d;
-
+button{
   cursor:pointer;
 }
-
-.tab.active{
-  background:#ffd33f;
-
-  box-shadow:
-    0 6px 0 #c49b00;
-
-  transform:translateY(-1px);
-}
-
-/* ================= ADMIN BUTTON ================= */
-
-.admin-login-button{
-  width:100%;
-
-  margin-top:14px;
-
-  padding:15px;
-
-  border:4px solid #29244d;
-  border-radius:21px;
-
-  background:
-    linear-gradient(135deg,#eee7ff,#fff);
-
-  color:#6739d5;
-
-  font-weight:1000;
-  font-size:18px;
-
-  cursor:pointer;
-}
-
-.admin-login-button:active{
-  transform:translateY(2px);
-}
-
-/* ================= FORM ================= */
-
-label{
-  display:block;
-
-  font-size:18px;
-  font-weight:1000;
-
-  margin:19px 0 8px;
-}
-
-input{
-  width:100%;
-
-  padding:17px;
-
-  border:4px solid #d9d8e7;
-  border-radius:20px;
-
-  background:#fbfaff;
-
-  color:#29244d;
-
-  outline:none;
-}
-
-input:focus{
-  border-color:#7042df;
-
-  box-shadow:
-    0 0 0 4px rgba(112,66,223,.12);
-}
-
-/* ================= BUTTON ================= */
-
-.primary{
-  width:100%;
-
-  padding:17px;
-
-  margin-top:20px;
-
-  border:4px solid #29244d;
-  border-radius:21px;
-
-  background:
-    linear-gradient(135deg,#12cf92,#14afe7);
-
-  color:white;
-
-  font-size:18px;
-  font-weight:1000;
-
-  box-shadow:0 7px 0 #29244d;
-
-  cursor:pointer;
-
-  transition:.12s;
-}
-
-.primary:active{
-  transform:translateY(6px);
-  box-shadow:0 2px 0 #29244d;
-}
-
-.secondary{
-  width:100%;
-
-  padding:15px;
-
-  margin-top:14px;
-
-  border:4px solid #7042df;
-  border-radius:20px;
-
-  background:#f4f0ff;
-
-  color:#6739d5;
-
-  font-weight:1000;
-
-  cursor:pointer;
-}
-
-/* ================= MESSAGE ================= */
-
-.message{
-  display:none;
-
-  margin-top:18px;
-
-  padding:15px;
-
-  border-radius:18px;
-
-  font-weight:1000;
-
-  line-height:1.5;
-
-  word-break:break-word;
-}
-
-.message.error{
-  display:block;
-  background:#ffe0e6;
-  color:#a71f3c;
-}
-
-.message.success{
-  display:block;
-  background:#dbffeb;
-  color:#087342;
-}
-
-.message.info{
-  display:block;
-  background:#e5f5ff;
-  color:#14658a;
-}
-
-/* ================= ADMIN ================= */
-
-.admin-panel{
-  display:none;
-}
-
-.admin-title{
-  text-align:center;
-  color:#6739d5;
-
-  font-size:28px;
-  margin-top:0;
-}
-
-.admin-box{
-  background:#f7f3ff;
-
-  border:3px solid #ddd3ff;
-
-  border-radius:22px;
-
-  padding:18px;
-
-  margin-top:15px;
-}
-
-.admin-box h3{
-  margin-top:0;
-  color:#6739d5;
-}
-
-.admin-action{
-  width:100%;
-
-  padding:14px;
-
-  border:3px solid #29244d;
-
-  border-radius:18px;
-
-  background:white;
-
-  font-weight:1000;
-
-  cursor:pointer;
-
-  margin-top:10px;
-}
-
-.admin-action.danger{
-  background:#ff5770;
-  color:white;
-}
-
-/* ================= USER ================= */
-
-.user-panel{
-  display:none;
-}
-
-.welcome{
-  text-align:center;
-}
-
-.welcome .emoji{
-  font-size:55px;
-}
-
-/* ================= SUPPORT ================= */
-
-.support{
-  border:4px dashed #15b996;
-
-  border-radius:27px;
-
-  padding:22px;
-
-  text-align:center;
-
-  background:#effff9;
-
-  margin-bottom:25px;
-}
-
-.support-title{
-  font-size:18px;
-}
-
-.support-link{
-  display:inline-block;
-
-  color:#087a5d;
-
-  font-size:21px;
-  font-weight:1000;
-
-  text-decoration:none;
-
-  margin-top:8px;
-}
-
-/* ================= FOOTER ================= */
-
-footer{
-  text-align:center;
-
-  color:#777;
-
-  padding:22px 5px 35px;
-
-  font-weight:bold;
-}
-
-/* ================= UTILITY ================= */
 
 .hidden{
   display:none !important;
 }
 
-.small{
-  font-size:13px;
-  opacity:.85;
+/* =====================================================
+   APP
+===================================================== */
+
+.app{
+  width:100%;
+  max-width:1250px;
+  margin:auto;
+  padding:12px;
 }
 
-.note{
-  font-size:13px;
-  color:#777;
-  line-height:1.5;
+/* =====================================================
+   TOP HEADER
+===================================================== */
+
+.topbar{
+  background:rgba(255,255,255,.94);
+
+  border:3px solid #30265b;
+  border-radius:25px;
+
+  padding:10px 14px;
+
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:12px;
+
+  box-shadow:0 7px 0 #30265b;
+
+  margin-bottom:15px;
+
+  position:sticky;
+  top:8px;
+  z-index:50;
+
+  backdrop-filter:blur(12px);
 }
 
-hr{
+.brand{
+  display:flex;
+  align-items:center;
+  gap:9px;
+  min-width:0;
+}
+
+.brand-robot{
+  width:50px;
+  height:50px;
+
+  border-radius:16px;
+
+  display:flex;
+  align-items:center;
+  justify-content:center;
+
+  font-size:31px;
+
+  background:
+    linear-gradient(145deg,#d9c7ff,#72e8ff);
+
+  border:3px solid #30265b;
+
+  box-shadow:
+    inset 0 -5px 0 rgba(0,0,0,.08);
+}
+
+.brand-text{
+  line-height:1.05;
+}
+
+.brand-name{
+  font-size:25px;
+  font-weight:1000;
+
+  background:
+    linear-gradient(90deg,#6830df,#08bfe8);
+
+  -webkit-background-clip:text;
+  background-clip:text;
+  color:transparent;
+}
+
+.brand-sub{
+  font-size:11px;
+  font-weight:900;
+  color:#766e92;
+}
+
+.nav{
+  display:flex;
+  gap:5px;
+  overflow:auto;
+}
+
+.nav button{
   border:0;
-  border-top:2px dashed #ddd;
-  margin:22px 0;
+  background:transparent;
+
+  padding:11px 12px;
+
+  border-radius:15px;
+
+  font-weight:1000;
+  color:#443b68;
+
+  white-space:nowrap;
 }
 
-/* ================= MOBILE ================= */
+.nav button:hover,
+.nav button.active{
+  background:#eee7ff;
+  color:#6332d6;
+}
 
-@media(max-width:600px){
+.profile-mini{
+  display:flex;
+  align-items:center;
+  gap:7px;
+
+  font-weight:1000;
+  white-space:nowrap;
+}
+
+.profile-avatar{
+  width:42px;
+  height:42px;
+
+  border-radius:50%;
+
+  display:flex;
+  align-items:center;
+  justify-content:center;
+
+  background:#ffdca8;
+
+  border:3px solid #30265b;
+
+  font-size:25px;
+}
+
+/* =====================================================
+   LOGO / HERO
+===================================================== */
+
+.logo-stage{
+  border:5px solid #30265b;
+  border-radius:34px;
+
+  overflow:hidden;
+
+  background:
+    radial-gradient(circle at 50% 20%,#4c9dff,#15105e 50%,#220b63);
+
+  box-shadow:0 11px 0 #30265b;
+
+  position:relative;
+
+  margin-bottom:25px;
+}
+
+.logo-stage:before{
+  content:"";
+
+  position:absolute;
+  inset:0;
+
+  background:
+    radial-gradient(circle,#ffffff 1px,transparent 2px);
+
+  background-size:42px 42px;
+
+  opacity:.35;
+}
+
+.stars{
+  position:absolute;
+  inset:0;
+  pointer-events:none;
+}
+
+.stars span{
+  position:absolute;
+  font-size:25px;
+  animation:twinkle 2.5s infinite alternate;
+}
+
+.stars span:nth-child(1){left:5%;top:8%}
+.stars span:nth-child(2){left:20%;top:16%;animation-delay:.5s}
+.stars span:nth-child(3){right:8%;top:10%;animation-delay:1s}
+.stars span:nth-child(4){right:20%;top:30%;animation-delay:1.4s}
+.stars span:nth-child(5){left:10%;bottom:25%;animation-delay:.7s}
+.stars span:nth-child(6){right:7%;bottom:22%;animation-delay:1.2s}
+
+@keyframes twinkle{
+  from{
+    transform:scale(.8) rotate(-10deg);
+    opacity:.5;
+  }
+  to{
+    transform:scale(1.2) rotate(10deg);
+    opacity:1;
+  }
+}
+
+.logo-content{
+  position:relative;
+  z-index:2;
+
+  padding:35px 20px 22px;
+
+  text-align:center;
+}
+
+.ai-character{
+  width:180px;
+  height:180px;
+
+  margin:0 auto 10px;
+
+  border-radius:48%;
+
+  background:
+    linear-gradient(145deg,#dcd8ff,#9a8cff);
+
+  border:6px solid #4b20a4;
+
+  box-shadow:
+    0 15px 0 #2d1769,
+    inset 0 -15px 20px rgba(53,22,126,.15);
+
+  display:flex;
+  align-items:center;
+  justify-content:center;
+
+  font-size:105px;
+
+  position:relative;
+
+  animation:robotFloat 3s ease-in-out infinite;
+}
+
+@keyframes robotFloat{
+  0%,100%{
+    transform:translateY(0);
+  }
+  50%{
+    transform:translateY(-9px);
+  }
+}
+
+.ai-character:before{
+  content:"AI";
+
+  position:absolute;
+
+  top:-18px;
+  left:50%;
+
+  transform:translateX(-50%);
+
+  background:#13d7a2;
+
+  color:#fff;
+
+  border:4px solid #30265b;
+
+  border-radius:15px;
+
+  padding:6px 16px;
+
+  font-weight:1000;
+
+  font-size:19px;
+}
+
+.logo-title{
+  margin:8px 0 0;
+
+  font-size:clamp(52px,9vw,105px);
+
+  line-height:.95;
+
+  font-weight:1000;
+
+  color:#fff;
+
+  text-shadow:
+    5px 5px 0 #6a28d9,
+    8px 9px 0 #24105f;
+}
+
+.logo-title span{
+  color:#15e0b0;
+}
+
+.logo-ribbon{
+  display:inline-block;
+
+  margin-top:18px;
+
+  padding:10px 28px;
+
+  border-radius:20px;
+
+  background:
+    linear-gradient(135deg,#ffd73b,#ffae20);
+
+  border:4px solid #30265b;
+
+  color:#472071;
+
+  font-size:clamp(16px,3vw,25px);
+
+  font-weight:1000;
+
+  box-shadow:0 7px 0 #30265b;
+}
+
+.books-decoration{
+  display:flex;
+  justify-content:center;
+  flex-wrap:wrap;
+  gap:8px;
+
+  margin-top:25px;
+
+  font-size:35px;
+}
+
+/* =====================================================
+   AUTH
+===================================================== */
+
+.auth-card{
+  background:#fff;
+
+  border:4px solid #30265b;
+  border-radius:30px;
+
+  padding:22px;
+
+  box-shadow:0 9px 0 #30265b;
+
+  max-width:650px;
+  margin:0 auto 30px;
+}
+
+.tabs{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+
+  gap:7px;
+
+  padding:6px;
+
+  background:#f0ecff;
+
+  border-radius:20px;
+}
+
+.tab{
+  border:0;
+  border-radius:16px;
+
+  padding:14px;
+
+  font-weight:1000;
+  color:#40375e;
+
+  background:transparent;
+}
+
+.tab.active{
+  background:#ffd23f;
+  box-shadow:0 5px 0 #c39500;
+}
+
+label{
+  display:block;
+
+  margin:17px 0 7px;
+
+  font-size:16px;
+  font-weight:1000;
+}
+
+input,
+textarea{
+  width:100%;
+
+  border:3px solid #ddd8ed;
+  border-radius:17px;
+
+  padding:15px;
+
+  outline:none;
+
+  background:#fbfaff;
+
+  color:#29234d;
+}
+
+input:focus,
+textarea:focus{
+  border-color:#7240df;
+
+  box-shadow:
+    0 0 0 4px rgba(114,64,223,.1);
+}
+
+.primary{
+  width:100%;
+
+  margin-top:18px;
+
+  padding:16px;
+
+  border:4px solid #30265b;
+  border-radius:19px;
+
+  color:#fff;
+
+  font-weight:1000;
+
+  background:
+    linear-gradient(135deg,#13d29d,#0eb5e9);
+
+  box-shadow:0 6px 0 #30265b;
+
+  transition:.12s;
+}
+
+.primary:active{
+  transform:translateY(5px);
+  box-shadow:0 1px 0 #30265b;
+}
+
+.secondary{
+  width:100%;
+
+  margin-top:13px;
+
+  padding:14px;
+
+  border:3px solid #7042df;
+  border-radius:17px;
+
+  background:#f4efff;
+
+  color:#6332d6;
+
+  font-weight:1000;
+}
+
+.message{
+  margin-top:15px;
+
+  padding:14px;
+
+  border-radius:16px;
+
+  font-weight:900;
+
+  line-height:1.5;
+
+  display:none;
+}
+
+.message.success{
+  display:block;
+  background:#ddffed;
+  color:#087447;
+}
+
+.message.error{
+  display:block;
+  background:#ffe1e8;
+  color:#a52042;
+}
+
+.message.info{
+  display:block;
+  background:#e3f5ff;
+  color:#14658a;
+}
+
+/* =====================================================
+   DASHBOARD
+===================================================== */
+
+.dashboard{
+  display:none;
+}
+
+.dashboard-grid{
+  display:grid;
+
+  grid-template-columns:220px 1fr 390px;
+
+  gap:15px;
+
+  align-items:start;
+}
+
+.panel{
+  background:rgba(255,255,255,.94);
+
+  border:3px solid #d8d0f2;
+  border-radius:24px;
+
+  box-shadow:0 6px 0 rgba(48,38,91,.18);
+}
+
+/* =====================================================
+   SIDEBAR
+===================================================== */
+
+.sidebar{
+  padding:13px;
+
+  position:sticky;
+  top:92px;
+}
+
+.student-card{
+  padding:13px;
+
+  border-radius:20px;
+
+  background:
+    linear-gradient(135deg,#efe6ff,#e3fbff);
+
+  margin-bottom:12px;
+}
+
+.student-top{
+  display:flex;
+  gap:10px;
+  align-items:center;
+}
+
+.student-avatar{
+  width:55px;
+  height:55px;
+
+  border-radius:18px;
+
+  background:#ffdca8;
+
+  display:flex;
+  align-items:center;
+  justify-content:center;
+
+  font-size:35px;
+
+  border:3px solid #30265b;
+}
+
+.student-name{
+  font-weight:1000;
+}
+
+.class-badge{
+  display:inline-block;
+
+  margin-top:5px;
+
+  padding:4px 9px;
+
+  background:#e5d9ff;
+
+  color:#6332d6;
+
+  border-radius:10px;
+
+  font-size:12px;
+
+  font-weight:1000;
+}
+
+.side-menu{
+  display:grid;
+  gap:5px;
+}
+
+.side-menu button{
+  border:0;
+
+  text-align:left;
+
+  padding:12px;
+
+  border-radius:15px;
+
+  background:transparent;
+
+  color:#40375e;
+
+  font-weight:1000;
+}
+
+.side-menu button:hover,
+.side-menu button.active{
+  background:#eee7ff;
+  color:#6030d4;
+}
+
+.logout{
+  width:100%;
+
+  margin-top:13px;
+
+  padding:12px;
+
+  border:0;
+
+  border-radius:15px;
+
+  background:#ffd9e0;
+
+  color:#b3224d;
+
+  font-weight:1000;
+}
+
+/* =====================================================
+   MAIN CONTENT
+===================================================== */
+
+.main-content{
+  min-width:0;
+}
+
+.hero-card{
+  border-radius:25px;
+
+  overflow:hidden;
+
+  color:#fff;
+
+  background:
+    linear-gradient(135deg,#4733dd,#7650ed,#1dbce7);
+
+  border:3px solid #30265b;
+
+  padding:25px;
+
+  position:relative;
+
+  box-shadow:0 7px 0 #30265b;
+
+  margin-bottom:15px;
+}
+
+.hero-card h2{
+  margin:0;
+
+  font-size:30px;
+}
+
+.hero-card p{
+  font-weight:900;
+}
+
+.hero-robot{
+  position:absolute;
+
+  right:25px;
+  bottom:10px;
+
+  font-size:95px;
+
+  filter:drop-shadow(0 8px 0 rgba(0,0,0,.2));
+}
+
+.hero-start{
+  display:inline-block;
+
+  border:3px solid #30265b;
+
+  background:#ffd52e;
+
+  color:#43206d;
+
+  padding:12px 18px;
+
+  border-radius:16px;
+
+  font-weight:1000;
+
+  box-shadow:0 5px 0 #30265b;
+}
+
+/* =====================================================
+   LESSON CARDS
+===================================================== */
+
+.section-title{
+  margin:20px 5px 10px;
+
+  font-size:22px;
+
+  font-weight:1000;
+
+  color:#4d328d;
+}
+
+.lesson-grid{
+  display:grid;
+
+  grid-template-columns:repeat(2,1fr);
+
+  gap:10px;
+}
+
+.lesson{
+  min-height:145px;
+
+  padding:16px;
+
+  border-radius:20px;
+
+  border:2px solid #ddd5f0;
+
+  position:relative;
+
+  overflow:hidden;
+}
+
+.lesson:nth-child(1){
+  background:#e9fbff;
+}
+
+.lesson:nth-child(2){
+  background:#fff0ee;
+}
+
+.lesson:nth-child(3){
+  background:#eafff4;
+}
+
+.lesson:nth-child(4){
+  background:#fff9df;
+}
+
+.lesson:nth-child(5){
+  background:#f2eaff;
+}
+
+.lesson:nth-child(6){
+  background:#e9f1ff;
+}
+
+.lesson h3{
+  margin:0 0 7px;
+  font-size:18px;
+}
+
+.lesson p{
+  font-size:13px;
+  font-weight:700;
+  opacity:.8;
+}
+
+.lesson-icon{
+  position:absolute;
+
+  right:8px;
+  bottom:3px;
+
+  font-size:55px;
+
+  opacity:.9;
+}
+
+.lesson button{
+  border:0;
+
+  padding:8px 12px;
+
+  border-radius:12px;
+
+  background:#fff;
+
+  color:#5b31cb;
+
+  font-weight:1000;
+}
+
+/* =====================================================
+   CHAT
+===================================================== */
+
+.chat-panel{
+  height:calc(100vh - 110px);
+
+  min-height:600px;
+
+  display:flex;
+  flex-direction:column;
+
+  overflow:hidden;
+
+  position:sticky;
+  top:92px;
+}
+
+.chat-header{
+  padding:14px;
+
+  color:#fff;
+
+  background:
+    linear-gradient(135deg,#6a2ee0,#7d45ef);
+
+  display:flex;
+
+  align-items:center;
+  justify-content:space-between;
+}
+
+.chat-title{
+  display:flex;
+  align-items:center;
+  gap:10px;
+}
+
+.chat-avatar{
+  width:45px;
+  height:45px;
+
+  display:flex;
+  align-items:center;
+  justify-content:center;
+
+  border-radius:15px;
+
+  background:#dcd4ff;
+
+  font-size:28px;
+
+  border:2px solid #fff;
+}
+
+.chat-title strong{
+  display:block;
+}
+
+.online{
+  font-size:11px;
+  color:#bfffe9;
+  font-weight:900;
+}
+
+.chat-messages{
+  flex:1;
+
+  overflow-y:auto;
+
+  padding:15px;
+
+  background:
+    radial-gradient(circle at 10% 10%,#f1eaff,transparent 30%),
+    #fff;
+}
+
+.msg{
+  max-width:88%;
+
+  padding:11px 13px;
+
+  margin-bottom:10px;
+
+  border-radius:17px;
+
+  line-height:1.5;
+
+  font-weight:700;
+
+  white-space:pre-wrap;
+
+  word-break:break-word;
+}
+
+.msg.ai{
+  margin-right:auto;
+
+  background:#f0ebff;
+
+  border:2px solid #ded4ff;
+
+  border-bottom-left-radius:5px;
+}
+
+.msg.user{
+  margin-left:auto;
+
+  color:#fff;
+
+  background:
+    linear-gradient(135deg,#6a32df,#9148ef);
+
+  border-bottom-right-radius:5px;
+}
+
+.typing{
+  display:none;
+
+  padding:8px 13px;
+
+  font-size:13px;
+
+  font-weight:900;
+
+  color:#71698a;
+}
+
+.chat-tools{
+  padding:8px 10px 4px;
+
+  display:flex;
+  gap:6px;
+}
+
+.tool-button{
+  width:42px;
+  height:42px;
+
+  border-radius:14px;
+
+  border:2px solid #d8cff2;
+
+  background:#fff;
+
+  font-size:20px;
+}
+
+.tool-button.recording{
+  background:#ff5c76;
+  color:#fff;
+
+  animation:pulse 1s infinite;
+}
+
+@keyframes pulse{
+  50%{
+    transform:scale(1.08);
+  }
+}
+
+.chat-input-row{
+  display:flex;
+
+  gap:7px;
+
+  padding:8px 10px 12px;
+
+  background:#fff;
+}
+
+.chat-input{
+  flex:1;
+
+  border:2px solid #d8cff2;
+
+  border-radius:17px;
+
+  padding:12px;
+
+  resize:none;
+
+  height:48px;
+}
+
+.send-button{
+  width:50px;
+
+  border:0;
+
+  border-radius:17px;
+
+  background:
+    linear-gradient(135deg,#6b31df,#12bce8);
+
+  color:#fff;
+
+  font-size:22px;
+
+  font-weight:1000;
+}
+
+/* =====================================================
+   PREVIEW IMAGE
+===================================================== */
+
+.image-preview{
+  display:none;
+
+  padding:8px 10px;
+
+  background:#f7f3ff;
+}
+
+.image-preview img{
+  max-width:100%;
+  max-height:120px;
+
+  border-radius:14px;
+
+  border:2px solid #cfc4ef;
+}
+
+.remove-image{
+  border:0;
+
+  background:#ff5d77;
+  color:#fff;
+
+  padding:6px 10px;
+
+  border-radius:10px;
+
+  font-weight:1000;
+
+  margin-left:5px;
+}
+
+/* =====================================================
+   FEATURE STRIP
+===================================================== */
+
+.features{
+  margin-top:20px;
+
+  display:grid;
+
+  grid-template-columns:repeat(5,1fr);
+
+  gap:8px;
+
+  background:#fff;
+
+  border:3px solid #ddd4f2;
+
+  border-radius:22px;
+
+  padding:14px;
+}
+
+.feature{
+  text-align:center;
+
+  font-weight:1000;
+
+  font-size:13px;
+}
+
+.feature-icon{
+  font-size:35px;
+  display:block;
+  margin-bottom:4px;
+}
+
+/* =====================================================
+   ADMIN
+===================================================== */
+
+.admin-panel{
+  display:none;
+
+  background:#fff;
+
+  border:4px solid #30265b;
+
+  border-radius:28px;
+
+  padding:20px;
+
+  box-shadow:0 9px 0 #30265b;
+}
+
+.admin-grid{
+  display:grid;
+
+  grid-template-columns:repeat(2,1fr);
+
+  gap:12px;
+}
+
+.admin-box{
+  padding:17px;
+
+  background:#f6f2ff;
+
+  border:2px solid #ddd2f5;
+
+  border-radius:20px;
+}
+
+.admin-box h3{
+  margin-top:0;
+  color:#6030d3;
+}
+
+.admin-action{
+  width:100%;
+
+  padding:12px;
+
+  border:2px solid #30265b;
+
+  border-radius:14px;
+
+  background:#fff;
+
+  font-weight:1000;
+}
+
+.admin-action.danger{
+  background:#ff6079;
+  color:#fff;
+}
+
+/* =====================================================
+   FOOTER
+===================================================== */
+
+footer{
+  text-align:center;
+
+  padding:25px 5px 40px;
+
+  color:#777;
+
+  font-weight:800;
+}
+
+/* =====================================================
+   RESPONSIVE
+===================================================== */
+
+@media(max-width:1050px){
+
+  .dashboard-grid{
+    grid-template-columns:190px 1fr;
+  }
+
+  .chat-panel{
+    grid-column:1/-1;
+
+    height:650px;
+
+    position:relative;
+    top:auto;
+  }
+
+  .features{
+    grid-template-columns:repeat(3,1fr);
+  }
+
+}
+
+@media(max-width:700px){
 
   .app{
-    padding:10px;
+    padding:8px;
   }
 
-  .logo{
-    font-size:31px;
-    padding:15px;
+  .topbar{
+    position:relative;
+    top:auto;
+
+    flex-wrap:wrap;
   }
 
-  .subtitle{
-    font-size:17px;
+  .nav{
+    width:100%;
+    order:3;
   }
 
-  .hero h1{
-    font-size:25px;
+  .profile-mini{
+    margin-left:auto;
   }
 
-  .card{
-    padding:17px;
+  .logo-content{
+    padding:25px 12px 18px;
   }
 
-  .tab{
-    font-size:16px;
+  .ai-character{
+    width:130px;
+    height:130px;
+    font-size:75px;
+  }
+
+  .logo-title{
+    font-size:55px;
+  }
+
+  .logo-ribbon{
+    padding:8px 14px;
+    font-size:15px;
+  }
+
+  .dashboard-grid{
+    display:block;
+  }
+
+  .sidebar{
+    position:relative;
+    top:auto;
+    margin-bottom:12px;
+  }
+
+  .side-menu{
+    grid-template-columns:repeat(2,1fr);
+  }
+
+  .lesson-grid{
+    grid-template-columns:1fr;
+  }
+
+  .chat-panel{
+    height:620px;
+    min-height:620px;
+
+    margin-top:15px;
+  }
+
+  .features{
+    grid-template-columns:repeat(2,1fr);
+  }
+
+  .admin-grid{
+    grid-template-columns:1fr;
+  }
+
+  .hero-card{
+    padding:18px;
+  }
+
+  .hero-card h2{
+    font-size:23px;
+  }
+
+  .hero-robot{
+    font-size:65px;
+    right:10px;
   }
 
 }
+
 </style>
 </head>
-
 
 <body>
 
 <div class="app">
 
-  <!-- ================= HEADER ================= -->
+<!-- =====================================================
+     TOP BAR
+===================================================== -->
 
-  <div class="logo">
-    Padh-<span>Ai</span> 🤖
-  </div>
+<header class="topbar">
 
-  <div class="subtitle">
-    🔢 गिनती • 🔤 वर्णमाला • 📚 पहाड़ा • 🤖 AI Teacher
-  </div>
+  <div class="brand">
 
+    <div class="brand-robot">
+      🤖
+    </div>
 
-  <!-- ================= APK ================= -->
+    <div class="brand-text">
 
-  <section class="hero">
+      <div class="brand-name">
+        Padh-Ai
+      </div>
 
-    <h1>📱 Padh-Ai Android App</h1>
-
-    <p>
-      बच्चों की मजेदार पढ़ाई — मोबाइल ऐप
-    </p>
-
-    <a
-      class="download"
-      href="https://github.com/sonwaniv842-cell/Padh-Ai/releases/download/v1.0.5/app-release.apk"
-      target="_blank"
-      rel="noopener"
-    >
-      📲 Padh-Ai App (APK) डाउनलोड करें
-    </a>
-
-    <p>
-      Version 1.0.5 • Free Download
-    </p>
-
-  </section>
-
-
-  <!-- ================= AUTH ================= -->
-
-  <section class="card" id="authCard">
-
-    <div class="tabs">
-
-      <button
-        class="tab active"
-        id="loginTab"
-        onclick="showLogin()"
-      >
-        🔐 Login
-      </button>
-
-      <button
-        class="tab"
-        id="signupTab"
-        onclick="showSignup()"
-      >
-        🎒 नया Account
-      </button>
+      <div class="brand-sub">
+        AI Teacher • बच्चों का सच्चा साथी
+      </div>
 
     </div>
 
+  </div>
 
-    <!-- ADMIN LOGIN -->
+  <nav class="nav">
+
+    <button class="active" onclick="scrollHome()">
+      🏠 होम
+    </button>
+
+    <button onclick="focusChat()">
+      🤖 AI Teacher
+    </button>
+
+    <button onclick="showLesson('books')">
+      📚 किताबें
+    </button>
+
+    <button onclick="showLesson('games')">
+      🎮 गेम्स
+    </button>
+
+    <button onclick="showLesson('progress')">
+      📊 प्रगति
+    </button>
+
+    <button onclick="focusChat()">
+      ❓ सहायता
+    </button>
+
+  </nav>
+
+  <div class="profile-mini">
+
+    <div class="profile-avatar">
+      👦
+    </div>
+
+    <span id="profileName">
+      नमस्ते!
+    </span>
+
+  </div>
+
+</header>
+
+
+<!-- =====================================================
+     BIG 3D LOGO
+===================================================== -->
+
+<section class="logo-stage" id="home">
+
+  <div class="stars">
+    <span>⭐</span>
+    <span>✨</span>
+    <span>🌟</span>
+    <span>⭐</span>
+    <span>✨</span>
+    <span>🌟</span>
+  </div>
+
+  <div class="logo-content">
+
+    <div class="ai-character">
+      🤖
+    </div>
+
+    <div class="logo-title">
+      Padh-<span>AI</span>
+    </div>
+
+    <div class="logo-ribbon">
+      गिनती • वर्णमाला • पहाड़ा • AI Teacher
+    </div>
+
+    <div class="books-decoration">
+      📚 📖 ✏️ 🔢 🧮 🎒 🧠 🎮
+    </div>
+
+  </div>
+
+</section>
+
+
+<!-- =====================================================
+     AUTH
+===================================================== -->
+
+<section class="auth-card" id="authCard">
+
+  <div class="tabs">
 
     <button
-      class="admin-login-button"
+      class="tab active"
+      id="loginTab"
+      onclick="showLogin()"
+    >
+      🔐 Login
+    </button>
+
+    <button
+      class="tab"
+      id="signupTab"
+      onclick="showSignup()"
+    >
+      🎒 नया Account
+    </button>
+
+  </div>
+
+
+  <!-- LOGIN -->
+
+  <div id="loginBox">
+
+    <label>📧 Email</label>
+
+    <input
+      id="loginEmail"
+      type="email"
+      placeholder="अपना Email डालें"
+      autocomplete="email"
+    >
+
+    <label>🔢 6 अंकों का PIN</label>
+
+    <input
+      id="loginPin"
+      type="password"
+      inputmode="numeric"
+      maxlength="6"
+      placeholder="6 अंकों का PIN"
+    >
+
+    <button
+      class="primary"
+      onclick="loginUser()"
+    >
+      🚀 Login करके पढ़ाई शुरू करें
+    </button>
+
+    <button
+      class="secondary"
+      onclick="forgotPin()"
+    >
+      🔑 PIN भूल गए?
+    </button>
+
+    <button
+      class="secondary"
       onclick="showAdminMode()"
     >
       🛡️ Admin Login
     </button>
 
-
-    <!-- ================= LOGIN ================= -->
-
-    <div id="loginBox">
-
-      <label>
-        📧 Email
-      </label>
-
-      <input
-        id="loginEmail"
-        type="email"
-        autocomplete="email"
-        placeholder="अपना Email डालें"
-      >
+  </div>
 
 
-      <label>
-        🔢 6 अंकों का PIN
-      </label>
+  <!-- SIGNUP -->
 
-      <input
-        id="loginPin"
-        type="password"
-        inputmode="numeric"
-        autocomplete="current-password"
-        maxlength="6"
-        placeholder="6 अंकों का PIN"
-      >
+  <div id="signupBox" class="hidden">
 
+    <label>👦 बच्चे का नाम</label>
 
-      <button
-        class="primary"
-        onclick="loginUser()"
-      >
-        🔐 Login करें
-      </button>
-
-
-      <button
-        class="secondary"
-        onclick="forgotPin()"
-      >
-        🔑 PIN भूल गए?
-      </button>
-
-    </div>
-
-
-    <!-- ================= SIGNUP ================= -->
-
-    <div id="signupBox" class="hidden">
-
-      <label>
-        👦 आपका नाम
-      </label>
-
-      <input
-        id="signupName"
-        type="text"
-        placeholder="बच्चे का नाम"
-      >
-
-
-      <label>
-        📚 कक्षा
-      </label>
-
-      <input
-        id="signupClass"
-        type="text"
-        placeholder="जैसे KG1, KG2, Class 1"
-      >
-
-
-      <label>
-        📧 Email
-      </label>
-
-      <input
-        id="signupEmail"
-        type="email"
-        autocomplete="email"
-        placeholder="Email"
-      >
-
-
-      <label>
-        🔢 6 अंकों का PIN
-      </label>
-
-      <input
-        id="signupPin"
-        type="password"
-        inputmode="numeric"
-        autocomplete="new-password"
-        maxlength="6"
-        placeholder="6 अंकों का PIN"
-      >
-
-
-      <button
-        class="primary"
-        onclick="signupUser()"
-      >
-        🎒 Account बनाएँ
-      </button>
-
-
-      <p class="note">
-        PIN ठीक 6 अंकों का होना चाहिए।
-        Account बनने के बाद उसी Email और PIN से Login करें।
-      </p>
-
-    </div>
-
-
-    <!-- ================= ADMIN SETUP ================= -->
-
-    <div id="adminSetupBox" class="hidden">
-
-      <h2 style="color:#6739d5;text-align:center">
-        🛡️ Admin Setup
-      </h2>
-
-      <p class="note">
-        पहली बार Admin account बनाने के लिए नीचे
-        Admin Email और अपना 6-अंकों का PIN डालें।
-      </p>
-
-
-      <label>
-        👑 Admin Email
-      </label>
-
-      <input
-        id="adminEmail"
-        type="email"
-        value="Sonwaniv842@gmail.com"
-        readonly
-      >
-
-
-      <label>
-        🔢 नया Admin PIN
-      </label>
-
-      <input
-        id="adminPin"
-        type="password"
-        inputmode="numeric"
-        maxlength="6"
-        placeholder="अपना 6 अंकों का PIN"
-      >
-
-
-      <button
-        class="primary"
-        onclick="setupAdmin()"
-      >
-        👑 Admin Account बनाएं
-      </button>
-
-
-      <button
-        class="secondary"
-        onclick="showLogin()"
-      >
-        🔙 वापस Login
-      </button>
-
-    </div>
-
-
-    <!-- MESSAGE -->
-
-    <div id="message"></div>
-
-  </section>
-
-
-  <!-- ================= USER PANEL ================= -->
-
-  <section
-    class="card user-panel"
-    id="userPanel"
-  >
-
-    <div class="welcome">
-
-      <div class="emoji">
-        🎉
-      </div>
-
-      <h2>
-        स्वागत है!
-      </h2>
-
-      <p id="welcomeText"></p>
-
-    </div>
-
-
-    <a
-      class="download"
-      style="display:block;text-align:center"
-      href="https://github.com/sonwaniv842-cell/Padh-Ai/releases/download/v1.0.5/app-release.apk"
-      target="_blank"
-      rel="noopener"
+    <input
+      id="signupName"
+      placeholder="बच्चे का नाम"
     >
-      📲 Padh-Ai App डाउनलोड करें
-    </a>
 
+    <label>📚 कक्षा</label>
+
+    <input
+      id="signupClass"
+      placeholder="जैसे KG1, KG2, Class 1"
+    >
+
+    <label>📧 Email</label>
+
+    <input
+      id="signupEmail"
+      type="email"
+      placeholder="Email"
+    >
+
+    <label>🔢 6 अंकों का PIN</label>
+
+    <input
+      id="signupPin"
+      type="password"
+      inputmode="numeric"
+      maxlength="6"
+      placeholder="6 अंकों का PIN"
+    >
 
     <button
       class="primary"
-      onclick="logoutUser()"
+      onclick="signupUser()"
     >
-      🚪 Logout
+      🎒 मेरा Padh-Ai Account बनाओ
     </button>
 
-  </section>
+  </div>
 
 
-  <!-- ================= ADMIN PANEL ================= -->
+  <!-- ADMIN SETUP -->
 
-  <section
-    class="card admin-panel"
-    id="adminPanel"
+  <div id="adminSetupBox" class="hidden">
+
+    <h2 style="text-align:center;color:#6030d3">
+      🛡️ Admin Setup
+    </h2>
+
+    <p>
+      पहली बार Admin account बनाने के लिए अपना
+      6 अंकों का PIN डालें।
+    </p>
+
+    <label>👑 Admin Email</label>
+
+    <input
+      id="adminEmail"
+      value="Sonwaniv842@gmail.com"
+      readonly
+    >
+
+    <label>🔢 Admin PIN</label>
+
+    <input
+      id="adminPin"
+      type="password"
+      inputmode="numeric"
+      maxlength="6"
+      placeholder="6 अंकों का PIN"
+    >
+
+    <button
+      class="primary"
+      onclick="setupAdmin()"
+    >
+      👑 Admin Account बनाएं
+    </button>
+
+    <button
+      class="secondary"
+      onclick="showLogin()"
+    >
+      🔙 वापस Login
+    </button>
+
+  </div>
+
+
+  <div id="message"></div>
+
+</section>
+
+
+<!-- =====================================================
+     DASHBOARD
+===================================================== -->
+
+<section
+  class="dashboard"
+  id="dashboard"
+>
+
+<div class="dashboard-grid">
+
+
+<!-- =====================================================
+     SIDEBAR
+===================================================== -->
+
+<aside class="sidebar panel">
+
+  <div class="student-card">
+
+    <div class="student-top">
+
+      <div class="student-avatar">
+        👦
+      </div>
+
+      <div>
+
+        <div
+          class="student-name"
+          id="studentName"
+        >
+          विद्यार्थी
+        </div>
+
+        <span
+          class="class-badge"
+          id="studentClass"
+        >
+          कक्षा
+        </span>
+
+      </div>
+
+    </div>
+
+  </div>
+
+
+  <div class="side-menu">
+
+    <button
+      class="active"
+      onclick="scrollHome()"
+    >
+      🏠 होम पेज
+    </button>
+
+    <button onclick="focusChat()">
+      🤖 AI Teacher से बात करें
+    </button>
+
+    <button onclick="showLesson('books')">
+      📚 किताबें पढ़ें
+    </button>
+
+    <button onclick="showLesson('tables')">
+      ✖️ पहाड़ा सीखें
+    </button>
+
+    <button onclick="showLesson('counting')">
+      🔢 गिनती सीखें
+    </button>
+
+    <button onclick="showLesson('alphabet')">
+      🔤 वर्णमाला सीखें
+    </button>
+
+    <button onclick="showLesson('games')">
+      🎮 शैक्षिक गेम
+    </button>
+
+    <button onclick="showLesson('progress')">
+      📊 मेरी प्रगति
+    </button>
+
+  </div>
+
+
+  <button
+    class="logout"
+    onclick="logoutUser()"
+  >
+    🚪 Logout
+  </button>
+
+</aside>
+
+
+<!-- =====================================================
+     MAIN
+===================================================== -->
+
+<main class="main-content">
+
+
+  <div class="hero-card">
+
+    <div style="position:relative;z-index:2">
+
+      <h2>
+        🤖 AI Teacher से कुछ भी पूछो!
+      </h2>
+
+      <p>
+        सवाल लिखो, बोलो या किताब की फोटो भेजो।
+        Padh-Ai तुम्हें आसान भाषा में समझाएगा।
+      </p>
+
+      <button
+        class="hero-start"
+        onclick="focusChat()"
+      >
+        🚀 चलो शुरू करें
+      </button>
+
+    </div>
+
+    <div class="hero-robot">
+      🤖
+    </div>
+
+  </div>
+
+
+  <div class="section-title">
+    📚 आज क्या सीखना है?
+  </div>
+
+
+  <div class="lesson-grid">
+
+
+    <div class="lesson">
+
+      <h3>📖 किताबें पढ़ें</h3>
+
+      <p>
+        कहानी, पाठ और ज्ञानवर्धक किताबें।
+      </p>
+
+      <button onclick="askPreset('मुझे बच्चों के लिए एक छोटी और मजेदार कहानी सुनाओ।')">
+        पढ़ें →
+      </button>
+
+      <div class="lesson-icon">
+        📖
+      </div>
+
+    </div>
+
+
+    <div class="lesson">
+
+      <h3>✖️ पहाड़ा सीखें</h3>
+
+      <p>
+        2 से 20 तक पहाड़ा आसानी से सीखें।
+      </p>
+
+      <button onclick="askPreset('मुझे 2 का पहाड़ा आसान तरीके से समझाओ।')">
+        सीखें →
+      </button>
+
+      <div class="lesson-icon">
+        🧮
+      </div>
+
+    </div>
+
+
+    <div class="lesson">
+
+      <h3>🎮 शैक्षिक गेम</h3>
+
+      <p>
+        खेल-खेल में मजेदार पढ़ाई।
+      </p>
+
+      <button onclick="askPreset('मेरे लिए एक आसान गणित का educational quiz बनाओ।')">
+        खेलें →
+      </button>
+
+      <div class="lesson-icon">
+        🎮
+      </div>
+
+    </div>
+
+
+    <div class="lesson">
+
+      <h3>🔢 गिनती सीखें</h3>
+
+      <p>
+        1 से 100 तक गिनती सीखो।
+      </p>
+
+      <button onclick="askPreset('मुझे 1 से 20 तक गिनती मजेदार तरीके से सिखाओ।')">
+        सीखें →
+      </button>
+
+      <div class="lesson-icon">
+        🔢
+      </div>
+
+    </div>
+
+
+    <div class="lesson">
+
+      <h3>🔤 वर्णमाला सीखें</h3>
+
+      <p>
+        अ से ज्ञ और A से Z तक।
+      </p>
+
+      <button onclick="askPreset('मुझे हिंदी वर्णमाला बच्चों को बहुत आसान तरीके से सिखाओ।')">
+        सीखें →
+      </button>
+
+      <div class="lesson-icon">
+        🔤
+      </div>
+
+    </div>
+
+
+    <div class="lesson">
+
+      <h3>📊 मेरी प्रगति</h3>
+
+      <p>
+        अपनी पढ़ाई और सीखने की प्रगति देखें।
+      </p>
+
+      <button onclick="showProgress()">
+        देखें →
+      </button>
+
+      <div class="lesson-icon">
+        🏆
+      </div>
+
+    </div>
+
+
+  </div>
+
+
+  <div class="features">
+
+    <div class="feature">
+      <span class="feature-icon">🤖</span>
+      AI Teacher
+    </div>
+
+    <div class="feature">
+      <span class="feature-icon">📚</span>
+      सभी विषय
+    </div>
+
+    <div class="feature">
+      <span class="feature-icon">🎮</span>
+      मजेदार गेम
+    </div>
+
+    <div class="feature">
+      <span class="feature-icon">🏆</span>
+      सीखो और इनाम
+    </div>
+
+    <div class="feature">
+      <span class="feature-icon">🛡️</span>
+      सुरक्षित पढ़ाई
+    </div>
+
+  </div>
+
+</main>
+
+
+<!-- =====================================================
+     AI CHAT
+===================================================== -->
+
+<section
+  class="chat-panel panel"
+  id="chatPanel"
+>
+
+  <div class="chat-header">
+
+    <div class="chat-title">
+
+      <div class="chat-avatar">
+        🤖
+      </div>
+
+      <div>
+
+        <strong>
+          AI Teacher
+        </strong>
+
+        <div class="online">
+          🟢 ऑनलाइन
+        </div>
+
+      </div>
+
+    </div>
+
+    <button
+      onclick="clearChat()"
+      style="
+        border:0;
+        background:transparent;
+        color:#fff;
+        font-size:22px;
+      "
+      title="Chat साफ करें"
+    >
+      ✕
+    </button>
+
+  </div>
+
+
+  <div
+    class="chat-messages"
+    id="chatMessages"
   >
 
-    <h2 class="admin-title">
-      🛡️ Padh-Ai Admin Panel
-    </h2>
+    <div class="msg ai">
+      नमस्ते! 👋 मैं Padh-Ai का AI Teacher हूँ।
+
+आप मुझसे गणित, हिंदी, English, Science, पहाड़ा, गिनती या किसी भी पढ़ाई के सवाल पूछ सकते हो। 😊
+
+🎤 Mic दबाकर बोल भी सकते हो।
+📷 किताब या सवाल की फोटो भी भेज सकते हो।
+    </div>
+
+  </div>
+
+
+  <div
+    class="typing"
+    id="typing"
+  >
+    🤖 AI Teacher सोच रहा है...
+  </div>
+
+
+  <div
+    class="image-preview"
+    id="imagePreview"
+  >
+
+    <img
+      id="previewImg"
+      alt="Question preview"
+    >
+
+    <button
+      class="remove-image"
+      onclick="removeImage()"
+    >
+      ✕ हटाएँ
+    </button>
+
+  </div>
+
+
+  <div class="chat-tools">
+
+    <button
+      class="tool-button"
+      onclick="document.getElementById('imageInput').click()"
+      title="सवाल की फोटो भेजें"
+    >
+      📷
+    </button>
+
+    <button
+      class="tool-button"
+      id="micButton"
+      onclick="toggleMic()"
+      title="बोलकर सवाल पूछें"
+    >
+      🎤
+    </button>
+
+    <input
+      id="imageInput"
+      type="file"
+      accept="image/*"
+      capture="environment"
+      style="display:none"
+      onchange="handleImage(event)"
+    >
+
+  </div>
+
+
+  <div class="chat-input-row">
+
+    <textarea
+      id="chatInput"
+      class="chat-input"
+      placeholder="अपना सवाल लिखें..."
+      onkeydown="handleChatKey(event)"
+    ></textarea>
+
+    <button
+      class="send-button"
+      onclick="sendMessage()"
+      title="सवाल भेजें"
+    >
+      ➤
+    </button>
+
+  </div>
+
+</section>
+
+
+</div>
+
+</section>
+
+
+<!-- =====================================================
+     ADMIN PANEL
+===================================================== -->
+
+<section
+  class="admin-panel"
+  id="adminPanel"
+>
+
+  <h2 style="text-align:center;color:#6030d3">
+    🛡️ Padh-Ai Admin Panel
+  </h2>
+
+  <div class="admin-grid">
 
 
     <div class="admin-box">
 
-      <h3>
-        👑 Admin Information
-      </h3>
+      <h3>👑 Admin Information</h3>
 
       <p>
         <b>Email:</b>
@@ -856,22 +2063,17 @@ hr{
     </div>
 
 
-    <!-- APK CONTROL -->
-
     <div class="admin-box">
 
-      <h3>
-        📲 APK App
-      </h3>
+      <h3>📲 Android App</h3>
 
       <p>
-        Current Version:
-        <b>1.0.5</b>
+        Padh-Ai APK
       </p>
 
       <a
-        class="download"
-        style="display:block;text-align:center"
+        class="primary"
+        style="display:block;text-align:center;text-decoration:none"
         href="https://github.com/sonwaniv842-cell/Padh-Ai/releases/download/v1.0.5/app-release.apk"
         target="_blank"
         rel="noopener"
@@ -882,17 +2084,9 @@ hr{
     </div>
 
 
-    <!-- UPI -->
-
     <div class="admin-box">
 
-      <h3>
-        💳 Payment / UPI
-      </h3>
-
-      <p>
-        <b>Admin UPI ID:</b>
-      </p>
+      <h3>💳 Payment / UPI</h3>
 
       <input
         id="upiInput"
@@ -910,43 +2104,30 @@ hr{
     </div>
 
 
-    <!-- WHATSAPP -->
-
     <div class="admin-box">
 
-      <h3>
-        📞 Support
-      </h3>
+      <h3>📞 Support</h3>
 
       <p>
-        <b>WhatsApp:</b>
-        +91 7067132801
+        WhatsApp: +91 7067132801
       </p>
 
       <a
-        class="download"
-        style="display:block;text-align:center"
+        class="primary"
+        style="display:block;text-align:center;text-decoration:none"
         href="https://wa.me/917067132801"
         target="_blank"
         rel="noopener"
       >
-        💬 WhatsApp Support
+        💬 WhatsApp
       </a>
 
     </div>
 
 
-    <!-- WEBSITE SETTINGS -->
-
     <div class="admin-box">
 
-      <h3>
-        🎨 Website Settings
-      </h3>
-
-      <label>
-        Website Title
-      </label>
+      <h3>🎨 Website Title</h3>
 
       <input
         id="siteTitleInput"
@@ -957,24 +2138,15 @@ hr{
         class="admin-action"
         onclick="saveSiteTitle()"
       >
-        💾 Title Save करें
+        💾 Save Title
       </button>
 
     </div>
 
 
-    <!-- SESSION -->
-
     <div class="admin-box">
 
-      <h3>
-        🔐 Account Session
-      </h3>
-
-      <p class="note">
-        Admin logout करने के बाद दोबारा Admin Email और
-        अपना Admin PIN डालकर Login करना होगा।
-      </p>
+      <h3>🔐 Session</h3>
 
       <button
         class="admin-action danger"
@@ -985,33 +2157,14 @@ hr{
 
     </div>
 
-
-  </section>
-
-
-  <!-- ================= SUPPORT ================= -->
-
-  <div class="support">
-
-    <div class="support-title">
-      💬 सहायता चाहिए?
-    </div>
-
-    <a
-      class="support-link"
-      href="https://wa.me/917067132801"
-      target="_blank"
-      rel="noopener"
-    >
-      WhatsApp Support खोलें
-    </a>
-
   </div>
 
+</section>
 
-  <footer>
-    © Padh-Ai • बच्चों की मजेदार पढ़ाई 🤖📚
-  </footer>
+
+<footer>
+  © Padh-Ai • बच्चों की मजेदार AI पढ़ाई 🤖📚
+</footer>
 
 </div>
 
@@ -1019,8 +2172,8 @@ hr{
 <script>
 
 /* =========================================================
-   PADH-AI CONFIGURATION
-   ========================================================= */
+   CONFIG
+========================================================= */
 
 const SUPABASE_URL =
   "https://tyonurrbwdjqfrmqrgpk.supabase.co";
@@ -1034,16 +2187,10 @@ const ADMIN_EMAIL =
 const ADMIN_UPI_ID =
   "7067132801@ptyes";
 
-const SUPPORT_WHATSAPP =
-  "917067132801";
-
-const APK_URL =
-  "https://github.com/sonwaniv842-cell/Padh-Ai/releases/download/v1.0.5/app-release.apk";
-
 
 /* =========================================================
-   SUPABASE CLIENT
-   ========================================================= */
+   SUPABASE
+========================================================= */
 
 const supabaseClient =
   window.supabase.createClient(
@@ -1053,13 +2200,50 @@ const supabaseClient =
 
 
 /* =========================================================
-   MESSAGE SYSTEM
-   ========================================================= */
+   STATE
+========================================================= */
+
+let currentUser = null;
+
+let selectedImageBase64 = "";
+
+let selectedImageMime =
+  "image/jpeg";
+
+let recognition = null;
+
+let isRecording = false;
+
+
+/* =========================================================
+   HELPERS
+========================================================= */
+
+function $(id){
+  return document.getElementById(id);
+}
+
+
+function escapeHTML(value){
+
+  return String(value)
+
+    .replaceAll("&","&amp;")
+    .replaceAll("<","&lt;")
+    .replaceAll(">","&gt;")
+    .replaceAll('"',"&quot;")
+    .replaceAll("'","&#039;");
+}
+
+
+function validPIN(pin){
+  return /^[0-9]{6}$/.test(pin);
+}
+
 
 function showMessage(text,type="error"){
 
-  const box =
-    document.getElementById("message");
+  const box = $("message");
 
   box.className =
     "message " + type;
@@ -1069,18 +2253,12 @@ function showMessage(text,type="error"){
 
   box.style.display =
     "block";
-
-  box.scrollIntoView({
-    behavior:"smooth",
-    block:"nearest"
-  });
 }
 
 
 function hideMessage(){
 
-  const box =
-    document.getElementById("message");
+  const box = $("message");
 
   box.style.display =
     "none";
@@ -1090,203 +2268,167 @@ function hideMessage(){
 
 
 /* =========================================================
-   SCREEN SWITCHING
-   ========================================================= */
+   AUTH FORMS
+========================================================= */
 
-function hideAllForms(){
+function hideForms(){
 
-  document
-    .getElementById("loginBox")
+  $("loginBox")
     .classList.add("hidden");
 
-  document
-    .getElementById("signupBox")
+  $("signupBox")
     .classList.add("hidden");
 
-  document
-    .getElementById("adminSetupBox")
+  $("adminSetupBox")
     .classList.add("hidden");
 }
 
 
 function showLogin(){
 
-  hideAllForms();
+  hideForms();
   hideMessage();
 
-  document
-    .getElementById("loginBox")
+  $("loginBox")
     .classList.remove("hidden");
 
-  document
-    .getElementById("loginTab")
+  $("loginTab")
     .classList.add("active");
 
-  document
-    .getElementById("signupTab")
+  $("signupTab")
     .classList.remove("active");
 }
 
 
 function showSignup(){
 
-  hideAllForms();
+  hideForms();
   hideMessage();
 
-  document
-    .getElementById("signupBox")
+  $("signupBox")
     .classList.remove("hidden");
 
-  document
-    .getElementById("signupTab")
+  $("signupTab")
     .classList.add("active");
 
-  document
-    .getElementById("loginTab")
+  $("loginTab")
     .classList.remove("active");
 }
 
 
 function showAdminMode(){
 
-  hideAllForms();
+  hideForms();
   hideMessage();
 
-  document
-    .getElementById("adminSetupBox")
+  $("adminSetupBox")
     .classList.remove("hidden");
 
-  document
-    .getElementById("loginTab")
-    .classList.remove("active");
-
-  document
-    .getElementById("signupTab")
-    .classList.remove("active");
-
-  document
-    .getElementById("adminPin")
-    .focus();
-
+  $("adminPin").focus();
 }
 
 
 /* =========================================================
-   PIN VALIDATION
-   ========================================================= */
-
-function validPIN(pin){
-
-  return /^[0-9]{6}$/.test(pin);
-
-}
-
-
-/* =========================================================
-   ERROR MESSAGE
-   ========================================================= */
+   FRIENDLY ERROR
+========================================================= */
 
 function friendlyError(error){
 
   const raw =
-    (error?.message || String(error || ""))
-    .toLowerCase();
+    String(
+      error?.message ||
+      error ||
+      ""
+    ).toLowerCase();
+
 
   if(raw.includes("invalid api key")){
+
     return `
-      ❌ Supabase API key स्वीकार नहीं हुई।<br>
-      कृपया Supabase Publishable Key और Project URL जाँचें।
+      ❌ Supabase API key गलत है।
+      Supabase Project URL और Publishable Key जाँचें।
     `;
   }
+
 
   if(raw.includes("invalid login credentials")){
+
     return `
-      ❌ Email या PIN गलत है।<br>
-      अगर यह पहली बार Admin Login है तो पहले
-      <b>Admin Setup</b> से Admin Account बनाएं।
+      ❌ Email या PIN गलत है।
     `;
   }
+
 
   if(raw.includes("email not confirmed")){
+
     return `
-      📧 Email अभी confirm नहीं हुआ है।<br>
-      अपने Email inbox में Supabase का confirmation mail देखें।
+      📧 पहले Email confirm करें।
     `;
   }
 
-  if(raw.includes("user already registered")){
+
+  if(
+    raw.includes("already registered") ||
+    raw.includes("already been registered")
+  ){
+
     return `
-      ⚠️ यह Email पहले से registered है।<br>
-      सीधे Login करें या PIN reset करें।
+      ⚠️ यह Email पहले से registered है।
     `;
   }
 
-  if(raw.includes("password")){
-    return `
-      ❌ PIN/Password स्वीकार नहीं हुआ।<br>
-      PIN ठीक 6 अंकों का होना चाहिए।
-    `;
-  }
 
   return `
     ❌ ${escapeHTML(
-      error?.message || "कुछ गलत हो गया"
+      error?.message ||
+      "कुछ गलत हो गया।"
     )}
   `;
 }
 
 
 /* =========================================================
-   NORMAL USER SIGNUP
-   ========================================================= */
+   SIGNUP
+========================================================= */
 
 async function signupUser(){
 
   hideMessage();
 
   const name =
-    document.getElementById("signupName")
+    $("signupName")
     .value.trim();
 
   const studentClass =
-    document.getElementById("signupClass")
+    $("signupClass")
     .value.trim();
 
   const email =
-    document.getElementById("signupEmail")
+    $("signupEmail")
     .value.trim();
 
   const pin =
-    document.getElementById("signupPin")
+    $("signupPin")
     .value.trim();
 
 
   if(!name){
 
-    showMessage(
-      "👦 कृपया बच्चे का नाम डालें"
-    );
-
+    showMessage("👦 बच्चे का नाम डालें");
     return;
   }
 
 
   if(!studentClass){
 
-    showMessage(
-      "📚 कृपया कक्षा डालें"
-    );
-
+    showMessage("📚 कक्षा डालें");
     return;
   }
 
 
   if(!email){
 
-    showMessage(
-      "📧 कृपया Email डालें"
-    );
-
+    showMessage("📧 Email डालें");
     return;
   }
 
@@ -1304,15 +2446,15 @@ async function signupUser(){
   try{
 
     const result =
-      await supabaseClient.auth.signUp({
+      await supabaseClient.auth
+      .signUp({
 
-        email:email,
-
+        email,
         password:pin,
 
         options:{
           data:{
-            name:name,
+            name,
             class:studentClass,
             account_type:"student"
           }
@@ -1322,18 +2464,17 @@ async function signupUser(){
 
 
     if(result.error){
-
       throw result.error;
     }
 
 
+    $("loginEmail").value =
+      email;
+
+    showLogin();
+
+
     if(result.data?.session){
-
-      document
-        .getElementById("loginEmail")
-        .value = email;
-
-      showLogin();
 
       showMessage(
         "🎉 Account बन गया! अब Login करें।",
@@ -1342,25 +2483,17 @@ async function signupUser(){
 
     }else{
 
-      document
-        .getElementById("loginEmail")
-        .value = email;
-
-      showLogin();
-
       showMessage(
-        "✅ Account बन गया। यदि Email confirmation चालू है तो पहले Email verify करें, फिर Login करें।",
+        "✅ Account बन गया। यदि Email confirmation चालू है तो पहले Email verify करें।",
         "success"
       );
+
     }
 
 
   }catch(error){
 
-    console.error(
-      "SIGNUP ERROR:",
-      error
-    );
+    console.error(error);
 
     showMessage(
       friendlyError(error)
@@ -1371,20 +2504,16 @@ async function signupUser(){
 
 
 /* =========================================================
-   FIRST-TIME ADMIN SETUP
-   ========================================================= */
+   ADMIN SETUP
+========================================================= */
 
 async function setupAdmin(){
 
   hideMessage();
 
-  const email =
-    ADMIN_EMAIL;
-
   const pin =
-    document
-      .getElementById("adminPin")
-      .value.trim();
+    $("adminPin")
+    .value.trim();
 
 
   if(!validPIN(pin)){
@@ -1400,9 +2529,10 @@ async function setupAdmin(){
   try{
 
     const result =
-      await supabaseClient.auth.signUp({
+      await supabaseClient.auth
+      .signUp({
 
-        email:email,
+        email:ADMIN_EMAIL,
 
         password:pin,
 
@@ -1418,37 +2548,33 @@ async function setupAdmin(){
 
     if(result.error){
 
-      /*
-       यदि account पहले से मौजूद है,
-       तो user को Login करने के लिए भेजेंगे।
-      */
-
       const msg =
-        (result.error.message || "")
-        .toLowerCase();
+        String(
+          result.error.message || ""
+        ).toLowerCase();
+
 
       if(
         msg.includes("already registered") ||
         msg.includes("already been registered")
       ){
 
-        document
-          .getElementById("loginEmail")
-          .value = ADMIN_EMAIL;
+        $("loginEmail").value =
+          ADMIN_EMAIL;
 
-        document
-          .getElementById("loginPin")
-          .value = pin;
+        $("loginPin").value =
+          pin;
 
         showLogin();
 
         showMessage(
-          "ℹ️ Admin account पहले से मौजूद है। अब Login करें।",
+          "ℹ️ Admin account पहले से मौजूद है। Login करें।",
           "info"
         );
 
         return;
       }
+
 
       throw result.error;
     }
@@ -1460,40 +2586,32 @@ async function setupAdmin(){
         result.data.user
       );
 
-      showMessage(
-        "🎉 Admin Account तैयार है!",
-        "success"
-      );
-
     }else{
 
-      document
-        .getElementById("loginEmail")
-        .value = ADMIN_EMAIL;
+      $("loginEmail").value =
+        ADMIN_EMAIL;
 
-      document
-        .getElementById("loginPin")
-        .value = pin;
+      $("loginPin").value =
+        pin;
 
       showLogin();
 
       showMessage(
-        "✅ Admin account बन गया। यदि Email confirmation चालू है तो पहले Email verify करें। फिर Admin Login करें।",
+        "✅ Admin account बन गया। Email confirmation की जरूरत हो सकती है।",
         "success"
       );
+
     }
 
 
   }catch(error){
 
-    console.error(
-      "ADMIN SETUP ERROR:",
-      error
-    );
+    console.error(error);
 
     showMessage(
       friendlyError(error)
     );
+
   }
 
 }
@@ -1501,29 +2619,24 @@ async function setupAdmin(){
 
 /* =========================================================
    LOGIN
-   ========================================================= */
+========================================================= */
 
 async function loginUser(){
 
   hideMessage();
 
   const email =
-    document
-      .getElementById("loginEmail")
-      .value.trim();
+    $("loginEmail")
+    .value.trim();
 
   const pin =
-    document
-      .getElementById("loginPin")
-      .value.trim();
+    $("loginPin")
+    .value.trim();
 
 
   if(!email){
 
-    showMessage(
-      "📧 Email डालें"
-    );
-
+    showMessage("📧 Email डालें");
     return;
   }
 
@@ -1544,15 +2657,13 @@ async function loginUser(){
       await supabaseClient.auth
       .signInWithPassword({
 
-        email:email,
-
+        email,
         password:pin
 
       });
 
 
     if(result.error){
-
       throw result.error;
     }
 
@@ -1571,9 +2682,9 @@ async function loginUser(){
     }
 
 
-    /*
-      Admin पहचान केवल fixed email से।
-    */
+    currentUser =
+      user;
+
 
     if(
       user.email &&
@@ -1592,37 +2703,171 @@ async function loginUser(){
 
   }catch(error){
 
-    console.error(
-      "LOGIN ERROR:",
-      error
-    );
+    console.error(error);
 
     showMessage(
       friendlyError(error)
     );
+
   }
 
 }
 
 
 /* =========================================================
+   OPEN USER
+========================================================= */
+
+function openUser(user){
+
+  currentUser =
+    user;
+
+
+  $("authCard")
+    .classList.add("hidden");
+
+
+  $("adminPanel")
+    .style.display="none";
+
+
+  $("dashboard")
+    .style.display="block";
+
+
+  const name =
+    user.user_metadata?.name ||
+    "दोस्त";
+
+
+  const studentClass =
+    user.user_metadata?.class ||
+    "विद्यार्थी";
+
+
+  $("studentName")
+    .textContent =
+    name;
+
+
+  $("studentClass")
+    .textContent =
+    studentClass;
+
+
+  $("profileName")
+    .textContent =
+    "नमस्ते, " + name;
+
+
+  scrollHome();
+
+}
+
+
+/* =========================================================
+   OPEN ADMIN
+========================================================= */
+
+function openAdmin(user){
+
+  currentUser =
+    user;
+
+
+  $("authCard")
+    .classList.add("hidden");
+
+
+  $("dashboard")
+    .style.display="none";
+
+
+  $("adminPanel")
+    .style.display="block";
+
+
+  $("adminEmailView")
+    .textContent =
+    user?.email ||
+    ADMIN_EMAIL;
+
+
+  window.scrollTo({
+    top:0,
+    behavior:"smooth"
+  });
+
+}
+
+
+/* =========================================================
+   LOGOUT
+========================================================= */
+
+async function logoutUser(){
+
+  try{
+
+    await supabaseClient
+      .auth
+      .signOut();
+
+  }catch(error){
+
+    console.error(error);
+
+  }
+
+
+  currentUser =
+    null;
+
+
+  $("authCard")
+    .classList.remove("hidden");
+
+
+  $("dashboard")
+    .style.display="none";
+
+
+  $("adminPanel")
+    .style.display="none";
+
+
+  $("loginPin").value="";
+
+
+  showLogin();
+
+
+  showMessage(
+    "🚪 आप Logout हो गए हैं।",
+    "success"
+  );
+
+}
+
+
+/* =========================================================
    FORGOT PIN
-   ========================================================= */
+========================================================= */
 
 async function forgotPin(){
 
   hideMessage();
 
   const email =
-    document
-      .getElementById("loginEmail")
-      .value.trim();
+    $("loginEmail")
+    .value.trim();
 
 
   if(!email){
 
     showMessage(
-      "📧 पहले अपना Email डालें"
+      "📧 पहले Email डालें"
     );
 
     return;
@@ -1643,134 +2888,475 @@ async function forgotPin(){
 
 
     if(result.error){
-
       throw result.error;
     }
 
 
     showMessage(
-      "📧 PIN reset करने का link आपके Email पर भेज दिया गया है।",
+      "📧 PIN reset link Email पर भेज दिया गया है।",
       "success"
     );
 
 
   }catch(error){
 
-    console.error(
-      "RESET ERROR:",
-      error
-    );
-
     showMessage(
       friendlyError(error)
     );
+
   }
 
 }
 
 
 /* =========================================================
-   OPEN USER PANEL
-   ========================================================= */
+   CHAT
+========================================================= */
 
-function openUser(user){
+function addMessage(
+  text,
+  role="ai"
+){
 
-  document
-    .getElementById("authCard")
-    .classList.add("hidden");
-
-  document
-    .getElementById("adminPanel")
-    .style.display="none";
-
-  document
-    .getElementById("userPanel")
-    .style.display="block";
+  const box =
+    $("chatMessages");
 
 
-  const name =
-    user.user_metadata?.name ||
-    "दोस्त";
-
-  const studentClass =
-    user.user_metadata?.class ||
-    "—";
-
-  const email =
-    user.email ||
-    "—";
+  const msg =
+    document.createElement("div");
 
 
-  document
-    .getElementById("welcomeText")
-    .innerHTML = `
-
-      👋 नमस्ते
-      <b>${escapeHTML(name)}</b>!
-
-      <br><br>
-
-      📚 कक्षा:
-      <b>${escapeHTML(studentClass)}</b>
-
-      <br><br>
-
-      📧 Email:
-      <b>${escapeHTML(email)}</b>
-
-    `;
+  msg.className =
+    "msg " + role;
 
 
-  window.scrollTo({
-    top:0,
-    behavior:"smooth"
-  });
+  msg.textContent =
+    text;
+
+
+  box.appendChild(msg);
+
+
+  box.scrollTop =
+    box.scrollHeight;
+
+}
+
+
+function focusChat(){
+
+  if(
+    $("dashboard").style.display !==
+    "block"
+  ){
+
+    $("authCard")
+      .scrollIntoView({
+        behavior:"smooth"
+      });
+
+    return;
+  }
+
+
+  $("chatPanel")
+    .scrollIntoView({
+      behavior:"smooth",
+      block:"center"
+    });
+
+
+  setTimeout(()=>{
+    $("chatInput").focus();
+  },500);
+
+}
+
+
+function handleChatKey(event){
+
+  if(
+    event.key === "Enter" &&
+    !event.shiftKey
+  ){
+
+    event.preventDefault();
+
+    sendMessage();
+
+  }
 
 }
 
 
 /* =========================================================
-   OPEN ADMIN PANEL
-   ========================================================= */
+   PRESET QUESTIONS
+========================================================= */
 
-function openAdmin(user){
+function askPreset(text){
 
-  document
-    .getElementById("authCard")
-    .classList.add("hidden");
+  focusChat();
 
-  document
-    .getElementById("userPanel")
-    .style.display="none";
+  $("chatInput").value =
+    text;
 
-  document
-    .getElementById("adminPanel")
-    .style.display="block";
-
-
-  document
-    .getElementById("adminEmailView")
-    .textContent =
-      user?.email || ADMIN_EMAIL;
-
-
-  window.scrollTo({
-    top:0,
-    behavior:"smooth"
-  });
+  setTimeout(()=>{
+    sendMessage();
+  },300);
 
 }
 
 
 /* =========================================================
-   LOGOUT
-   ========================================================= */
+   SEND MESSAGE TO GEMINI
+========================================================= */
 
-async function logoutUser(){
+async function sendMessage(){
+
+  const input =
+    $("chatInput");
+
+  const question =
+    input.value.trim();
+
+
+  if(
+    !question &&
+    !selectedImageBase64
+  ){
+
+    input.focus();
+
+    return;
+  }
+
+
+  if(question){
+
+    addMessage(
+      question,
+      "user"
+    );
+
+  }else if(selectedImageBase64){
+
+    addMessage(
+      "📷 मैंने सवाल की फोटो भेजी है। इसे समझाकर बताओ।",
+      "user"
+    );
+
+  }
+
+
+  input.value = "";
+
+
+  $("typing")
+    .style.display =
+    "block";
+
 
   try{
 
-    await supabaseClient.auth.signOut();
+    const response =
+      await fetch(
+        "/api/gemini",
+        {
+          method:"POST",
+
+          headers:{
+            "Content-Type":
+              "application/json"
+          },
+
+          body:JSON.stringify({
+
+            question,
+
+            imageBase64:
+              selectedImageBase64,
+
+            mimeType:
+              selectedImageMime
+
+          })
+
+        }
+      );
+
+
+    const data =
+      await response.json();
+
+
+    if(!response.ok){
+
+      throw new Error(
+        data?.error ||
+        "AI Teacher से जवाब नहीं मिला।"
+      );
+
+    }
+
+
+    addMessage(
+      data.text ||
+      "मुझे जवाब नहीं मिल पाया। 😊",
+      "ai"
+    );
+
+
+  }catch(error){
+
+    console.error(
+      "CHAT ERROR:",
+      error
+    );
+
+
+    addMessage(
+      "❌ AI Teacher से कनेक्शन में समस्या हुई।\n\n" +
+      error.message,
+      "ai"
+    );
+
+  }finally{
+
+    $("typing")
+      .style.display =
+      "none";
+
+    removeImage();
+
+  }
+
+}
+
+
+/* =========================================================
+   IMAGE QUESTION
+========================================================= */
+
+function handleImage(event){
+
+  const file =
+    event.target.files?.[0];
+
+
+  if(!file){
+    return;
+  }
+
+
+  if(!file.type.startsWith("image/")){
+
+    alert(
+      "कृपया image file चुनें।"
+    );
+
+    return;
+  }
+
+
+  selectedImageMime =
+    file.type;
+
+
+  const reader =
+    new FileReader();
+
+
+  reader.onload = function(){
+
+    const result =
+      String(reader.result);
+
+
+    const comma =
+      result.indexOf(",");
+
+
+    selectedImageBase64 =
+      comma >= 0
+        ? result.slice(comma + 1)
+        : result;
+
+
+    $("previewImg")
+      .src =
+      result;
+
+
+    $("imagePreview")
+      .style.display =
+      "block";
+
+
+    focusChat();
+
+  };
+
+
+  reader.readAsDataURL(file);
+
+}
+
+
+function removeImage(){
+
+  selectedImageBase64 =
+    "";
+
+
+  selectedImageMime =
+    "image/jpeg";
+
+
+  $("imagePreview")
+    .style.display =
+    "none";
+
+
+  $("previewImg")
+    .removeAttribute("src");
+
+
+  $("imageInput")
+    .value =
+    "";
+
+}
+
+
+/* =========================================================
+   MICROPHONE
+========================================================= */
+
+function setupSpeechRecognition(){
+
+  const SpeechRecognition =
+    window.SpeechRecognition ||
+    window.webkitSpeechRecognition;
+
+
+  if(!SpeechRecognition){
+
+    recognition =
+      null;
+
+    return;
+  }
+
+
+  recognition =
+    new SpeechRecognition();
+
+
+  recognition.lang =
+    "hi-IN";
+
+
+  recognition.continuous =
+    false;
+
+
+  recognition.interimResults =
+    true;
+
+
+  recognition.onstart =
+    function(){
+
+      isRecording =
+        true;
+
+      $("micButton")
+        .classList.add(
+          "recording"
+        );
+
+      $("micButton").textContent =
+        "⏹️";
+
+    };
+
+
+  recognition.onresult =
+    function(event){
+
+      let transcript = "";
+
+
+      for(
+        let i =
+          event.resultIndex;
+
+        i <
+        event.results.length;
+
+        i++
+      ){
+
+        transcript +=
+          event.results[i][0]
+            .transcript;
+
+      }
+
+
+      $("chatInput")
+        .value =
+        transcript;
+
+    };
+
+
+  recognition.onerror =
+    function(event){
+
+      console.error(
+        "Speech error:",
+        event.error
+      );
+
+      stopMic();
+
+    };
+
+
+  recognition.onend =
+    function(){
+
+      stopMic();
+
+    };
+
+}
+
+
+function toggleMic(){
+
+  if(!recognition){
+
+    alert(
+      "इस browser में Voice Input उपलब्ध नहीं है। Chrome में खोलकर फिर कोशिश करें।"
+    );
+
+    return;
+  }
+
+
+  if(isRecording){
+
+    recognition.stop();
+
+    return;
+  }
+
+
+  try{
+
+    recognition.start();
 
   }catch(error){
 
@@ -1778,59 +3364,142 @@ async function logoutUser(){
 
   }
 
-
-  document
-    .getElementById("authCard")
-    .classList.remove("hidden");
-
-  document
-    .getElementById("userPanel")
-    .style.display="none";
-
-  document
-    .getElementById("adminPanel")
-    .style.display="none";
+}
 
 
-  document
-    .getElementById("loginPin")
-    .value="";
+function stopMic(){
+
+  isRecording =
+    false;
 
 
-  showLogin();
+  $("micButton")
+    .classList.remove(
+      "recording"
+    );
 
 
-  showMessage(
-    "🚪 आप Logout हो गए हैं।",
-    "success"
+  $("micButton").textContent =
+    "🎤";
+
+}
+
+
+/* =========================================================
+   CLEAR CHAT
+========================================================= */
+
+function clearChat(){
+
+  $("chatMessages")
+    .innerHTML = `
+
+      <div class="msg ai">
+
+        नमस्ते! 👋
+
+        मैं Padh-Ai का AI Teacher हूँ।
+
+        अपना सवाल पूछो। 😊
+
+      </div>
+
+  `;
+
+}
+
+
+/* =========================================================
+   LESSON
+========================================================= */
+
+function showLesson(type){
+
+  const prompts = {
+
+    books:
+      "मुझे बच्चों के लिए एक छोटी मजेदार educational कहानी सुनाओ।",
+
+    tables:
+      "मुझे 5 का पहाड़ा बहुत आसान तरीके से सिखाओ।",
+
+    counting:
+      "मुझे 1 से 20 तक गिनती मजेदार तरीके से सिखाओ।",
+
+    alphabet:
+      "मुझे हिंदी वर्णमाला अ से ज्ञ तक आसान तरीके से सिखाओ।",
+
+    games:
+      "मेरे लिए 5 सवालों का बच्चों वाला educational quiz बनाओ।",
+
+    progress:
+      "मेरी पढ़ाई सुधारने के लिए एक आसान daily study plan बनाओ।"
+
+  };
+
+
+  askPreset(
+    prompts[type] ||
+    "मुझे पढ़ाई में मदद करो।"
   );
 
 }
 
 
 /* =========================================================
-   COPY UPI
-   ========================================================= */
+   PROGRESS
+========================================================= */
+
+function showProgress(){
+
+  askPreset(
+    "मेरी कक्षा के बच्चे के लिए पढ़ाई की प्रगति सुधारने का आसान तरीका बताओ और आज का 20 मिनट का study plan बनाओ।"
+  );
+
+}
+
+
+/* =========================================================
+   HOME
+========================================================= */
+
+function scrollHome(){
+
+  $("home")
+    .scrollIntoView({
+      behavior:"smooth",
+      block:"start"
+    });
+
+}
+
+
+/* =========================================================
+   UPI
+========================================================= */
 
 async function copyUPI(){
 
   try{
 
-    await navigator.clipboard
-      .writeText(ADMIN_UPI_ID);
+    await navigator
+      .clipboard
+      .writeText(
+        ADMIN_UPI_ID
+      );
+
 
     showMessage(
-      "📋 UPI ID copy हो गई: " +
-      escapeHTML(ADMIN_UPI_ID),
+      "📋 UPI ID copy हो गई।",
       "success"
     );
 
+
   }catch(error){
 
-    showMessage(
+    alert(
       "UPI ID: " +
-      escapeHTML(ADMIN_UPI_ID),
-      "info"
+      ADMIN_UPI_ID
     );
 
   }
@@ -1839,21 +3508,20 @@ async function copyUPI(){
 
 
 /* =========================================================
-   SAVE SITE TITLE
-   ========================================================= */
+   TITLE
+========================================================= */
 
 function saveSiteTitle(){
 
   const title =
-    document
-      .getElementById("siteTitleInput")
-      .value.trim();
+    $("siteTitleInput")
+    .value.trim();
 
 
   if(!title){
 
     showMessage(
-      "Website title खाली नहीं हो सकता"
+      "Title खाली नहीं हो सकता"
     );
 
     return;
@@ -1871,16 +3539,12 @@ function saveSiteTitle(){
 
 
   showMessage(
-    "💾 Website title इस device पर save हो गया।",
+    "💾 Title save हो गया।",
     "success"
   );
 
 }
 
-
-/* =========================================================
-   LOAD SAVED TITLE
-   ========================================================= */
 
 function loadSiteTitle(){
 
@@ -1895,14 +3559,13 @@ function loadSiteTitle(){
     document.title =
       saved;
 
-    const input =
-      document.getElementById(
-        "siteTitleInput"
-      );
 
-    if(input){
-      input.value =
+    if($("siteTitleInput")){
+
+      $("siteTitleInput")
+        .value =
         saved;
+
     }
 
   }
@@ -1911,42 +3574,22 @@ function loadSiteTitle(){
 
 
 /* =========================================================
-   ESCAPE HTML
-   ========================================================= */
-
-function escapeHTML(value){
-
-  return String(value)
-
-    .replaceAll("&","&amp;")
-
-    .replaceAll("<","&lt;")
-
-    .replaceAll(">","&gt;")
-
-    .replaceAll('"',"&quot;")
-
-    .replaceAll("'","&#039;");
-}
-
-
-/* =========================================================
-   INITIAL SESSION CHECK
-   ========================================================= */
+   SESSION
+========================================================= */
 
 async function checkCurrentSession(){
 
   try{
 
     const result =
-      await supabaseClient.auth
+      await supabaseClient
+      .auth
       .getSession();
 
 
     if(result.error){
 
       console.error(
-        "SESSION ERROR:",
         result.error
       );
 
@@ -1983,13 +3626,9 @@ async function checkCurrentSession(){
 
     }
 
-
   }catch(error){
 
-    console.error(
-      "INITIALIZATION ERROR:",
-      error
-    );
+    console.error(error);
 
   }
 
@@ -1997,33 +3636,34 @@ async function checkCurrentSession(){
 
 
 /* =========================================================
-   AUTH STATE LISTENER
-   ========================================================= */
+   AUTH LISTENER
+========================================================= */
 
-supabaseClient.auth
+supabaseClient
+.auth
 .onAuthStateChange(
   (event,session)=>{
 
     console.log(
-      "AUTH EVENT:",
+      "AUTH:",
       event
     );
 
-    if(
-      event === "SIGNED_OUT"
-    ){
 
-      document
-        .getElementById("authCard")
-        .classList.remove("hidden");
+    if(event === "SIGNED_OUT"){
 
-      document
-        .getElementById("userPanel")
-        .style.display="none";
+      $("authCard")
+        .classList.remove(
+          "hidden"
+        );
 
-      document
-        .getElementById("adminPanel")
-        .style.display="none";
+      $("dashboard")
+        .style.display =
+        "none";
+
+      $("adminPanel")
+        .style.display =
+        "none";
 
     }
 
@@ -2033,9 +3673,11 @@ supabaseClient.auth
 
 /* =========================================================
    START
-   ========================================================= */
+========================================================= */
 
 loadSiteTitle();
+
+setupSpeechRecognition();
 
 checkCurrentSession();
 
